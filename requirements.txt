@@ -1,0 +1,12 @@
+# TDC 2.0 automation stack
+# Suite A (smoke_critical_path.robot):  Robot Framework + Browser library (Playwright), driving Brave.
+#   Install:  py -m pip install -r requirements.txt
+#             py -m Browser.entry init      (one-time: downloads Playwright's node runtime; alias: rfbrowser init)
+#   Brave must be installed (suite expects C:/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe).
+# Older suites (smoke_install_check.robot, my_first_test.robot) still use SeleniumLibrary + Edge.
+# Note: pip >= 24.2 recommended (uses Windows system trust store; older pip hits
+#       SSL CERTIFICATE_VERIFY_FAILED on this machine's network).
+robotframework==7.4.2
+robotframework-browser==20.1.0
+robotframework-seleniumlibrary==6.9.0
+selenium==4.35.0

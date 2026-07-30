@@ -1,0 +1,14 @@
+# Robot Framework run artifacts (regenerated every run)
+results/
+log.html
+report.html
+output.xml
+playwright-log.txt
+
+# Python
+__pycache__/
+*.pyc
+
+# OS cruft
+Thumbs.db
+Desktop.ini
