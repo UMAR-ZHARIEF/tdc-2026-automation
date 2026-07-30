@@ -34,6 +34,7 @@ Results (log.html, report.html, output.xml, failure screenshots) are written to
 | File | Status | Notes |
 |---|---|---|
 | `tests/smoke_critical_path.robot` | Active — 7/7 passing | Suite A: guest critical path (Browser library + Brave) |
+| `tests/ts01_store_access.robot` | Active | TS-01 Store Access (UC-01): TC-01-001..007 mirrored from the TCS — 4 automated, 3 documented SKIPs (not executable on a live shared store) |
 | `tests/smoke_install_check.robot` | Legacy | SeleniumLibrary + Edge (retired stack) |
 | `tests/my_first_test.robot` | Legacy | SeleniumLibrary teaching example (retired stack) |
 
