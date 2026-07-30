@@ -35,6 +35,7 @@ Results (log.html, report.html, output.xml, failure screenshots) are written to
 |---|---|---|
 | `tests/smoke_critical_path.robot` | Active — 7/7 passing | Suite A: guest critical path (Browser library + Brave) |
 | `tests/ts01_store_access.robot` | Active | TS-01 Store Access (UC-01): TC-01-001..007 mirrored from the TCS — 4 automated, 3 documented SKIPs (not executable on a live shared store) |
+| `tests/ts02_product_catalogue.robot` | Active | TS-02 Product Catalogue (UC-02): TC-02-001..006 — 5 automated (incl. catalogue→PDP click navigation, no-results empty state, nonexistent-product 404), 1 documented SKIP (data-fault injection impossible on a live store) |
 | `tests/smoke_install_check.robot` | Legacy | SeleniumLibrary + Edge (retired stack) |
 | `tests/my_first_test.robot` | Legacy | SeleniumLibrary teaching example (retired stack) |
 
