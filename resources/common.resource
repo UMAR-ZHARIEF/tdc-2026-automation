@@ -25,3 +25,17 @@ Open Store Session
 
 Close Store Session
     Close Browser    ALL
+
+Open Fresh Context
+    [Documentation]    Opens a new browser context on a blank page — no cookies or history
+    ...    carry over from earlier tests (used by bookmark/direct-link cases).
+    New Context
+    New Page    about:blank
+
+Go Offline
+    [Documentation]    Client-side offline emulation (Playwright Set Offline) — while offline
+    ...    no request leaves this machine; the live store is untouched.
+    Set Offline    True
+
+Go Online
+    Set Offline    False

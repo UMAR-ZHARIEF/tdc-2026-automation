@@ -5,19 +5,21 @@ Documentation     TS-03 Product Detail Page — executable mirror of TCS cases T
 ...               trail is Home — product with no category level and no broken link to
 ...               exercise; the description-expansion control does not exist — the observed
 ...               element counts are logged at run time by TC-03-001 as evidence).
+...               Page Object Model: element locators live in resources/pages/ — this file
+...               contains business-readable steps only.
 ...               Environment: Brave (Chromium) via Browser library (Playwright), guest role.
 ...               Traffic: ~5 page loads per run — run sparingly (shared live store).
 Resource          ../resources/common.resource
+Resource          ../resources/pages/catalogue_page.resource
+Resource          ../resources/pages/product_listing.resource
+Resource          ../resources/pages/product_page.resource
 Suite Setup       Open Store Session
 Suite Teardown    Close Store Session
 Test Tags         TS-03    UC-03    guest
 
 *** Variables ***
-${PDP_URL}                 ${STORE_URL}products/grey-jacket
-${SOLD_OUT_URL}            ${STORE_URL}products/white-sandals
-${VISIBLE_PRODUCT_LINK}    css=a[href*="/products/"]:visible
-${ACTIVE_ADD_TO_CART}      xpath=//button[normalize-space()='Add to Cart' and not(@disabled)] | //input[@type='submit' and @value='Add to Cart' and not(@disabled)]
-${BREADCRUMB_LINKS}        css=div[id="breadcrumb"] a
+${PDP_HANDLE}         grey-jacket
+${SOLD_OUT_HANDLE}    white-sandals
 
 *** Test Cases ***
 TC-03-001 Product Detail Page Shows Pricing Availability And Attributes
@@ -25,25 +27,23 @@ TC-03-001 Product Detail Page Shows Pricing Availability And Attributes
     ...    availability control. Breadcrumb and description-block element counts are logged as
     ...    evidence for the skip decisions of TC-03-006/007/008. Priority High / Positive.
     [Tags]    priority-high    type-positive
-    Go To    ${PDP_URL}
-    Get Element Count    h1    >    0
-    Get Text    body    contains    £
-    Get Element Count    ${ACTIVE_ADD_TO_CART}    >    0
-    ${bc}=    Get Element Count    ${BREADCRUMB_LINKS}
+    Open Product    ${PDP_HANDLE}
+    Product Page Should Be Complete
+    Active Add To Cart Should Be Present
+    ${bc}=    Breadcrumb Link Count
     Log    Breadcrumb links found on the product detail page: ${bc} (evidence for TC-03-006/008)
-    ${desc}=    Get Element Count    css=.product-description, #product-description, .description, .rte
+    ${desc}=    Description Block Count
     Log    Description blocks rendered (fully visible, no expansion control): ${desc} (evidence for TC-03-007)
 
 TC-03-002 Browser Back Button Returns To The Catalogue
     [Documentation]    Alternative flow: after opening a product from the catalogue, the browser
     ...    Back button returns the customer to the catalogue listing. Priority Medium / Positive.
     [Tags]    priority-medium    type-positive
-    Go To    ${STORE_URL}collections/all
-    Click    ${VISIBLE_PRODUCT_LINK}
-    Get Url    contains    /products/
+    Open Catalogue
+    Open First Listed Product
     Go Back
-    Get Url    contains    /collections/
-    Get Element Count    ${VISIBLE_PRODUCT_LINK}    >    0
+    Should Be On Catalogue
+    Products Should Be Listed
 
 TC-03-003 Purchase Path Available Without Reading The Description
     [Documentation]    Alternative flow: the description is optional and does not gate the
@@ -51,9 +51,9 @@ TC-03-003 Purchase Path Available Without Reading The Description
     ...    step; the add-to-cart control is available immediately alongside it.
     ...    Priority Medium / Positive.
     [Tags]    priority-medium    type-positive
-    Go To    ${PDP_URL}
-    Get Element Count    ${ACTIVE_ADD_TO_CART}    >    0
-    Get Element Count    h1    >    0
+    Open Product    ${PDP_HANDLE}
+    Active Add To Cart Should Be Present
+    Product Page Should Be Complete
 
 TC-03-004 Core Product Data Fails To Display (Design-Only)
     [Documentation]    TCS expects safe behaviour when core data (price, name, add control)
@@ -68,12 +68,9 @@ TC-03-005 Sold-Out Product Indicates Unavailability
     ...    the price remains displayed while no active add control is offered.
     ...    Priority High / Negative.
     [Tags]    priority-high    type-negative
-    Go To    ${SOLD_OUT_URL}
-    Get Text    body    contains    £
-    ${sold_out_shown}=    Run Keyword And Return Status    Get Text    body    contains    Sold Out
-    ${active_add}=    Get Element Count    ${ACTIVE_ADD_TO_CART}
-    Should Be True    ${sold_out_shown} or ${active_add} == 0
-    ...    msg=Neither a Sold Out indicator nor a blocked add-to-cart control found on a sold-out product
+    Open Product    ${SOLD_OUT_HANDLE}
+    Product Price Should Be Displayed
+    Sold Out State Should Be Indicated
 
 TC-03-006 Broken Breadcrumb Link Fails Safely (Design-Only)
     [Documentation]    TCS expects a broken breadcrumb to fail safely toward a known page. Not

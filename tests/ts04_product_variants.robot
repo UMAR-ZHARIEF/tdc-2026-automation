@@ -6,18 +6,19 @@ Documentation     TS-04 Product Variant Handling — executable mirror of TCS ca
 ...               cannot be manipulated on a live store). Variant product: the two-dimension
 ...               item titled 'Black heels' served at /products/flower-print-jeans (title/URL
 ...               mismatch recorded as automation finding AF-03).
+...               Page Object Model: element locators live in resources/pages/ — this file
+...               contains business-readable steps only.
 ...               Environment: Brave (Chromium) via Browser library (Playwright), guest role.
 ...               Traffic: ~5 page loads per run — run sparingly (shared live store).
 Resource          ../resources/common.resource
+Resource          ../resources/pages/product_page.resource
 Suite Setup       Open Store Session
 Suite Teardown    Close Store Session
 Test Tags         TS-04    UC-04    guest
 
 *** Variables ***
-${VARIANT_URL}            ${STORE_URL}products/flower-print-jeans
-${SINGLE_CANDIDATE_URL}   ${STORE_URL}products/grey-jacket
-${VARIANT_SELECT}         css=form[action*="/cart/add"] select
-${ACTIVE_ADD_TO_CART}     xpath=//button[normalize-space()='Add to Cart' and not(@disabled)] | //input[@type='submit' and @value='Add to Cart' and not(@disabled)]
+${VARIANT_HANDLE}             flower-print-jeans
+${SINGLE_CANDIDATE_HANDLE}    grey-jacket
 
 *** Test Cases ***
 TC-04-001 Variant Selection Is Applied And Reflected
@@ -25,14 +26,14 @@ TC-04-001 Variant Selection Is Applied And Reflected
     ...    choice. The first variant dimension is changed to its second option and the selected
     ...    label is asserted to have changed. Priority High / Positive.
     [Tags]    priority-high    type-positive
-    Go To    ${VARIANT_URL}
-    ${selects}=    Get Element Count    ${VARIANT_SELECT}
+    Open Product    ${VARIANT_HANDLE}
+    ${selects}=    Variant Dimension Count
     Should Be True    ${selects} >= 1    msg=No variant selectors found on the variant product page
-    ${options}=    Get Property    ${VARIANT_SELECT} >> nth=0    length
+    ${options}=    Variant Option Count    0
     Skip If    ${options} < 2    Variant dimension offers fewer than two options in the current catalogue snapshot.
-    ${initial}=    Get Selected Options    ${VARIANT_SELECT} >> nth=0    label
-    Select Options By    ${VARIANT_SELECT} >> nth=0    index    1
-    ${after}=    Get Selected Options    ${VARIANT_SELECT} >> nth=0    label
+    ${initial}=    Selected Variant Label    0
+    Select Variant Option    0    1
+    ${after}=    Selected Variant Label    0
     Should Not Be Equal    ${initial}    ${after}    msg=Variant selection was not applied
     Log    Variant selection applied: ${initial} -> ${after}
 
@@ -42,23 +43,23 @@ TC-04-002 Single-Variant Product Proceeds Without Explicit Selection
     ...    if the candidate product presents variant selectors in the current snapshot.
     ...    Priority Medium / Positive.
     [Tags]    priority-medium    type-positive
-    Go To    ${SINGLE_CANDIDATE_URL}
-    ${selects}=    Get Element Count    ${VARIANT_SELECT}
+    Open Product    ${SINGLE_CANDIDATE_HANDLE}
+    ${selects}=    Variant Dimension Count
     Skip If    ${selects} > 0    Candidate product presents ${selects} variant selector(s); no single-variant product identified in the current catalogue snapshot.
-    Get Element Count    ${ACTIVE_ADD_TO_CART}    >    0
+    Active Add To Cart Should Be Present
 
 TC-04-003 Final Selection Persists Across Multiple Changes
     [Documentation]    Alternative flow: the customer changes the variant selection several
     ...    times; only the final choice remains active. Priority Medium / Positive.
     [Tags]    priority-medium    type-positive
-    Go To    ${VARIANT_URL}
-    ${options}=    Get Property    ${VARIANT_SELECT} >> nth=0    length
+    Open Product    ${VARIANT_HANDLE}
+    ${options}=    Variant Option Count    0
     Skip If    ${options} < 2    Variant dimension offers fewer than two options in the current catalogue snapshot.
-    Select Options By    ${VARIANT_SELECT} >> nth=0    index    1
-    ${target}=    Get Selected Options    ${VARIANT_SELECT} >> nth=0    label
-    Select Options By    ${VARIANT_SELECT} >> nth=0    index    0
-    Select Options By    ${VARIANT_SELECT} >> nth=0    index    1
-    ${final}=    Get Selected Options    ${VARIANT_SELECT} >> nth=0    label
+    Select Variant Option    0    1
+    ${target}=    Selected Variant Label    0
+    Select Variant Option    0    0
+    Select Variant Option    0    1
+    ${final}=    Selected Variant Label    0
     Should Be Equal    ${final}    ${target}    msg=Final variant selection was not preserved after multiple changes
 
 TC-04-004 A Default Variant Is Always Preselected
@@ -68,13 +69,8 @@ TC-04-004 A Default Variant Is Always Preselected
     ...    possible. The case is executed as a verification of that safeguard.
     ...    Priority High / Negative.
     [Tags]    priority-high    type-negative
-    Go To    ${VARIANT_URL}
-    ${selects}=    Get Element Count    ${VARIANT_SELECT}
-    Should Be True    ${selects} >= 1    msg=No variant selectors found on the variant product page
-    FOR    ${i}    IN RANGE    ${selects}
-        ${value}=    Get Selected Options    ${VARIANT_SELECT} >> nth=${i}    value
-        Should Not Be Empty    ${value}    msg=Variant dimension ${i} loaded without a preselected default
-    END
+    Open Product    ${VARIANT_HANDLE}
+    All Variant Dimensions Should Have Defaults
 
 TC-04-005 Selected Variant Becomes Out Of Stock (Design-Only)
     [Documentation]    TCS expects notification when a selected variant sells out while the
@@ -89,14 +85,14 @@ TC-04-006 Page Refresh Yields A Valid Variant State
     ...    observed behaviour (restored or reset) is logged as evidence.
     ...    Priority Medium / Negative.
     [Tags]    priority-medium    type-negative
-    Go To    ${VARIANT_URL}
-    ${options}=    Get Property    ${VARIANT_SELECT} >> nth=0    length
+    Open Product    ${VARIANT_HANDLE}
+    ${options}=    Variant Option Count    0
     Skip If    ${options} < 2    Variant dimension offers fewer than two options in the current catalogue snapshot.
-    Select Options By    ${VARIANT_SELECT} >> nth=0    index    1
-    ${before}=    Get Selected Options    ${VARIANT_SELECT} >> nth=0    label
+    Select Variant Option    0    1
+    ${before}=    Selected Variant Label    0
     Reload
-    Get Element Count    h1    >    0
-    ${after}=    Get Selected Options    ${VARIANT_SELECT} >> nth=0    label
+    Product Page Should Be Complete
+    ${after}=    Selected Variant Label    0
     Should Not Be Empty    ${after}    msg=No valid variant selected after refresh
     IF    $before == $after
         Log    Refresh behaviour: prior selection RESTORED (${after})
@@ -107,21 +103,22 @@ TC-04-006 Page Refresh Yields A Valid Variant State
 TC-04-007 Size And Colour Are Selectable Together
     [Documentation]    Extension flow: specific size and colour options are configured
     ...    together; both dimensions apply and the add control remains available. Runtime data
-    ...    guard: skips if the product offers fewer than two variant dimensions.
-    ...    Priority Low / Positive.
+    ...    guard: skips if the product offers fewer than two variant dimensions, or if a
+    ...    dimension offers fewer than two options (the theme's linked option selector can
+    ...    constrain the second dimension by availability). Priority Low / Positive.
     [Tags]    priority-low    type-positive
-    Go To    ${VARIANT_URL}
-    ${selects}=    Get Element Count    ${VARIANT_SELECT}
+    Open Product    ${VARIANT_HANDLE}
+    ${selects}=    Variant Dimension Count
     Skip If    ${selects} < 2    Product offers ${selects} variant dimension(s) in the current snapshot; two are required for this case.
-    ${opt0}=    Get Property    ${VARIANT_SELECT} >> nth=0    length
-    ${opt1}=    Get Property    ${VARIANT_SELECT} >> nth=1    length
+    ${opt0}=    Variant Option Count    0
+    ${opt1}=    Variant Option Count    1
     Log    Variant dimension option counts at run time: ${opt0} / ${opt1} (the theme's linked option selector can constrain the second dimension by availability)
     Skip If    ${opt0} < 2 or ${opt1} < 2    A variant dimension offers fewer than two options in the current catalogue snapshot (option counts: ${opt0}/${opt1}); the theme's linked option selector constrains the second dimension by availability.
-    Select Options By    ${VARIANT_SELECT} >> nth=0    index    1
-    Select Options By    ${VARIANT_SELECT} >> nth=1    index    1
-    ${first}=    Get Selected Options    ${VARIANT_SELECT} >> nth=0    label
-    ${second}=    Get Selected Options    ${VARIANT_SELECT} >> nth=1    label
+    Select Variant Option    0    1
+    Select Variant Option    1    1
+    ${first}=    Selected Variant Label    0
+    ${second}=    Selected Variant Label    1
     Should Not Be Empty    ${first}
     Should Not Be Empty    ${second}
-    Get Element Count    ${ACTIVE_ADD_TO_CART}    >    0
+    Active Add To Cart Should Be Present
     Log    Combined configuration applied: ${first} / ${second}

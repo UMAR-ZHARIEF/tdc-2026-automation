@@ -5,16 +5,23 @@ Documentation     TS-01 Store Access System — executable mirror of TCS cases T
 ...               against a live, shared production store (see each case's reason). Expected
 ...               results in the TCS are derived acceptance criteria (oracle = standard
 ...               e-commerce behaviour); a mismatch found here is a finding, not a broken test.
-...               Environment: Brave 150 (Chromium) via Browser library (Playwright), guest role.
+...               Page Object Model: element locators live in resources/pages/ — this file
+...               contains business-readable steps only.
+...               Environment: Brave (Chromium) via Browser library (Playwright), guest role.
 ...               Traffic: ~4 page loads per run — run sparingly (shared live store).
 Resource          ../resources/common.resource
+Resource          ../resources/pages/layout.resource
+Resource          ../resources/pages/home_page.resource
+Resource          ../resources/pages/catalogue_page.resource
+Resource          ../resources/pages/product_listing.resource
+Resource          ../resources/pages/product_page.resource
 Suite Setup       Open Store Session
 Suite Teardown    Close Store Session
 Test Tags         TS-01    UC-01    guest
 
 *** Variables ***
 # Stable in-stock product used for the deep-link case (availability re-checked at runtime)
-${DEEP_LINK_URL}        ${STORE_URL}products/grey-jacket
+${DEEP_LINK_HANDLE}     grey-jacket
 ${DEEP_LINK_PRODUCT}    Grey jacket
 
 *** Test Cases ***
@@ -22,25 +29,23 @@ TC-01-001 Load Storefront Homepage Via URL
     [Documentation]    Customer loads the storefront homepage via its URL; the page loads and
     ...    displays the storefront home elements. Priority High / Positive.
     [Tags]    priority-high    type-positive
-    Go To    ${STORE_URL}
-    Get Title    ==    Sauce Demo
-    Get Text    body    contains    My Cart
-    Get Element Count    xpath=//a[contains(@href,'/products/')]    >    0
+    Open Home
+    Home Title Should Be Correct
+    Cart Indicator Should Be Present
+    Products Should Be Listed
 
 TC-01-002 Bookmark Or Direct Product Link Loads Without Homepage
     [Documentation]    Access via a saved bookmark or shared direct link. A bookmark is a stored
     ...    direct URL, so this is executed as direct deep-link navigation in a fresh browser
     ...    context (no history/cookies from the previous case). Priority High / Positive.
     [Tags]    priority-high    type-positive
-    New Context
-    New Page    about:blank
-    Go To    ${DEEP_LINK_URL}
-    Get Url    contains    /products/grey-jacket
-    Get Text    body    contains    ${DEEP_LINK_PRODUCT}
+    Open Fresh Context
+    Open Product    ${DEEP_LINK_HANDLE}
+    Product Name Should Be Displayed    ${DEEP_LINK_PRODUCT}
 
 TC-01-003 Layout Degradation On Older Browsers (Design-Only)
     [Documentation]    TCS expects a graceful, degraded layout on legacy browsers. Not executed:
-    ...    no legacy browser is part of the approved environment (Brave/Chromium 150 only), and
+    ...    no legacy browser is part of the approved environment (Brave/Chromium only), and
     ...    "graceful degradation" has no objective automated oracle. Priority Medium / Negative.
     [Tags]    priority-medium    type-negative    design-only
     Skip    Not executable: legacy-browser environment is outside the approved test environment (Brave/Chromium only); no objective automated oracle for "graceful degradation".
@@ -51,11 +56,11 @@ TC-01-004 Storefront Renders Fully On Supported Modern Browser
     ...    completely: cart indicator, catalogue navigation, search box, product grid.
     ...    Priority High / Positive.
     [Tags]    priority-high    type-positive
-    Go To    ${STORE_URL}
-    Get Text    body    contains    My Cart (
-    Get Element Count    xpath=//a[contains(@href,'/collections/')]    >    0
-    Get Element Count    input[name="q"]    >    0
-    Get Element Count    xpath=//a[contains(@href,'/products/')]    >    0
+    Open Home
+    Cart Indicator Should Be Present
+    Catalogue Navigation Should Be Present
+    Search Box Should Be Present
+    Products Should Be Listed
 
 TC-01-005 Network Disconnection Yields Clear Error And Recovery
     [Documentation]    With connectivity lost, attempting to load the store must surface an
@@ -64,14 +69,14 @@ TC-01-005 Network Disconnection Yields Clear Error And Recovery
     ...    (Set Offline) — no request leaves this machine while offline, safe for the live store.
     ...    Priority High / Negative.
     [Tags]    priority-high    type-negative
-    Set Offline    True
-    ${err}=    Run Keyword And Expect Error    *    Go To    ${STORE_URL}collections/all
+    Go Offline
+    ${err}=    Run Keyword And Expect Error    *    Open Catalogue
     Should Contain    ${err}    net::ERR
     ...    msg=Expected an explicit network error from the navigation attempt while offline
-    Set Offline    False
-    Go To    ${STORE_URL}collections/all
-    Get Element Count    xpath=//a[contains(@href,'/products/')]    >    0
-    [Teardown]    Set Offline    False
+    Go Online
+    Open Catalogue
+    Products Should Be Listed
+    [Teardown]    Go Online
 
 TC-01-006 Partial Content Load Failure (Design-Only)
     [Documentation]    TCS expects graceful handling when some assets fail to load. Not executed:
