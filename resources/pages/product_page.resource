@@ -28,14 +28,20 @@ Open Nonexistent Product Page
     Go To    ${STORE_URL}products/${handle}
 
 Product Page Should Be Complete
-    Get Element Count    h1    >    0
+    Get Element Count    h1:not(#logo)    >    0
     Get Text    body    contains    £
 
 Product Price Should Be Displayed
     Get Text    body    contains    £
 
 Product Title
-    ${name}=    Get Text    h1
+    [Documentation]    Returns the PRODUCT h1's text. The theme renders TWO h1 elements on the
+    ...    PDP: an EMPTY h1#logo (the site logo, first in the DOM) and the real product-title
+    ...    h1 — discovered by live verification 7 Aug 2026, when the unscoped first-h1 grab
+    ...    returned an empty string and downstream contains-oracles passed vacuously. The
+    ...    :not(#logo) filter targets the real title.
+    ${name}=    Get Text    h1:not(#logo)
+    Should Not Be Empty    ${name}    msg=Product title element rendered empty (h1:not(#logo)) — page incomplete or theme changed
     RETURN    ${name}
 
 Product Name Should Be Displayed
@@ -55,7 +61,28 @@ Active Add To Cart Should Be Present
     Get Element Count    ${ACTIVE_ADD_TO_CART}    >    0
 
 Add Current Product To Cart
+    [Documentation]    Clicks the active add control, then WAITS until the header cart badge
+    ...    ("My Cart (N)") INCREMENTS — the semantic proof the add actually landed. Root-caused
+    ...    by live verification 7 Aug 2026: the theme's add is a full form submission with a
+    ...    page reload; a caller that navigates away right after the click aborts the in-flight
+    ...    submission and the item silently never lands (earlier suites were unaffected only
+    ...    because their own post-add badge assertions forced the reload to complete first). A
+    ...    load-state wait is NOT sufficient (it can no-op against the pre-click page state);
+    ...    waiting on the badge delta both synchronizes correctly and turns any server-side
+    ...    swallowed submission into a loud, diagnosable failure after 10s.
+    ${before_text}=    Get Text    body
+    ${before}=    Evaluate    int(re.search(r'My Cart \\((\\d+)\\)', $before_text).group(1))    modules=re
     Click    ${ACTIVE_ADD_TO_CART}
+    Wait Until Keyword Succeeds    10s    500ms    Cart Badge Count Should Exceed    ${before}
+
+Cart Badge Count Should Exceed
+    [Documentation]    Private helper for Add Current Product To Cart's badge-delta wait: reads
+    ...    the current header badge count from the page text and asserts it exceeds the given
+    ...    pre-click value.
+    [Arguments]    ${before}
+    ${text}=    Get Text    body
+    ${now}=    Evaluate    int(re.search(r'My Cart \\((\\d+)\\)', $text).group(1))    modules=re
+    Should Be True    ${now} > ${before}    msg=Cart badge did not increment past ${before} — the add submission has not landed
 
 Sold Out State Should Be Indicated
     [Documentation]    A sold-out product must show a Sold Out indicator or offer no active
@@ -101,6 +128,11 @@ All Variant Dimensions Should Have Defaults
 Breadcrumb Link Count
     ${n}=    Get Element Count    ${BREADCRUMB_LINKS}
     RETURN    ${n}
+
+Click Breadcrumb Home Link
+    [Documentation]    Clicks the first (Home) link in the two-level breadcrumb trail
+    ...    (TB-PDP-003: Home — product name).
+    Click    ${BREADCRUMB_LINKS} >> nth=0
 
 Description Block Count
     ${n}=    Get Element Count    ${DESCRIPTION_BLOCKS}

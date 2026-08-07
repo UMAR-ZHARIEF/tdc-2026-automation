@@ -1,9 +1,11 @@
 *** Settings ***
 Documentation     TS-01 Store Access System — executable mirror of TCS cases TC-01-001..007.
-...               Source: "test case n test suite tdc - amirah.docx" (TCS, 2026-07-29), UC-01.
-...               4 cases automated; 3 carry a documented SKIP because they are not executable
-...               against a live, shared production store (see each case's reason). Expected
-...               results in the TCS are derived acceptance criteria (oracle = standard
+...               Authorities: 02 - Test Case Specification v2.1 and
+...               01 - Test Basis v1.0 (approved 2026-08-05), UC-01.
+...               3 cases automated. TC-01-003/004/006/007 were removed together with 02 v2.1's
+...               deletion of the non-functional annex (competition Don't #1); the removal is
+...               recorded in 02's change log and the ID gaps are intentional (no renumbering).
+...               Expected results in the TCS are derived acceptance criteria (oracle = standard
 ...               e-commerce behaviour); a mismatch found here is a finding, not a broken test.
 ...               Page Object Model: element locators live in resources/pages/ — this file
 ...               contains business-readable steps only.
@@ -27,40 +29,25 @@ ${DEEP_LINK_PRODUCT}    Grey jacket
 *** Test Cases ***
 TC-01-001 Load Storefront Homepage Via URL
     [Documentation]    Customer loads the storefront homepage via its URL; the page loads and
-    ...    displays the storefront home elements. Priority High / Positive.
-    [Tags]    priority-high    type-positive
+    ...    displays the storefront home elements. Also carries the core-layout render checks
+    ...    (catalogue navigation, search box) merged in from the excluded-non-functional
+    ...    TC-01-004. Priority High / Positive.
+    [Tags]    priority-high    type-positive    TC-01-001    TB-ACC-001    TB-ACC-002    TB-ACC-003
     Open Home
     Home Title Should Be Correct
     Cart Indicator Should Be Present
+    Catalogue Navigation Should Be Present
+    Search Box Should Be Present
     Products Should Be Listed
 
 TC-01-002 Bookmark Or Direct Product Link Loads Without Homepage
     [Documentation]    Access via a saved bookmark or shared direct link. A bookmark is a stored
     ...    direct URL, so this is executed as direct deep-link navigation in a fresh browser
     ...    context (no history/cookies from the previous case). Priority High / Positive.
-    [Tags]    priority-high    type-positive
+    [Tags]    priority-high    type-positive    TC-01-002    TB-ACC-001    TB-ACC-002    TB-ACC-003
     Open Fresh Context
     Open Product    ${DEEP_LINK_HANDLE}
     Product Name Should Be Displayed    ${DEEP_LINK_PRODUCT}
-
-TC-01-003 Layout Degradation On Older Browsers (Design-Only)
-    [Documentation]    TCS expects a graceful, degraded layout on legacy browsers. Not executed:
-    ...    no legacy browser is part of the approved environment (Brave/Chromium only), and
-    ...    "graceful degradation" has no objective automated oracle. Priority Medium / Negative.
-    [Tags]    priority-medium    type-negative    design-only
-    Skip    Not executable: legacy-browser environment is outside the approved test environment (Brave/Chromium only); no objective automated oracle for "graceful degradation".
-
-TC-01-004 Storefront Renders Fully On Supported Modern Browser
-    [Documentation]    TCS names Chrome/Safari/Edge as examples; the approved environment browser
-    ...    is Brave (modern Chromium engine). Verifies the storefront's core layout renders
-    ...    completely: cart indicator, catalogue navigation, search box, product grid.
-    ...    Priority High / Positive.
-    [Tags]    priority-high    type-positive
-    Open Home
-    Cart Indicator Should Be Present
-    Catalogue Navigation Should Be Present
-    Search Box Should Be Present
-    Products Should Be Listed
 
 TC-01-005 Network Disconnection Yields Clear Error And Recovery
     [Documentation]    With connectivity lost, attempting to load the store must surface an
@@ -68,7 +55,7 @@ TC-01-005 Network Disconnection Yields Clear Error And Recovery
     ...    once the connection returns. Executed with Playwright's client-side offline emulation
     ...    (Set Offline) — no request leaves this machine while offline, safe for the live store.
     ...    Priority High / Negative.
-    [Tags]    priority-high    type-negative
+    [Tags]    priority-high    type-negative    TC-01-005    TB-ACC-001    TB-ACC-002    TB-ACC-003
     Go Offline
     ${err}=    Run Keyword And Expect Error    *    Open Catalogue
     Should Contain    ${err}    net::ERR
@@ -77,17 +64,3 @@ TC-01-005 Network Disconnection Yields Clear Error And Recovery
     Open Catalogue
     Products Should Be Listed
     [Teardown]    Go Online
-
-TC-01-006 Partial Content Load Failure (Design-Only)
-    [Documentation]    TCS expects graceful handling when some assets fail to load. Not executed:
-    ...    the chosen stack exposes no per-request fault injection, and throttling a live shared
-    ...    store would cross into prohibited non-functional testing. Priority Medium / Negative.
-    [Tags]    priority-medium    type-negative    design-only
-    Skip    Not executable: requires per-request fault injection (not exposed by Browser library) and would amount to non-functional testing of a live shared store.
-
-TC-01-007 Backend Platform Outage Messaging (Design-Only)
-    [Documentation]    TCS expects a clean store-unavailable message when the e-commerce backend
-    ...    is down. Not executed: the Shopify backend cannot and must not be taken offline by
-    ...    testers on a live shared test object. Priority High / Negative.
-    [Tags]    priority-high    type-negative    design-only
-    Skip    Not executable: requires a backend outage; testers must not disrupt the live shared test object (competition conduct rules).

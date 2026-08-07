@@ -12,3 +12,9 @@ __pycache__/
 # OS cruft
 Thumbs.db
 Desktop.ini
+
+# Transient robot output folders (any variant)
+results_*/
+
+# Trusted persistent browser profile for suite runs - NEVER commit (cookies/session data)
+.robot-profile/
