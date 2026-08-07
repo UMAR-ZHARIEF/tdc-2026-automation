@@ -15,8 +15,11 @@ ${HEADLESS}       False
 # already-trusted, history-carrying profile when one exists at this path (populate it by
 # copying the trusted profile; NEVER commit it — .gitignore'd; refresh by re-copying).
 # Openly documented in the Part 2 report. Set to a nonexistent path to force the plain
-# fresh-browser behaviour.
-${ROBOT_PROFILE_DIR}    ${EXECDIR}${/}.robot-profile
+# fresh-browser behaviour. Anchored to this resource file's own location (${CURDIR} =
+# resources\) so the default resolves to automation\.robot-profile regardless of the
+# directory robot is launched from — the original ${EXECDIR} anchor silently fell back to
+# the plain fresh browser whenever robot ran from outside automation\ (7 Aug run evidence).
+${ROBOT_PROFILE_DIR}    ${CURDIR}${/}..${/}.robot-profile
 
 *** Keywords ***
 Open Store Session
