@@ -148,10 +148,18 @@ Checkout Should Be Reached
     Get Url    contains    /checkouts/
 
 Checkout Should Not Have Advanced To Confirmation
-    [Documentation]    Asserts the browser is still on checkout (URL family /checkouts/cn/...)
-    ...    rather than a post-payment confirmation page — the "no order was created" oracle used
-    ...    by every declined/rejected/failed payment case in this suite family.
-    Get Url    contains    /checkouts/
+    [Documentation]    Asserts no order was created: the page carries NONE of the confirmation
+    ...    markers. Used by every declined/rejected/failed payment case in this suite family.
+    ...
+    ...    THIS NO LONGER TESTS THE URL. It previously asserted `Get Url contains /checkouts/`,
+    ...    which is unconditionally true for any case that never reaches payment — and Shopify's
+    ...    one-page checkout keeps the /checkouts/cn/<token> prefix through the thank-you step,
+    ...    so the check could not catch a wrongly-approved payment either. It made TC-09-002 and
+    ...    TC-09-003 incapable of failing (12 Aug 2026). Absence of the confirmation markers is
+    ...    the thing actually worth asserting, and it holds regardless of URL shape.
+    ${text}=    Checkout Page Text
+    Should Not Match Regexp    ${text}    (?i)(thank you[,!\\s]|your order is confirmed|order number|confirmation number)
+    ...    msg=Checkout appears to have advanced to an order confirmation — an order may have been created when none was expected
 
 Fill Contact Email
     [Documentation]    Types the given address into the Contact section's e-mail field.
@@ -261,8 +269,12 @@ Checkout Page Should Contain
 Checkout Text Should Contain Normalised
     [Documentation]    Single whitespace-normalised containment check on the checkout page text.
     ...    Internal helper for `Checkout Page Should Contain` — call that instead, so the
-    ...    retry wrapper applies.
+    ...    retry wrapper applies. Guards against an EMPTY needle first, the same protection
+    ...    `Cart Should Contain` gained on 7 Aug 2026: "contains ''" passes against any page and
+    ...    silently voids the oracle whenever a runtime capture returns empty.
     [Arguments]    ${text}
+    Should Not Be Empty    ${text}
+    ...    msg=Checkout Page Should Contain called with an EMPTY expected text — the runtime capture that produced it failed; the oracle would be vacuous
     ${page}=    Get Text    body
     ${page_norm}=    Evaluate    " ".join($page.split())
     ${want_norm}=    Evaluate    " ".join($text.split())
@@ -387,24 +399,41 @@ Required Field Validation Should Be Shown
     ...    in the page text, OR the browser remaining on checkout (/checkouts/) rather than
     ...    advancing — union oracle, mirroring resources/pages/account_pages.resource's
     ...    "Empty Login Validation Should Be Shown" pattern for an un-verified validation surface.
+    ...
+    ...    THE ALWAYS-TRUE ARM HAS BEEN REMOVED. This previously accepted "the browser is still
+    ...    on /checkouts/" as evidence of validation. TC-09-002 never fills the card section, so
+    ...    payment cannot proceed and the URL can never leave /checkouts/ — the OR was
+    ...    unconditionally satisfied and the case could not fail whether the store validated or
+    ...    not (12 Aug 2026). The oracle now asserts the validation message itself, which is the
+    ...    actual recovered requirement; if the store genuinely shows nothing, that FAIL is a
+    ...    finding worth recording, exactly as the silent failed-login defect was.
+    Wait Until Keyword Succeeds    10s    1s    Required Field Message Should Be Present
+
+Required Field Message Should Be Present
+    [Documentation]    Single check for required-field validation wording. Internal helper for
+    ...    `Required Field Validation Should Be Shown` — call that instead.
     ${page_text}=    Checkout Page Text
-    ${message_hit}=    Run Keyword And Return Status    Should Match Regexp    ${page_text}
+    Should Match Regexp    ${page_text}
     ...    (?i)(required|can.?t be blank|fill (in|out)|this field|enter (your|a valid)|missing)
-    ${still_on_checkout}=    Run Keyword And Return Status    Get Url    contains    /checkouts/
-    Should Be True    ${message_hit} or ${still_on_checkout}
-    ...    msg=Missing-required-field submission was neither validated with a message nor safely refused (still on checkout)
+    ...    msg=Missing-required-field submission produced no validation message on the checkout page
 
 Email Format Validation Should Be Shown
-    [Documentation]    Asserts submitting checkout with a malformed e-mail is refused with
-    ...    validation evidence (TC-09-003; TB-VAL-003): an e-mail/format message in the page text,
-    ...    OR the browser remaining on checkout — union oracle (same rationale as
-    ...    `Required Field Validation Should Be Shown`).
+    [Documentation]    Asserts submitting checkout with a malformed e-mail is refused with an
+    ...    e-mail/format validation message (TC-09-003; TB-VAL-003).
+    ...
+    ...    THE ALWAYS-TRUE ARM HAS BEEN REMOVED for the same reason as
+    ...    `Required Field Validation Should Be Shown`: TC-09-003 never fills the card section, so
+    ...    "still on /checkouts/" could never be false and the case could not fail. The oracle now
+    ...    asserts the message itself.
+    Wait Until Keyword Succeeds    10s    1s    Email Format Message Should Be Present
+
+Email Format Message Should Be Present
+    [Documentation]    Single check for e-mail-format validation wording. Internal helper for
+    ...    `Email Format Validation Should Be Shown` — call that instead.
     ${page_text}=    Checkout Page Text
-    ${message_hit}=    Run Keyword And Return Status    Should Match Regexp    ${page_text}
+    Should Match Regexp    ${page_text}
     ...    (?i)(invalid email|email.{0,15}(invalid|not valid|format)|enter a valid email)
-    ${still_on_checkout}=    Run Keyword And Return Status    Get Url    contains    /checkouts/
-    Should Be True    ${message_hit} or ${still_on_checkout}
-    ...    msg=Invalid-email submission was neither validated with a message nor safely refused (still on checkout)
+    ...    msg=Invalid-email submission produced no e-mail validation message on the checkout page
 
 Payment Rejection Should Be Shown
     [Documentation]    Asserts a payment attempt with invalid/garbage card data is rejected: the
@@ -509,9 +538,17 @@ Confirmation Page Should Contain
     ...    given string (product name, totals, order-detail sections). Same underlying mechanic as
     ...    "Checkout Page Should Contain" — kept as a separately named keyword for call-site
     ...    honesty once payment has succeeded and the browser has moved past checkout onto the
-    ...    confirmation page.
+    ...    confirmation page. Guards against an EMPTY needle first (see `Cart Should Contain`,
+    ...    7 Aug 2026) and normalises whitespace, since the confirmation page renders its order
+    ...    details as tables whose label and value are separated by a newline rather than a space.
     [Arguments]    ${text}
-    Get Text    body    contains    ${text}
+    Should Not Be Empty    ${text}
+    ...    msg=Confirmation Page Should Contain called with an EMPTY expected text — the runtime capture that produced it failed; the oracle would be vacuous
+    ${page}=    Get Text    body
+    ${page_norm}=    Evaluate    " ".join($page.split())
+    ${want_norm}=    Evaluate    " ".join($text.split())
+    Should Contain    ${page_norm}    ${want_norm}
+    ...    msg=Confirmation page text does not contain "${want_norm}" (whitespace-normalised comparison)
 
 Confirmation Number Text
     [Documentation]    Returns the confirmation page's visible text for callers to log/assert the
