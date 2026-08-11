@@ -64,7 +64,14 @@ TC-16-003 Login With Non-Existing Account
     ...    the account exists or which field is wrong. The e-mail is generated random-ish at
     ...    run time so this case is guaranteed to target an unregistered account without
     ...    hardcoding one fixed fictitious address. Priority High / Negative.
-    [Tags]    priority-high    type-negative    TC-16-003    TB-AUTH-001    TB-AUTH-002    TB-AUTH-003    TB-AUTH-004    TB-AUTH-005    TB-AUTH-006    TB-AUTH-007
+    ...    LIVE RESULT 12 Aug 2026 — EXPECTED FAIL, defect harvested: after submitting
+    ...    credentials for a non-existent account the store shows NO feedback at all. Polled for
+    ...    15s: zero error-surface elements and no error wording anywhere in the page text; the
+    ...    browser simply remains on the Customer Login page. The session is correctly refused,
+    ...    but the customer is told nothing — the same "protection works, communication does
+    ...    not" shape as the empty-cart checkout finding (TC-08-004). This FAIL is the defect
+    ...    record, not test breakage.
+    [Tags]    priority-high    type-negative    known-defect-lead    TC-16-003    TB-AUTH-001    TB-AUTH-002    TB-AUTH-003    TB-AUTH-004    TB-AUTH-005    TB-AUTH-006    TB-AUTH-007
     Open Login Page
     ${email}=    Generate Fictitious Nonexistent Email
     Fill Login Credentials    ${email}    ${FICTITIOUS_PASSWORD}

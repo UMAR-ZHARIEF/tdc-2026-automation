@@ -42,6 +42,16 @@ Cart Badge Should Show
     [Arguments]    ${count}
     Get Text    body    contains    My Cart (${count})
 
+Current Cart Badge Count
+    [Documentation]    Returns the header cart badge's current count as an integer. Use this when
+    ...    a case needs to compare the cart against its OWN starting state rather than an absolute
+    ...    number — suites chain cases against a shared cart, so a hard-coded expectation like
+    ...    "1" silently depends on which cases ran first (TC-15-004 failed this way on
+    ...    12 Aug 2026: an earlier case had left one item, so the badge read 2, not 1).
+    ${text}=    Get Text    body
+    ${count}=    Evaluate    int(re.search(r'My Cart \\((\\d+)\\)', $text).group(1))    modules=re
+    RETURN    ${count}
+
 Cart Indicator Should Be Present
     Get Text    body    contains    My Cart (
 

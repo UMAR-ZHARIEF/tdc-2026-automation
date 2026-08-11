@@ -60,6 +60,17 @@ Login Error Should Be Shown
     ...    robust even if the surface locator proves wrong once live-verified). Realigned
     ...    TC-16-003 expected result (02 v2.1 §REWORDS): a generic error that does not reveal
     ...    whether the account exists or which field is wrong.
+    ...
+    ...    THE CHECK RETRIES. Submitting the login form is a full page reload, so asserting
+    ...    immediately after the click can read the PRE-reload page, which of course carries no
+    ...    error. Polling for up to 15s removes that ambiguity: a failure after the wait means
+    ...    the store genuinely gave the customer no feedback on a failed login, which is a
+    ...    finding worth recording rather than a timing artifact.
+    Wait Until Keyword Succeeds    15s    1s    Login Error Surface Or Text Should Be Present
+
+Login Error Surface Or Text Should Be Present
+    [Documentation]    Single union check for a login error. Internal helper for
+    ...    `Login Error Should Be Shown` — call that instead, so the retry wrapper applies.
     ${surface_hits}=    Get Element Count    ${LOGIN_ERROR_SURFACE}
     ${page_text}=    Get Text    body
     ${text_hit}=    Run Keyword And Return Status    Should Match Regexp    ${page_text}

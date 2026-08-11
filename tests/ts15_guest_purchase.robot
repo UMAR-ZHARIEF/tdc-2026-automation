@@ -111,10 +111,14 @@ TC-15-004 Guest Cart Persistence (Same-Context New Page)
     [Tags]    priority-high    type-positive    TC-15-004    TB-AUTH-004    TB-CHK-001    TB-CART-005
     Open Product    ${PRODUCT_HANDLE}
     Add Current Product To Cart
-    Cart Badge Should Show    1
+    ${count_before}=    Current Cart Badge Count
     Close Page
     New Page    ${STORE_URL}
-    Cart Badge Should Show    1
+    ${count_after}=    Current Cart Badge Count
+    Should Be Equal As Integers    ${count_after}    ${count_before}
+    ...    msg=Cart did not persist across closing and reopening a page in the same context: badge was ${count_before} before, ${count_after} after
+    Should Be True    ${count_after} > 0
+    ...    msg=Cart badge reads 0 after reopening the page — the cart did not persist at all
 
 TC-15-005 Offer Account Creation After Purchase
     [Documentation]    Precondition: guest order completed. Steps: 1. Complete a test purchase.
