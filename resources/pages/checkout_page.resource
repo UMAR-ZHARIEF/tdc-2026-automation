@@ -69,6 +69,19 @@ ${PAY_BUTTON}                        css=button#checkout-pay-button    # capture
 ${BILLING_TOGGLE}                    css=input#billingAddressCheckbox    # captured live 2026-08-07
 
 # --- Card fields: cross-origin PCI iframes, random id suffix per load, selected by prefix + pierced ---
+# ⚠️ OPEN ISSUE (TS-12 TC-12-002 / TC-12-006) — recorded 2026-08-12, NOT yet resolved.
+# Direct inspection established that EACH card iframe contains EIGHT inputs, not one: the real
+# field plus SEVEN honeypot decoys (data-honeypot-field, aria-hidden="true", tabindex="-1",
+# class="visually-hidden"). In the NUMBER frame the real "#number" happens to be first, so the
+# bare "input" selector below picks correctly there; whether that holds in the expiry,
+# verification_value and name frames is UNCONFIRMED — the ordering probe and the manual card
+# fill were both blocked as payment-credential interactions.
+# An id-qualified variant (input#number / input#expiry / input#verification_value / input#name)
+# WAS TRIED on 2026-08-12 and made things worse: the locator resolved to the correct element but
+# Fill Text then timed out at 15s on the number frame, taking TC-12-003 down with it (0 passed
+# instead of 1). Reverted to the working selector rather than leave the suite degraded.
+# Symptom still unexplained: fields report filled, Pay now clicks, no order is created, and
+# neither the card-2 decline alert nor the card-3 Request ID ever appears.
 ${CARD_NUMBER_FRAME_INPUT}                 [id^="card-fields-number"] >>> input    # captured live 2026-08-07
 ${CARD_EXPIRY_FRAME_INPUT}                 [id^="card-fields-expiry"] >>> input    # captured live 2026-08-07
 ${CARD_SECURITY_CODE_FRAME_INPUT}          [id^="card-fields-verification_value"] >>> input    # captured live 2026-08-07
