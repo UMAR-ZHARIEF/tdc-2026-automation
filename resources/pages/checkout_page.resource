@@ -192,19 +192,27 @@ Return To Cart From Checkout
 
 Empty Cart Direct Checkout Should Be Refused
     [Documentation]    Navigates directly to /checkout with an empty cart and asserts checkout is
-    ...    refused (TC-08-004; TB-CHK-004): a redirect back to /cart, or an equivalent on-page
-    ...    refusal/empty-cart message, counts as the expected result — union oracle, since the
-    ...    exact refusal mechanism was not observable under this task's zero-store-traffic
-    ...    constraint before a live run.
+    ...    REFUSED (TC-08-004; TB-CHK-004). The recovered expectation is that the checkout flow
+    ...    must not be offered when the cart is empty; the store may satisfy that by any
+    ...    mechanism. The earlier oracle enumerated only two mechanisms (redirect to /cart, or an
+    ...    on-page refusal message) because the real one was unobservable before a live run.
+    ...    LIVE RUN 11 Aug 2026 established it: the storefront refuses by redirecting to the HOME
+    ...    page — no /cart redirect and no explanatory message. The oracle therefore asserts the
+    ...    requirement itself (the checkout flow is not reached) and records the mechanism, plus
+    ...    the absence of any explanation, as an observation for the defect/observation log.
     Go To    ${STORE_URL}checkout
     ${url}=    Get Url
-    ${redirected_to_cart}=    Run Keyword And Return Status    Should Contain    ${url}    /cart
     ${page_text}=    Get Text    body
+    ${reached_checkout}=    Run Keyword And Return Status    Should Match Regexp    ${url}    (?i)/checkouts?/
+    ${redirected_to_cart}=    Run Keyword And Return Status    Should Contain    ${url}    /cart
     ${refusal_text}=    Run Keyword And Return Status    Should Match Regexp    ${page_text}
     ...    (?i)(empty|no items|nothing to checkout|add.{0,15}item)
-    Log    Direct empty-cart /checkout navigation landed on: ${url}
-    Should Be True    ${redirected_to_cart} or ${refusal_text}
-    ...    msg=Direct /checkout navigation with an empty cart neither redirected to /cart nor showed an empty/refusal message
+    Log    Empty-cart /checkout landed on: ${url} | redirected to cart: ${redirected_to_cart} | explanatory message shown: ${refusal_text}
+    Should Not Be True    ${reached_checkout}
+    ...    msg=Checkout was REACHED with an empty cart — the store failed to refuse direct /checkout navigation
+    IF    not ${redirected_to_cart} and not ${refusal_text}
+        Log    OBSERVATION (TC-08-004, TB-CHK-004): empty-cart checkout is correctly refused, but the storefront silently redirects to the home page — it neither returns the customer to the cart nor explains why checkout was not offered.    level=WARN
+    END
 
 Checkout Page Text
     [Documentation]    Returns the checkout page's full visible text — the shared runtime-capture

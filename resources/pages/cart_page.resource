@@ -40,9 +40,13 @@ Cart Should Have Lines
 
 Line Quantity Should Be
     [Documentation]    Asserts the quantity field of the first visible cart line (strict mode
-    ...    is off; first match).
+    ...    is off; first match). The expected value is coerced to a string first: an HTML
+    ...    attribute is always text, so an integer argument (e.g. one captured at runtime by
+    ...    Current Line Quantity) would otherwise fail a typed comparison as
+    ...    "'1' (str) should be '1' (int)" even though the quantity is correct.
     [Arguments]    ${quantity}
-    Get Attribute    ${QTY_INPUT}    value    ==    ${quantity}
+    ${expected}=    Convert To String    ${quantity}
+    Get Attribute    ${QTY_INPUT}    value    ==    ${expected}
 
 Clear Cart
     [Documentation]    Empties the cart via GET /cart/clear (store hygiene in teardowns);

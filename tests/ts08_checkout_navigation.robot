@@ -42,6 +42,21 @@ Test Tags         TS-08    UC-08    guest
 ${PRODUCT_HANDLE}    grey-jacket
 
 *** Test Cases ***
+TC-08-004 Block Checkout Access When The Cart Is Empty
+    [Documentation]    Precondition: cart currently has zero items. Steps (02 v2.1 §REWORDS):
+    ...    1. With an empty cart, navigate to /checkout directly. 2. Observe whether checkout is
+    ...    refused or redirected. Expected: checkout is not offered for an empty cart (refusal,
+    ...    redirect, or equivalent — e.g. lands back on /cart). SAFE, no data needed.
+    ...    ORDERING: runs FIRST, immediately after the Suite Setup /cart/clear, because that is
+    ...    the only point in the run where the cart is genuinely empty. It previously ran last
+    ...    inside Open Fresh Context, but Playwright cannot open a second context while a
+    ...    persistent context is active, so the fallback reused the SAME context — the cart still
+    ...    held the shared line and the case failed on a precondition that was never established
+    ...    (live run 11 Aug 2026). Running first needs no extra /cart/clear hit, keeping the
+    ...    two-per-run budget. Priority High / Negative.
+    [Tags]    priority-high    type-negative    TC-08-004    TB-CHK-001    TB-CHK-002    TB-CHK-003    TB-CHK-004
+    Empty Cart Direct Checkout Should Be Refused
+
 TC-08-001 Proceed To Checkout With Valid Cart And Verify Data Transfer
     [Documentation]    Precondition: customer has at least one item in the cart and is on the cart
     ...    page. Steps: 1. Click "Proceed to Checkout". 2. Verify the checkout page loads with
@@ -125,19 +140,6 @@ TC-08-005 Handle Cart-Data Transfer Into Checkout
     Fill Delivery Address
     Shipping Method Should Be Displayed
     Checkout Page Should Contain    £75.00
-
-TC-08-004 Block Checkout Access When The Cart Is Empty
-    [Documentation]    Precondition: cart currently has zero items. Steps (02 v2.1 §REWORDS):
-    ...    1. With an empty cart, navigate to /checkout directly. 2. Observe whether checkout is
-    ...    refused or redirected. Expected: checkout is not offered for an empty cart (refusal,
-    ...    redirect, or equivalent — e.g. lands back on /cart). SAFE, no data needed. Runs in an
-    ...    isolated fresh browser context (Open Fresh Context) deliberately scheduled after every
-    ...    other executing case in this file: it needs a genuinely EMPTY cart, incompatible with
-    ...    the shared checkout state TC-08-001 built, and nothing later in the file needs that
-    ...    shared state back. Priority High / Negative.
-    [Tags]    priority-high    type-negative    TC-08-004    TB-CHK-001    TB-CHK-002    TB-CHK-003    TB-CHK-004
-    Open Fresh Context
-    Empty Cart Direct Checkout Should Be Refused
 
 TC-08-006 Handle Session Timeout Or Interruption During Transition To Checkout (Design-Only)
     [Documentation]    Scenario (02 v2.1 A11 wording): handle session timeout / interruption
