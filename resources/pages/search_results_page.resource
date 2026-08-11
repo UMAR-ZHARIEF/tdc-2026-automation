@@ -62,8 +62,12 @@ No Search Performed Message Should Be Shown
 
 Zero Results Message Should Be Shown
     [Documentation]    Asserts a nonsense query yields the functional zero-results state
-    ...    ("0 results found for ..." class text — TB-SRCH-004; TC-17-003; verified 5 Aug 2026
-    ...    per 02 v2.1 §FRESH CASES).
+    ...    (TB-SRCH-004; TC-17-003). The recovered expectation is that the store tells the
+    ...    customer plainly that nothing matched — the exact wording is the store's choice.
+    ...    LIVE RUN 12 Aug 2026 established the actual wording: "No results found for zzzqxv".
+    ...    The earlier pattern demanded a literal "0 results found", which the store has never
+    ...    used, so a correct zero-results page was reported as a failure. The oracle now
+    ...    accepts either phrasing of the same message.
     ${page_text}=    Get Text    body
-    Should Match Regexp    ${page_text}    (?i)0\s+results?\s+found
-    ...    msg=Expected a "0 results found" style message for a no-match search query
+    Should Match Regexp    ${page_text}    (?i)(0|no)\\s+results?\\s+found
+    ...    msg=Expected a zero-results message ("no results found" or "0 results found") for a no-match search query

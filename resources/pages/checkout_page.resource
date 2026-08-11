@@ -227,8 +227,34 @@ Checkout Page Should Contain
     ...    family (mirrors resources/pages/cart_page.resource's "Cart Should Contain"). Use for
     ...    product-name checks too: the order-summary line doubles the title ("Grey
     ...    jacketGrey jacket"), so "contains" is deliberate, never equality.
+    ...
+    ...    WHITESPACE IS NORMALISED ON BOTH SIDES before comparing. The Cost summary is a
+    ...    two-column table (Item | Value), so its rendered text separates label from amount
+    ...    with a NEWLINE, not a space: "Shipping\\n£20.00", "Total\\nGBP\\n£75.00". A raw
+    ...    "contains" against the literal "Shipping £20.00" therefore fails even though the
+    ...    page is entirely correct — this produced five false failures across TS-09 and TS-10
+    ...    on 12 Aug 2026. Collapsing whitespace runs to single spaces makes the oracle
+    ...    tolerant of the table layout without weakening what it actually checks.
+    ...
+    ...    THE COMPARISON RETRIES. Browser's own `Get Text ... contains` retries for the
+    ...    configured assertion timeout; a one-shot read plus Should Contain does not, and the
+    ...    checkout recalculates its Cost summary ASYNCHRONOUSLY after the delivery address is
+    ...    entered. Dropping the retry made TS-11 read the summary before shipping had been
+    ...    computed (Total showed £55.00 with a blank Shipping row). Wait Until Keyword Succeeds
+    ...    restores the original timing tolerance.
     [Arguments]    ${text}
-    Get Text    body    contains    ${text}
+    Wait Until Keyword Succeeds    15s    1s    Checkout Text Should Contain Normalised    ${text}
+
+Checkout Text Should Contain Normalised
+    [Documentation]    Single whitespace-normalised containment check on the checkout page text.
+    ...    Internal helper for `Checkout Page Should Contain` — call that instead, so the
+    ...    retry wrapper applies.
+    [Arguments]    ${text}
+    ${page}=    Get Text    body
+    ${page_norm}=    Evaluate    " ".join($page.split())
+    ${want_norm}=    Evaluate    " ".join($text.split())
+    Should Contain    ${page_norm}    ${want_norm}
+    ...    msg=Checkout page text does not contain "${want_norm}" (whitespace-normalised comparison)
 
 Pre Address Shipping Message Should Be Shown
     [Documentation]    Asserts the Shipping method section shows its pre-address prompt (captured
@@ -284,6 +310,25 @@ Discount Error Surface Text
     ...    no stable discount-error container locator was captured (2026-08-07).
     ${text}=    Checkout Page Text
     RETURN    ${text}
+
+Discount Rejection Should Be Shown
+    [Documentation]    Waits for the checkout to surface a rejection message after an invalid
+    ...    discount code, then returns the page text for evidence logging. The code is applied
+    ...    asynchronously, so a single immediate read can miss a message that is on its way —
+    ...    this polls for up to 15s before concluding. If no rejection wording has appeared by
+    ...    then, the failure is a genuine finding (the store accepted an invalid code without
+    ...    telling the customer), not a timing artifact.
+    Wait Until Keyword Succeeds    15s    1s    Discount Rejection Wording Should Be Present
+    ${text}=    Checkout Page Text
+    RETURN    ${text}
+
+Discount Rejection Wording Should Be Present
+    [Documentation]    Single check for any rejection wording in the checkout page text.
+    ...    Internal helper for `Discount Rejection Should Be Shown` — call that instead.
+    ${text}=    Checkout Page Text
+    Should Match Regexp    ${text}
+    ...    (?i)(invalid|not found|expired|does.?n.?t (apply|exist)|error|couldn.?t be (applied|found)|isn.?t valid|not valid|unable to apply|enter a valid)
+    ...    msg=No discount-rejection wording present in the checkout page text
 
 Field Error Text Near
     [Documentation]    Best-effort field-level validation-error reader: returns text from the
@@ -397,9 +442,32 @@ Payment Alert Text
     [Documentation]    Returns the checkout page's visible text for callers to assert/log a
     ...    payment alert (for example the card-2 decline message, or the card-3 gateway-failure
     ...    alert plus Request ID). Text-based oracle — no stable alert-container locator was
-    ...    captured (2026-08-07).
+    ...    captured (2026-08-07). NOTE: this is an immediate one-shot read. For asserting that a
+    ...    payment alert APPEARED, use `Payment Alert Should Contain`, which waits.
     ${text}=    Checkout Page Text
     RETURN    ${text}
+
+Payment Alert Should Contain
+    [Documentation]    Waits for the given wording to appear in the checkout page text after a
+    ...    payment attempt, then returns the full text for evidence logging. Submitting a card
+    ...    is a gateway round-trip taking seconds, so reading the page immediately after
+    ...    Click Pay Now can precede the alert entirely — that produced two false failures in
+    ...    TS-12 on 12 Aug 2026 even though the card details were filled and Pay now was clicked
+    ...    successfully. Polls for up to 20s; a failure after that is a genuine finding.
+    [Arguments]    ${expected}
+    Wait Until Keyword Succeeds    20s    1s    Payment Alert Wording Should Be Present    ${expected}
+    ${text}=    Checkout Page Text
+    RETURN    ${text}
+
+Payment Alert Wording Should Be Present
+    [Documentation]    Single whitespace-normalised check for payment-alert wording.
+    ...    Internal helper for `Payment Alert Should Contain` — call that instead.
+    [Arguments]    ${expected}
+    ${text}=    Checkout Page Text
+    ${text_norm}=    Evaluate    " ".join($text.split())
+    ${want_norm}=    Evaluate    " ".join($expected.split())
+    Should Contain    ${text_norm}    ${want_norm}
+    ...    msg=Payment alert wording "${want_norm}" not present in the checkout page text
 
 Checkout Problem Banner Present
     [Documentation]    Returns True when the recurring transient banner "There was a problem with

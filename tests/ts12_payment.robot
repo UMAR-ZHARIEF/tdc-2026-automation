@@ -78,10 +78,8 @@ TC-12-002 Payment Declined
     [Tags]    priority-critical    type-negative    TC-12-002    TB-PAY-001    TB-PAY-002    TB-PAY-003    TB-PAY-004    TB-PAY-005    TB-PAY-006
     Enter Card Details    2    12/30    123
     Click Pay Now
-    ${alert_text}=    Payment Alert Text
+    ${alert_text}=    Payment Alert Should Contain    ${PAYMENT_DECLINED_ALERT_TEXT}
     Log    Post-decline page text (observation evidence — card fields expected to have cleared afterward, verified 5 Aug 2026): ${alert_text}
-    Should Contain    ${alert_text}    ${PAYMENT_DECLINED_ALERT_TEXT}
-    ...    msg=Card-2 decline alert text not found on checkout after the payment attempt
     Checkout Should Not Have Advanced To Confirmation
 
 TC-12-006 Payment Gateway Timeout
@@ -97,10 +95,8 @@ TC-12-006 Payment Gateway Timeout
     [Tags]    priority-critical    type-negative    TC-12-006    TB-PAY-001    TB-PAY-002    TB-PAY-003    TB-PAY-004    TB-PAY-005    TB-PAY-006
     Enter Card Details    3    12/30    123
     Click Pay Now
-    ${alert_text}=    Payment Alert Text
+    ${alert_text}=    Payment Alert Should Contain    Request ID
     Log    Post-gateway-failure page text (observation evidence): ${alert_text}
-    Should Contain    ${alert_text}    Request ID
-    ...    msg=No "Request ID" text found after the card-3 gateway-failure attempt
     ${banner_present}=    Checkout Problem Banner Present
     Should Be True    ${banner_present}
     ...    msg=Checkout-problem banner ("There was a problem with our checkout") was not shown after the card-3 gateway-failure attempt

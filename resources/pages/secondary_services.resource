@@ -13,13 +13,23 @@ Resource          layout.resource
 
 *** Keywords ***
 Current Page Fingerprint
-    [Documentation]    Returns a "URL|visible-element-count" runtime snapshot — a lightweight
-    ...    proxy for "did anything meaningfully change" (navigation OR new visible content/
-    ...    dialog), used to detect a response from controls whose behaviour is otherwise
+    [Documentation]    Returns a "URL-without-fragment|visible-element-count" runtime snapshot —
+    ...    a lightweight proxy for "did anything meaningfully change" (navigation OR new visible
+    ...    content/dialog), used to detect a response from controls whose behaviour is otherwise
     ...    undocumented.
+    ...
+    ...    THE URL FRAGMENT IS DELIBERATELY EXCLUDED. The inert Sauce-app controls are anchors
+    ...    (href="#sauce-show-wish-list", href="#sauce-show-refer-friend"), so activating one
+    ...    appends a fragment to the URL while changing nothing else whatsoever. Including the
+    ...    fragment made this oracle report that dead control as a meaningful response: on
+    ...    12 Aug 2026 TC-14-001, TC-14-002 and TC-14-004 all PASSED with an identical visible-
+    ...    element count of 95 before and after, differing only by "#sauce-show-wish-list".
+    ...    Those were vacuous passes that certified a known defect as working. A fragment-only
+    ...    change is navigation in name only and must not count as a response.
     ${url}=    Get Url
+    ${base_url}=    Evaluate    $url.split("#")[0]
     ${count}=    Get Element Count    css=body *:visible
-    ${fingerprint}=    Set Variable    ${url}|${count}
+    ${fingerprint}=    Set Variable    ${base_url}|${count}
     RETURN    ${fingerprint}
 
 Page Response Should Have Changed

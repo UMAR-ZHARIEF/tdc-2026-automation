@@ -50,10 +50,8 @@ TC-11-003 Apply Invalid Coupon
     [Tags]    priority-high    type-negative    TC-11-003    TB-DISC-001    TB-DISC-002    TB-DISC-003    TB-DISC-004
     Checkout Page Should Contain    £75.00
     Apply Discount Code    ${INVALID_DISCOUNT_CODE}
-    ${error_text}=    Discount Error Surface Text
+    ${error_text}=    Discount Rejection Should Be Shown
     Log    Discount-rejection surface text after an invalid code (evidence capture): ${error_text}
-    Should Match Regexp    ${error_text}    (?i)(invalid|not found|expired|does.?n.?t (apply|exist)|error|couldn.?t be (applied|found))
-    ...    msg=No discount-rejection message found in the checkout page text after applying an invalid code
     Checkout Page Should Contain    £75.00
 
 TC-11-005 Skip Coupon / Proceed Without A Discount Code
