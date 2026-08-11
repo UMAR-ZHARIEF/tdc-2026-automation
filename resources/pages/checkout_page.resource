@@ -69,23 +69,29 @@ ${PAY_BUTTON}                        css=button#checkout-pay-button    # capture
 ${BILLING_TOGGLE}                    css=input#billingAddressCheckbox    # captured live 2026-08-07
 
 # --- Card fields: cross-origin PCI iframes, random id suffix per load, selected by prefix + pierced ---
-# ⚠️ OPEN ISSUE (TS-12 TC-12-002 / TC-12-006) — recorded 2026-08-12, NOT yet resolved.
-# Direct inspection established that EACH card iframe contains EIGHT inputs, not one: the real
-# field plus SEVEN honeypot decoys (data-honeypot-field, aria-hidden="true", tabindex="-1",
-# class="visually-hidden"). In the NUMBER frame the real "#number" happens to be first, so the
-# bare "input" selector below picks correctly there; whether that holds in the expiry,
-# verification_value and name frames is UNCONFIRMED — the ordering probe and the manual card
-# fill were both blocked as payment-credential interactions.
-# An id-qualified variant (input#number / input#expiry / input#verification_value / input#name)
-# WAS TRIED on 2026-08-12 and made things worse: the locator resolved to the correct element but
-# Fill Text then timed out at 15s on the number frame, taking TC-12-003 down with it (0 passed
-# instead of 1). Reverted to the working selector rather than leave the suite degraded.
-# Symptom still unexplained: fields report filled, Pay now clicks, no order is created, and
-# neither the card-2 decline alert nor the card-3 Request ID ever appears.
-${CARD_NUMBER_FRAME_INPUT}                 [id^="card-fields-number"] >>> input    # captured live 2026-08-07
-${CARD_EXPIRY_FRAME_INPUT}                 [id^="card-fields-expiry"] >>> input    # captured live 2026-08-07
-${CARD_SECURITY_CODE_FRAME_INPUT}          [id^="card-fields-verification_value"] >>> input    # captured live 2026-08-07
-${CARD_NAME_FRAME_INPUT}                   [id^="card-fields-name"] >>> input    # captured live 2026-08-07
+# ⚠️ OPEN FINDING (TS-12 TC-12-001/002/005/006) — 2026-08-12, root cause NOT proven.
+# Each card iframe holds EIGHT inputs: the real field plus SEVEN honeypot decoys
+# (data-honeypot-field, aria-hidden="true", tabindex="-1", class="visually-hidden"). The
+# selectors below use :visible, which targets the one real field independently of DOM order.
+#
+# THE PAYMENT POST NEVER COMPLETES FROM THE AUTOMATED BROWSER. Fields fill, Pay now clicks,
+# and then nothing: no decline alert for card 2, no Request ID for card 3, and — decisively —
+# card 1 (the APPROVED test card) creates NO ORDER when run with -v ALLOW_ORDERS:True. TC-12-003
+# passes only because garbage card data is rejected client-side, needing no submission at all.
+# Tried and ruled out: longer waits (20s), id-qualified selectors, :visible selectors, and real
+# keystrokes via Type Text with a per-character delay. guard_check.py reports clean, because
+# there is no challenge page and no cart-badge failure to detect.
+#
+# LEADING HYPOTHESIS: the store's graduated, fingerprint-keyed bot mitigation silently DROPS the
+# payment POST, exactly as it was proven to drop cart-mutation POSTs on 7 Aug 2026 — pages served
+# normally, form accepted, request discarded, no error surfaced. Consistent with the fact that the
+# only order this project has ever placed (#1YRC8ZIPW, 5 Aug) was placed through the human-profiled
+# MCP browser; the robot has never successfully placed one. If correct, this is an ENVIRONMENTAL
+# constraint on the test object, not a suite defect, and belongs in the report as such.
+${CARD_NUMBER_FRAME_INPUT}                 [id^="card-fields-number"] >>> input:visible
+${CARD_EXPIRY_FRAME_INPUT}                 [id^="card-fields-expiry"] >>> input:visible
+${CARD_SECURITY_CODE_FRAME_INPUT}          [id^="card-fields-verification_value"] >>> input:visible
+${CARD_NAME_FRAME_INPUT}                   [id^="card-fields-name"] >>> input:visible
 
 # --- Return-to-cart: the modern one-page checkout header may not carry a Cart link (unlike the
 # classic /cart chrome) — this is the ONLY navigation-chrome PROVISIONAL locator in this file.
