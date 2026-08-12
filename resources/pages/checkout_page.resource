@@ -116,7 +116,17 @@ ${PAYMENT_DECLINED_ALERT_TEXT}       There was an issue processing your payment.
 ${FICTITIOUS_FIRST_NAME}             Test
 ${FICTITIOUS_LAST_NAME}              Tester
 ${FICTITIOUS_FULL_NAME}              Test Tester
-${FICTITIOUS_EMAIL}                  tdc.checkout.fictitious@example-tdc-invalid.test
+# ⚠️ MUST USE A RESOLVABLE DOMAIN. Shopify's checkout validates the e-mail domain and
+# refuses to submit with "This specified domain cannot be resolved." The previous value
+# used the .test TLD, which by definition never resolves — so the payment form never
+# submitted, no gateway alert could ever appear, and card 1 created no order under
+# ALLOW_ORDERS. That single validation line sat in the checkout body text all along,
+# above the Delivery section, unnoticed because every payment oracle searched only for
+# payment wording (found 12 Aug 2026). example.com is IANA-reserved for documentation:
+# obviously fictitious, permanently resolvable, and it accepts no mail — so nothing is
+# ever delivered to a real person. The team project inbox stays reserved for the cases
+# that genuinely need to READ a confirmation e-mail.
+${FICTITIOUS_EMAIL}                  tdc.checkout.fictitious@example.com
 ${FICTITIOUS_ADDRESS1}               1 Test Street
 ${FICTITIOUS_POSTAL_CODE}            40000
 ${FICTITIOUS_CITY}                   Shah Alam
