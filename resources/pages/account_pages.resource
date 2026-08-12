@@ -15,17 +15,21 @@ Library           Browser
 Resource          ../common.resource
 
 *** Variables ***
-${LOGIN_EMAIL_INPUT}            css=input[name="customer[email]"]:visible    # PROVISIONAL — live-verify before commit
-${LOGIN_PASSWORD_INPUT}         css=input[name="customer[password]"]:visible    # PROVISIONAL — live-verify before commit
-${LOGIN_SUBMIT}                 xpath=//input[@type='submit' and (contains(@value,'Sign In') or contains(@value,'Sign in'))] | //button[contains(normalize-space(),'Sign In') or contains(normalize-space(),'Sign in')]    # PROVISIONAL — live-verify before commit
-${LOGIN_ERROR_SURFACE}          css=#customer_login .errors, #login_form .errors, .form__message, [class*="error"]:visible    # PROVISIONAL — live-verify before commit; exact class/id unconfirmed, used only as one arm of a union oracle
-${REGISTER_FIRST_NAME_INPUT}    css=input[name="customer[first_name]"]:visible    # PROVISIONAL — live-verify before commit
-${REGISTER_LAST_NAME_INPUT}     css=input[name="customer[last_name]"]:visible    # PROVISIONAL — live-verify before commit
-${REGISTER_EMAIL_INPUT}         css=input[name="customer[email]"]:visible    # PROVISIONAL — live-verify before commit
-${REGISTER_PASSWORD_INPUT}      css=input[name="customer[password]"]:visible    # PROVISIONAL — live-verify before commit
-${REGISTER_SUBMIT}              xpath=//input[@type='submit' and contains(@value,'Create')] | //button[contains(normalize-space(),'Create')]    # PROVISIONAL — live-verify before commit
-${REGISTER_ERROR_SURFACE}       css=#create_customer .errors, .form__message, [class*="error"]:visible    # PROVISIONAL — live-verify before commit; exact class/id unconfirmed, used only as one arm of a union oracle
-${ACCOUNT_LOGGED_IN_MARK}       css=a[href*="/account/logout"]:visible    # PROVISIONAL — live-verify before commit; presence is taken as evidence of an active session
+${LOGIN_EMAIL_INPUT}            css=input[name="customer[email]"]:visible    # LIVE-VERIFIED (TC-16-003/006 executed runs)
+${LOGIN_PASSWORD_INPUT}         css=input[name="customer[password]"]:visible    # LIVE-VERIFIED (TC-16-003/006 executed runs)
+${LOGIN_SUBMIT}                 xpath=//input[@type='submit' and (contains(@value,'Sign In') or contains(@value,'Sign in'))] | //button[contains(normalize-space(),'Sign In') or contains(normalize-space(),'Sign in')]    # LIVE-VERIFIED (TC-16-003/006 executed runs)
+${LOGIN_ERROR_SURFACE}          css=#customer_login .errors, #login_form .errors, .form__message, [class*="error"]:visible    # PROVISIONAL — exact class/id unconfirmed, used only as one arm of a union oracle
+${REGISTER_FIRST_NAME_INPUT}    css=input[name="customer[first_name]"]:visible    # LIVE-VERIFIED 12 Aug 2026 (one-time account registration used these exact names)
+${REGISTER_LAST_NAME_INPUT}     css=input[name="customer[last_name]"]:visible    # LIVE-VERIFIED 12 Aug 2026
+${REGISTER_EMAIL_INPUT}         css=input[name="customer[email]"]:visible    # LIVE-VERIFIED 12 Aug 2026
+${REGISTER_PASSWORD_INPUT}      css=input[name="customer[password]"]:visible    # LIVE-VERIFIED 12 Aug 2026
+${REGISTER_SUBMIT}              xpath=//input[@type='submit' and contains(@value,'Create')] | //button[contains(normalize-space(),'Create')]    # LIVE-VERIFIED 12 Aug 2026 (button "Create")
+${REGISTER_ERROR_SURFACE}       css=#create_customer .errors, .form__message, [class*="error"]:visible    # PROVISIONAL — exact class/id unconfirmed, used only as one arm of a union oracle
+${ACCOUNT_LOGGED_IN_MARK}       css=a[href*="/account/logout"]:visible    # LIVE-VERIFIED 12 Aug 2026 (header "Log Out" link while logged in); presence is the active-session marker
+${GUEST_LOGIN_LINK}             css=a[href*="/account/login"]:visible    # LIVE-VERIFIED 12 Aug 2026 (guest header "Log In" link)
+${FORGOT_PASSWORD_LINK}         xpath=//a[contains(translate(normalize-space(),'FORGOT','forgot'),'forgot') or contains(@href,'recover')]    # PROVISIONAL — classic themes use a "Forgot your password?" link that toggles or navigates to the recover form
+${RECOVERY_EMAIL_INPUT}         css=form[action*="recover"] input[type="email"]:visible, form[action*="recover"] input[name="email"]:visible    # PROVISIONAL — classic recover form
+${RECOVERY_SUBMIT}              css=form[action*="recover"] input[type="submit"]:visible, form[action*="recover"] button[type="submit"]:visible    # PROVISIONAL — classic recover form
 
 *** Keywords ***
 Open Login Page
@@ -160,3 +164,82 @@ Native Validation Message For
         RETURN    ${EMPTY}
     END
     RETURN    ${value}
+
+Log In With
+    [Documentation]    Full login flow with the given credentials: open the login page, fill,
+    ...    submit. Added 12 Aug 2026 with the registered test account (TC-16-001/009).
+    [Arguments]    ${email}    ${password}
+    Open Login Page
+    Fill Login Credentials    ${email}    ${password}
+    Submit Login
+
+Logged In State Should Be Shown
+    [Documentation]    Asserts an active session: the header's Log Out link is present
+    ...    (live-verified marker, 12 Aug 2026). Login submission is a full page reload, so this
+    ...    relies on the session-wide retrying assertions to absorb the reload timing.
+    Get Element Count    ${ACCOUNT_LOGGED_IN_MARK}    >    0
+    ...    message=No logged-in marker (Log Out link) appeared after login — session not established
+
+Guest State Should Be Shown
+    [Documentation]    Asserts the guest header state: no Log Out link, and the Log In link is
+    ...    back (both markers live-verified 12 Aug 2026).
+    Get Element Count    ${ACCOUNT_LOGGED_IN_MARK}    ==    0
+    Get Element Count    ${GUEST_LOGIN_LINK}    >    0
+    ...    message=Guest header did not return after logout — Log In link absent
+
+Log Out Via Header
+    [Documentation]    Ends the session the way a customer does: activates the header's Log Out
+    ...    control (a plain GET to /account/logout — observed live 12 Aug 2026 to land back on
+    ...    the storefront as guest).
+    Click    ${ACCOUNT_LOGGED_IN_MARK}
+
+Ensure Logged Out
+    [Documentation]    Best-effort teardown guard: if a session is active, end it, so every case
+    ...    leaves the browser in guest state regardless of where it failed. Never fails itself.
+    ${status}    ${n}=    Run Keyword And Ignore Error    Get Element Count    ${ACCOUNT_LOGGED_IN_MARK}
+    IF    '${status}' == 'PASS' and ${n} > 0
+        Run Keyword And Ignore Error    Click    ${ACCOUNT_LOGGED_IN_MARK}
+    END
+
+Account Area Should Require Login
+    [Documentation]    Asserts access rights returned to guest: direct navigation to /account is
+    ...    answered with the login page, not the account area (TC-16-009 step 3).
+    Go To    ${STORE_URL}account
+    Get Url    contains    /account/login
+
+Open Password Recovery
+    [Documentation]    Activates "Forgot your password?" on the login page. PROVISIONAL control:
+    ...    classic themes either toggle an in-page recover form or navigate to /account/recover —
+    ...    both end with the recover form visible, which is what the next keyword asserts.
+    Click    ${FORGOT_PASSWORD_LINK}
+
+Recovery Form Should Be Shown
+    [Documentation]    Asserts the Reset Password form is displayed (TC-16-008 step 2).
+    Get Element Count    ${RECOVERY_EMAIL_INPUT}    >    0
+    ...    message=No password-recovery e-mail field appeared after activating Forgot your password
+
+Submit Recovery For
+    [Documentation]    Submits the recover form for the given address. Dispatches a REAL e-mail
+    ...    to that inbox; the reset itself is never followed (following the link would change the
+    ...    registered account's password and break TC-16-001).
+    [Arguments]    ${email}
+    Fill Text    ${RECOVERY_EMAIL_INPUT}    ${email}
+    Click    ${RECOVERY_SUBMIT}
+
+Login Email Client Validation Facts
+    [Documentation]    Reads the login e-mail field's client-side validation facts WITHOUT any
+    ...    submission (submissions are hCaptcha-gated): the input type, the required property,
+    ...    and the current native validationMessage. Added 12 Aug 2026 for TC-16-006's
+    ...    observation half — these DOM facts are browser-readable regardless of bot protection.
+    ${type}=    Get Property    ${LOGIN_EMAIL_INPUT}    type
+    ${required}=    Get Property    ${LOGIN_EMAIL_INPUT}    required
+    ${msg}=    Native Validation Message For    ${LOGIN_EMAIL_INPUT}
+    RETURN    type='${type}', required=${required}, validationMessage='${msg}'
+
+Recovery Dispatch Should Be Confirmed
+    [Documentation]    Asserts the store confirms on-page that a reset e-mail was sent (classic
+    ...    wording: "We've sent you an email with a link to update your password."). Text oracle
+    ...    kept loose — asserts the REQUIREMENT (dispatch confirmed), not one literal rendering.
+    ${text}=    Get Text    body
+    Should Match Regexp    ${text}    (?i)(sent you an email|email with a link|reset your password|password reset|check your (e-?)mail)
+    ...    msg=No on-page confirmation that a password-recovery e-mail was dispatched
