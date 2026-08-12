@@ -1,11 +1,13 @@
 *** Settings ***
 Documentation     TS-12 Payment Processing Module — executable mirror of TCS cases
 ...               TC-12-001..006. Authorities: 02 - Test Case Specification v2.1 and 01 - Test
-...               Basis v1.0 (approved 2026-08-05), UC-12 (TB-PAY-001..006). 5 cases automated
-...               (3 unconditionally, 2 gated); 1 documented SKIP (TC-12-004: 02 v2.1 §MODES
+...               Basis v1.0 (approved 2026-08-05), UC-12 (TB-PAY-001..006). 4 cases automated
+...               (3 unconditionally, 1 gated); 2 documented SKIPs (TC-12-004: 02 v2.1 §MODES
 ...               Design-only — the order total is server-computed, so there is no public-UI way
 ...               to submit a mismatched payment amount on a live store the team does not
-...               control).
+...               control; TC-12-005: automation-limited — SETTLED 12 Aug 2026 by the Phase H
+...               manual confirmation retest, which verified the requirement itself with one
+...               real order, #V860ENJ8W — see that case's Documentation and body comments).
 ...               PAYMENT POLICY / SAFETY INVARIANT (non-negotiable — applies to this entire
 ...               file): the store's published test-card values are 1 = approved/order-creating,
 ...               2 = declined, 3 = gateway failure (verified by executed transactions 5 Aug
@@ -13,14 +15,17 @@ Documentation     TS-12 Payment Processing Module — executable mirror of TCS c
 ...               any circumstance and are store-published-safe, default-executable (TC-12-002,
 ...               TC-12-006, TC-12-003). Card "1" is the ONLY value that creates a real order, so
 ...               it appears NOWHERE in this file except as the literal argument of an
-...               "Enter Card Details" call whose enclosing test's FIRST LINE is
-...               "Skip If    not ${ALLOW_ORDERS}" (TC-12-001, TC-12-005). ${ALLOW_ORDERS}
+...               "Enter Card Details" call inside a test whose opening lines gate it:
+...               TC-12-001's FIRST LINE is "Skip If    not ${ALLOW_ORDERS}"; TC-12-005 opens
+...               with an unconditional documented Skip (automation-limited, settled 12 Aug
+...               2026) and retains the same ALLOW_ORDERS gate directly behind it as
+...               defence-in-depth. ${ALLOW_ORDERS}
 ...               defaults to ${False} below, so the default run of this suite creates zero
 ...               orders; a real order is only ever created by an explicit
 ...               `-v ALLOW_ORDERS:True` command-line run. ORDER BUDGET when authorized: UP TO
-...               TWO real orders total (TC-12-001's own order, plus TC-12-005's retry-success
-...               order, which needs its own fresh checkout because TC-12-001 consumes the shared
-...               one) — team payment policy applies; only run authorized sessions.
+...               ONE real order (TC-12-001's own; TC-12-005 no longer executes — its retry
+...               question was settled by ONE manual-retest order, #V860ENJ8W, 12 Aug 2026) —
+...               team payment policy applies; only run authorized sessions.
 ...               New page object: resources/pages/checkout_page.resource (captured live
 ...               2026-08-07) — see that file's own Documentation for capture scope and the
 ...               PROVISIONAL locators it flags individually (the post-payment confirmation page
@@ -48,14 +53,17 @@ Documentation     TS-12 Payment Processing Module — executable mirror of TCS c
 ...               Page Object Model: element locators live in resources/pages/ — this file
 ...               contains business-readable steps only.
 ...               Environment: Brave (Chromium) via Browser library (Playwright), guest role.
-...               Traffic (default run, ALLOW_ORDERS=False): ~3 page loads (Suite Setup's product
-...               -> cart -> checkout reach; TC-12-002/003/006 interact with that same page via
-...               card-iframe fills and Pay Now, no further top-level navigation; TC-12-001/005
-...               skip immediately; TC-12-004 skips immediately) — plus the Suite Setup/Teardown
-...               /cart/clear pair. Traffic (authorized run, ALLOW_ORDERS=True): add ~1 page load
-...               for TC-12-001's confirmation navigation and ~4 more for TC-12-005's own fresh
-...               product -> cart -> checkout -> confirmation reach. Run sparingly (shared live
-...               store); never authorize outside a deliberate, team-approved session.
+...               Traffic (rewritten 12 Aug 2026 for the per-case Test Setup design): each taken
+...               Test Setup costs ~5 page loads (its own /cart/clear + product -> cart ->
+...               checkout reach) — TC-12-002/006/003 take it, and TC-12-001's setup also runs
+...               before its order-gate Skip on a default run — so a default run is roughly 20
+...               page loads plus the Suite Setup/Teardown /cart/clear pair. (The "2 hits total"
+...               /cart/clear rule above belongs to the superseded chained design; the 12 Aug
+...               2026 campaign ran the per-case shape cleanly.) TC-12-004 and TC-12-005 carry
+...               [Setup] NONE (documented Skips; no state, no traffic). Authorized run
+...               (ALLOW_ORDERS=True): add ~1 page load for TC-12-001's confirmation. Run
+...               sparingly (shared live store); never authorize outside a deliberate,
+...               team-approved session.
 Resource          ../resources/common.resource
 Resource          ../resources/pages/cart_page.resource
 Resource          ../resources/pages/checkout_page.resource
@@ -134,7 +142,8 @@ TC-12-001 Successful Payment
     ...    payment using card 1, any future expiry date, and any 3-digit security code. Expected:
     ...    order confirmation page displays with a confirmation number. Verified 5 Aug 2026
     ...    (order #1YRC8ZIPW format). SAFETY INVARIANT: this is the ONLY case in this suite (with
-    ...    TC-12-005) allowed to enter the published test-card value "1" (approved,
+    ...    TC-12-005's retained, no-longer-executing procedure) allowed to enter the published
+    ...    test-card value "1" (approved,
     ...    order-creating), and it is gated behind Skip If not ${ALLOW_ORDERS} as its first line
     ...    — the default run (${ALLOW_ORDERS} = ${False}) always skips this case; a real order is
     ...    only ever created by an explicit `-v ALLOW_ORDERS:True` run. See this file's
@@ -160,32 +169,41 @@ TC-12-005 Retry Payment After Failure
     ...    a second product, reaches its own checkout, induces one genuine failure (card 2 —
     ...    mirrors TC-12-002's verified decline behaviour), then retries with card 1, re-entering
     ...    all card fields since they clear after the failure (verified 5 Aug 2026). See this
-    ...    file's Documentation for the full order-budget note (this is the second of up to two
-    ...    real orders created when the suite runs with ALLOW_ORDERS:True). Priority High /
-    ...    Positive.
-    [Tags]    priority-high    type-positive    TC-12-005    TB-PAY-001    TB-PAY-002    TB-PAY-003    TB-PAY-004    TB-PAY-005    TB-PAY-006
+    ...    file's Documentation for the full order-budget note (this was the second of up to two
+    ...    real orders when both gated cases executed). RESOLUTION 12 Aug 2026: settled by the
+    ...    Phase H manual confirmation retest — the identical flow succeeds for a human IN
+    ...    PLACE, without a reload (order #V860ENJ8W), so the requirement is VERIFIED and the
+    ...    automated failure is an AUTOMATION LIMITATION, not a store defect. The case is now an
+    ...    unconditional documented Skip (evidence: results/MANUAL_TC-12-005_2026-08-12/).
+    ...    Priority High / Positive.
+    [Tags]    priority-high    type-positive    automation-limited    TC-12-005    TB-PAY-001    TB-PAY-002    TB-PAY-003    TB-PAY-004    TB-PAY-005    TB-PAY-006
+    [Setup]    NONE
+    Skip    Automation-limited — SETTLED 12 Aug 2026 by the Phase H manual confirmation retest: the identical decline -> in-place retry flow (no reload) SUCCEEDS for a human (order #V860ENJ8W), so the requirement is VERIFIED and this is NOT a store defect; only this automated stack's retry never completes (two authorized runs 12 Aug 2026, in place and after reload — every step green, no order). Evidence: results/MANUAL_TC-12-005_2026-08-12/. Automated execution withheld: it cannot currently return a truthful verdict and would waste order budget. For a deliberate maintenance re-attempt remove this Skip and the [Setup] NONE line; the ALLOW_ORDERS gate below still applies.
     Skip If    not ${ALLOW_ORDERS}    Creates a real order — run only in an explicitly authorized session (-v ALLOW_ORDERS:True); team payment policy and order budget apply (see suite Documentation).
     Enter Card Details    2    12/30    123
     Click Pay Now
     Checkout Should Not Have Advanced To Confirmation
-    # ⚠️ OPEN QUESTION FOR PHASE H — TC-12-005 does not pass and the reason is NOT yet known.
-    # Live runs 12 Aug 2026 (twice, with and without the reload below): every step succeeds —
-    # card 2 is entered, Pay now clicks, the decline is correctly refused, card 1 is re-entered
-    # cleanly, Pay now clicks again — and then NO confirmation appears and NO order is created.
-    # By contrast TC-12-001, a single card-1 payment on a fresh checkout, DOES create an order
-    # (#5NUU58KV8). So the difference is specifically that a checkout which has already had a
-    # DECLINED attempt will not then accept a successful one from this automated browser.
-    # This must be settled by ONE MANUAL RETRY in Phase H, because the two possible readings have
-    # very different weight:
-    #   (a) it reproduces for a human -> a CRITICAL business defect: a customer who mistypes a
-    #       card cannot recover within the same checkout; or
-    #   (b) it does not reproduce -> an automation limitation, recorded as such.
-    # Do not report this as a store defect until that manual check is done.
-    # Refresh the checkout before retrying. Live run 12 Aug 2026: re-entering the card in the
-    # SAME page state after a decline fills correctly and Pay now clicks, but no confirmation
-    # ever appears and no order is created — the payment session does not survive the declined
-    # attempt. Reloading gives the retry a fresh payment session with the cart intact, which is
-    # also what a real customer's browser does when they try again.
+    # ✅ SETTLED 12 Aug 2026 — MANUAL CONFIRMATION RETEST (Phase H), performed by the Test
+    # Automation Developer by hand in a normal, non-automation Brave window, mirroring this case
+    # variable-for-variable (grey-jacket; same fictitious identity and e-mail; card 2 / 12/30 /
+    # 123 / Test Tester): Pay now -> the exact decline alert appeared and the card fields
+    # cleared (matching the 5 Aug observation) -> card fields re-entered IN PLACE, NO RELOAD,
+    # with card 1 -> Pay now -> confirmation page "Thank you, Test!", order #V860ENJ8W,
+    # Grey jacket £55.00 + £20.00 shipping = £75.00 GBP, payment method "•••• 1". Screenshots:
+    # results/MANUAL_TC-12-005_2026-08-12/.
+    # VERDICT — reading (b) below: AUTOMATION LIMITATION, not a store defect. The store accepts
+    # a successful retry after a decline in the same checkout session for a human, without even
+    # a reload. The automated retry (this stack) never completes whether retried in place or
+    # after Reload Checkout Page — both attempted under authorization on 12 Aug 2026 (every step
+    # green: card 2 entered, decline correctly refused, card 1 re-entered cleanly, Pay now
+    # clicked — then no confirmation and no order; contrast TC-12-001's single card-1 payment on
+    # a fresh checkout, which DID create #5NUU58KV8). Root cause inside the stack remains
+    # unidentified and is deliberately not pursued further: the requirement itself is settled,
+    # so the case is Skip-documented above and the steps below are RETAINED, non-executing, for
+    # a future maintenance re-attempt.
+    # (Original framing, kept for the record: (a) reproduces for a human -> CRITICAL business
+    # defect, a customer who mistypes a card cannot recover in the same checkout; (b) does not
+    # reproduce -> automation limitation, recorded as such. The manual retest returned (b).)
     Reload Checkout Page
     Enter Card Details    1    12/30    123
     Click Pay Now
@@ -200,4 +218,5 @@ TC-12-004 Payment Amount Mismatch (Design-Only)
     ...    is no public-UI way to submit a payment against a mismatched amount on a live store the
     ...    team does not control (02 v2.1 §MODES Design-only). Priority Critical / Negative.
     [Tags]    priority-critical    type-negative    design-only    TC-12-004    TB-PAY-001    TB-PAY-002    TB-PAY-003    TB-PAY-004    TB-PAY-005    TB-PAY-006
+    [Setup]    NONE
     Skip    Design-only: the order total is server-computed from the live checkout state; there is no public-UI way to submit a mismatched payment amount on a live store the team does not control. Designed case retained in the TCS.

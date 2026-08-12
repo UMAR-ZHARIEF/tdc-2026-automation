@@ -175,9 +175,12 @@ Reach Checkout With Product And Address
 
 Reload Checkout Page
     [Documentation]    Reloads the current checkout so a retry gets a fresh payment session while
-    ...    the cart and entered address are preserved server-side. Needed because a declined
+    ...    the cart and entered address are preserved server-side. Introduced because a declined
     ...    attempt leaves the page interactive — the card fields refill and Pay now still clicks —
-    ...    but the submission silently never completes (verified 12 Aug 2026, TC-12-005).
+    ...    but the submission silently never completes (12 Aug 2026, TC-12-005). The reload did
+    ...    NOT fix that automated retry, and the 12 Aug 2026 manual retest settled the question:
+    ...    a human retry succeeds in place with NO reload (order #V860ENJ8W). Retained solely for
+    ...    TC-12-005's non-executing procedure and future maintenance re-attempts.
     Reload
     Wait For Elements State    ${PAY_BUTTON}    visible    timeout=20s
 
