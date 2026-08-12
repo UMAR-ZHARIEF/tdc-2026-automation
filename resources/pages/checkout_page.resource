@@ -173,6 +173,14 @@ Reach Checkout With Product And Address
     Fill Contact Email    ${email}
     Fill Delivery Address
 
+Reload Checkout Page
+    [Documentation]    Reloads the current checkout so a retry gets a fresh payment session while
+    ...    the cart and entered address are preserved server-side. Needed because a declined
+    ...    attempt leaves the page interactive — the card fields refill and Pay now still clicks —
+    ...    but the submission silently never completes (verified 12 Aug 2026, TC-12-005).
+    Reload
+    Wait For Elements State    ${PAY_BUTTON}    visible    timeout=20s
+
 Checkout Should Be Reached
     [Documentation]    Asserts the browser has transitioned from /cart into the modern one-page
     ...    checkout (URL family /checkouts/cn/..., captured live 2026-08-07).
