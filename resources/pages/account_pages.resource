@@ -84,13 +84,22 @@ Empty Login Validation Should Be Shown
     ...    message, OR — if the theme relies on native HTML5 "required" field validation, which
     ...    blocks submission client-side with a browser tooltip this stack cannot read as DOM
     ...    text — the page simply remains on the login form with no session created.
+    ...
+    ...    THE "STILL ON THE LOGIN PAGE" ARM HAS BEEN REMOVED. It was unconditionally true:
+    ...    blocking submission is precisely what this case asserts, so the browser always remains
+    ...    on /account/login and the union could never fail (12 Aug 2026). The native HTML5
+    ...    tooltip the old docstring called unreadable IS readable as the input's
+    ...    validationMessage PROPERTY, so that fallback is now a real check rather than a
+    ...    tautology.
     ${page_text}=    Get Text    body
     ${message_hit}=    Run Keyword And Return Status    Should Match Regexp    ${page_text}
     ...    (?i)(required|can.?t be blank|fill (in|out)|this field|enter (your|a valid))
     ${surface_hits}=    Get Element Count    ${LOGIN_ERROR_SURFACE}
-    ${still_on_login}=    Run Keyword And Return Status    Get Url    contains    /account/login
-    Should Be True    ${message_hit} or ${surface_hits} > 0 or ${still_on_login}
-    ...    msg=Empty-field login submission was neither validated with a message nor safely refused
+    ${native_msg}=    Native Validation Message For    ${LOGIN_EMAIL_INPUT}
+    ${native_hit}=    Evaluate    len($native_msg.strip()) > 0
+    Log    Native HTML5 validation message on the e-mail field (evidence): '${native_msg}'
+    Should Be True    ${message_hit} or ${surface_hits} > 0 or ${native_hit}
+    ...    msg=Submitting the login form with both fields empty produced no validation evidence: no message text, no error surface, and no native HTML5 validation message
 
 No Session Should Be Established
     [Documentation]    Asserts the guest header state persists — no logged-in-session marker is
@@ -116,12 +125,19 @@ Registration Email Format Error Should Be Shown
     ...    the browser block submission of "user@@test" client-side with a native tooltip this
     ...    stack cannot read as DOM text — the page simply remains on the registration form with
     ...    no account created (same fallback pattern as Empty Login Validation Should Be Shown).
+    ...
+    ...    THE "STILL ON THE REGISTER PAGE" ARM HAS BEEN REMOVED for the same reason as
+    ...    Empty Login Validation Should Be Shown: it was unconditionally true, so the case could
+    ...    not fail. The browser's native validationMessage is read instead.
     ${surface_hits}=    Get Element Count    ${REGISTER_ERROR_SURFACE}
     ${page_text}=    Get Text    body
     ${text_hit}=    Run Keyword And Return Status    Should Match Regexp    ${page_text}
     ...    (?i)(invalid email|email.{0,15}(invalid|not valid|format)|enter a valid email)
-    ${still_on_register}=    Run Keyword And Return Status    Get Url    contains    /account/register
-    Should Be True    ${surface_hits} > 0 or ${text_hit} or ${still_on_register}
+    ${native_msg}=    Native Validation Message For    ${REGISTER_EMAIL_INPUT}
+    ${native_hit}=    Evaluate    len($native_msg.strip()) > 0
+    Log    Native HTML5 validation message on the sign-up e-mail field (evidence): '${native_msg}'
+    Should Be True    ${surface_hits} > 0 or ${text_hit} or ${native_hit}
+    ...    msg=Submitting sign-up with a malformed e-mail produced no validation evidence: no error surface, no message text, and no native HTML5 validation message
     ...    msg=No registration error surface, no e-mail-format error text, and no still-on-register-page evidence found after submitting a malformed e-mail
 
 No Account Created Should Be Confirmed
@@ -130,3 +146,17 @@ No Account Created Should Be Confirmed
     ...    marker is present.
     Get Url    contains    /account/register
     Get Element Count    ${ACCOUNT_LOGGED_IN_MARK}    ==    0
+
+Native Validation Message For
+    [Documentation]    Returns the browser's native HTML5 constraint-validation message for the
+    ...    given field, or an empty string if the field is currently valid. This is the readable
+    ...    form of the tooltip Playwright cannot capture as DOM text — it lives on the element as
+    ...    the validationMessage property. Using it lets the empty-field and bad-format cases
+    ...    assert real evidence instead of falling back on "the browser is still on this page",
+    ...    which is true by construction whenever submission is blocked.
+    [Arguments]    ${locator}
+    ${status}    ${value}=    Run Keyword And Ignore Error    Get Property    ${locator}    validationMessage
+    IF    '${status}' == 'FAIL'
+        RETURN    ${EMPTY}
+    END
+    RETURN    ${value}

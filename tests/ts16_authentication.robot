@@ -102,7 +102,7 @@ TC-16-006 Empty Login Fields
     [Documentation]    Login page open; fields empty. Steps: 1. Activate Sign In with both
     ...    fields empty. 2. Observe validation. Expected: login is refused with clear
     ...    validation; no session is created. Priority High / Negative.
-    [Tags]    priority-high    type-negative    TC-16-006    TB-AUTH-001
+    [Tags]    priority-high    type-negative    known-defect-lead    TC-16-006    TB-AUTH-001
     Open Login Page
     Submit Login
     Empty Login Validation Should Be Shown
