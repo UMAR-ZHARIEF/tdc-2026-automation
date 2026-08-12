@@ -2,12 +2,17 @@
 Documentation     TS-10 Shipping Selection System — executable mirror of TCS cases
 ...               TC-10-001..006. Authorities: 02 - Test Case Specification v2.1 and 01 - Test
 ...               Basis v1.0 (approved 2026-08-05), UC-10 (TB-SHP-001..003). 4 cases automated; 2
-...               documented SKIP (TC-10-004/005: 02 v2.1 §MODES Design-only — no second shipping
-...               method exists for Malaysian addresses, and no unsupported-address condition is
-...               known, on a live store the team does not control).
-...               Store-reality correction (02 v2.1 Change Log #6): shipping is single-method —
-...               "International Shipping £20.00" for Malaysian addresses, no Standard/Express
-...               tiers — and the live checkout has NO radio controls to select a method (captured
+...               documented SKIP (TC-10-004/005: 02 v2.1 §MODES Design-only — re-verified by a
+...               live destination sweep 12 Aug 2026; see each case's Skip message. The sweep
+...               CLOSES Test Basis open item TBD-008 "Non-Malaysian shipping methods —
+...               unobserved").
+...               Store-reality (02 v2.1 Change Log #6, extended by the 12 Aug 2026 sweep):
+...               shipping is single-method PER DESTINATION — "International Shipping £20.00"
+...               for Malaysian addresses and for every other destination probed (India,
+...               Netherlands, Peru, and the worldwide catch-all zone, probed via Vanuatu),
+...               while the United Kingdom alone receives "Standard Shipping £10.00". Two
+...               methods therefore exist store-wide but never simultaneously for one address,
+...               and the live checkout has NO radio controls to select a method (captured
 ...               live 2026-08-07). Every oracle in this file is therefore TEXT-BASED (section and
 ...               Cost-summary text), never radio-based, per
 ...               resources/pages/checkout_page.resource's own Documentation.
@@ -61,7 +66,11 @@ TC-10-002 Check Whether Destination-Appropriate Shipping Methods Are Offered
     ...    Expected: method list reflects the destination; observed 5 Aug 2026: a single
     ...    "International Shipping" method is offered for domestic (Malaysian) addresses — record
     ...    as observation if unchanged. Type stays Negative (02 v2.1: a single method for a
-    ...    domestic address is itself the documented anomaly under test). Chained from TC-10-001
+    ...    domestic address is itself the documented anomaly under test).
+    ...    Destination-appropriateness was additionally demonstrated live on 12 Aug 2026:
+    ...    switching the checkout destination to the United Kingdom replaced the method with
+    ...    "Standard Shipping £10.00" and recalculated the total accordingly — recorded as
+    ...    observation evidence for TB-SHP-001/003 (and closing TBD-008). Chained from TC-10-001
     ...    (deliberate — the MY address is already entered; no re-navigation). Priority High /
     ...    Negative.
     [Tags]    priority-high    type-negative    TC-10-002    TB-SHP-001    TB-SHP-002    TB-SHP-003
@@ -98,17 +107,22 @@ TC-10-004 Change Shipping Method (Design-Only)
     ...    (02 v2.1 A13): 1. Where more than one shipping method is offered, select a different
     ...    method. 2. Verify the order total updates by the method cost difference. Expected: the
     ...    order total recalculates to reflect the selected method. (No second method exists for
-    ...    Malaysian addresses as at 5 Aug 2026 — not currently executable.) Not executed: no
-    ...    second shipping method exists to select on this live store (02 v2.1 §MODES
-    ...    Design-only). Priority High / Positive.
+    ...    Malaysian addresses as at 5 Aug 2026 — not currently executable.) Re-verified by a
+    ...    live destination sweep 12 Aug 2026: two methods exist store-wide (International
+    ...    Shipping £20.00, effectively worldwide; Standard Shipping £10.00, UK only) but NO
+    ...    destination offers more than one simultaneously, so the precondition "more than one
+    ...    method offered" remains unreachable from the public UI (02 v2.1 §MODES Design-only).
+    ...    Priority High / Positive.
     [Tags]    priority-high    type-positive    design-only    TC-10-004    TB-SHP-001    TB-SHP-002    TB-SHP-003
-    Skip    Design-only: no second shipping method exists for Malaysian addresses to select on this live store (verified 5 Aug 2026) — the condition this case needs cannot be induced. Designed case retained in the TCS.
+    Skip    Design-only, re-verified 12 Aug 2026 by a live destination sweep (MY/IN/NL/PE and the worldwide catch-all zone -> International Shipping £20.00; UK alone -> Standard Shipping £10.00): two methods exist store-wide but never together for one address, so "select a different method" has no reachable precondition on the public UI. Designed case retained in the TCS.
 
 TC-10-005 No Shipping Available (Design-Only)
     [Documentation]    Scenario: no shipping available. Precondition: unsupported address. Steps:
-    ...    1. Proceed to shipping. Expected: appropriate message displayed. Not executed: no
-    ...    unsupported-address condition is known that can be induced on the live store without
-    ...    risking a genuinely broken checkout state the team does not control (02 v2.1 §MODES
-    ...    Design-only). Priority High / Negative.
+    ...    1. Proceed to shipping. Expected: appropriate message displayed. Re-verified live
+    ...    12 Aug 2026: the checkout's country selector offers the full world list, and a
+    ...    worldwide catch-all shipping zone answered every destination probed — including
+    ...    Vanuatu — with "International Shipping £20.00"; no selectable destination lacks a
+    ...    shipping method, so the unsupported-address precondition cannot be reached from the
+    ...    public UI (02 v2.1 §MODES Design-only). Priority High / Negative.
     [Tags]    priority-high    type-negative    design-only    TC-10-005    TB-SHP-001    TB-SHP-002    TB-SHP-003
-    Skip    Design-only: no known unsupported-address condition can be induced on a live store the team does not control. Designed case retained in the TCS.
+    Skip    Design-only, re-verified 12 Aug 2026 by a live probe: a worldwide catch-all shipping zone exists (every destination probed, incl. Vanuatu, is answered with International Shipping £20.00), so no selectable destination lacks a method and the unsupported-address precondition is unreachable. Designed case retained in the TCS.
