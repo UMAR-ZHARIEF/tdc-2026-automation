@@ -138,6 +138,21 @@ Reach Checkout With Product
     Open Cart
     Open Checkout From Cart
 
+Reach Fresh Checkout For Payment Case
+    [Documentation]    Test Setup for the payment suite: empties the cart and reaches a NEW
+    ...    checkout session with contact and delivery already filled, so each payment case starts
+    ...    from a clean, submittable checkout.
+    ...
+    ...    WHY PER-CASE RATHER THAN PER-SUITE: the suite previously reached checkout once in
+    ...    Suite Setup and chained every payment case against it. The cross-origin PCI card
+    ...    iframes do NOT survive a prior payment submission — the second and third cases in a
+    ...    run failed with a Fill Text timeout on the card-number field while the first succeeded
+    ...    (12 Aug 2026). Reaching a fresh checkout per case costs a few extra page loads and
+    ...    removes an entire class of order-dependent failure.
+    ...    Cases that Skip (order-gated or design-only) exit before touching this state.
+    Clear Cart
+    Reach Checkout With Product And Address    ${PRODUCT_HANDLE}
+
 Reach Checkout With Product And Address
     [Documentation]    As `Reach Checkout With Product`, additionally filling the Contact e-mail
     ...    and the standard fictitious Delivery address — leaves checkout ready for a
@@ -456,23 +471,30 @@ Payment Rejection Should Be Shown
 Enter Card Number
     [Documentation]    Types into the card-number PCI iframe (cross-origin, random id suffix per
     ...    load — selected by prefix and pierced with the Browser library ">>>" syntax).
+    ...
+    ...    USES Type Text, NOT Fill Text. The field auto-formats as you type, inserting spaces
+    ...    into the digits ("4111 1111 1111 1111"). Fill Text sets a value and then verifies the
+    ...    field still holds exactly what was set, so the formatter's rewrite makes it retry
+    ...    until it times out — a 16-digit number timed out at 15s while a single-digit store
+    ...    test value ("2") filled fine, which is what exposed the cause (12 Aug 2026).
+    ...    Typing character by character lets the formatter do its work.
     [Arguments]    ${value}
-    Fill Text    ${CARD_NUMBER_FRAME_INPUT}    ${value}
+    Type Text    ${CARD_NUMBER_FRAME_INPUT}    ${value}    delay=30ms    clear=False
 
 Enter Card Expiry
     [Documentation]    Types into the card-expiry PCI iframe (MM / YY).
     [Arguments]    ${value}
-    Fill Text    ${CARD_EXPIRY_FRAME_INPUT}    ${value}
+    Type Text    ${CARD_EXPIRY_FRAME_INPUT}    ${value}    delay=30ms    clear=False
 
 Enter Card Security Code
     [Documentation]    Types into the card security-code (CVV) PCI iframe.
     [Arguments]    ${value}
-    Fill Text    ${CARD_SECURITY_CODE_FRAME_INPUT}    ${value}
+    Type Text    ${CARD_SECURITY_CODE_FRAME_INPUT}    ${value}    delay=30ms    clear=False
 
 Enter Card Name
     [Documentation]    Types into the name-on-card PCI iframe.
     [Arguments]    ${value}
-    Fill Text    ${CARD_NAME_FRAME_INPUT}    ${value}
+    Type Text    ${CARD_NAME_FRAME_INPUT}    ${value}    delay=30ms    clear=False
 
 Enter Card Details
     [Documentation]    Convenience wrapper: fills all four card PCI iframe fields in one call.

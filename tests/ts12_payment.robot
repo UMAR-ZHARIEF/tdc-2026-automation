@@ -26,6 +26,12 @@ Documentation     TS-12 Payment Processing Module — executable mirror of TCS c
 ...               PROVISIONAL locators it flags individually (the post-payment confirmation page
 ...               was never captured live; TC-12-001/005's confirmation check is therefore
 ...               text-pattern based, per verified evidence only).
+...               ⚠️ SUPERSEDED 12 Aug 2026: the state-chained design described below is no
+...               longer in force. A Test Setup now reaches a FRESH checkout per payment case
+...               (Reach Fresh Checkout For Payment Case), because the PCI card iframes do not
+...               reliably accept input after a prior submission in the same session. Suite Setup
+...               opens the session and clears the cart only. The paragraph below is retained for
+...               the reasoning it records about /cart/clear frequency.
 ...               STATE-CHAINED execution (mirrors the ts06/ts07 root-caused fix — repeated
 ...               /cart/clear top-level GETs trip Cloudflare, so this file also keeps that call to
 ...               Suite Setup + Suite Teardown only, 2 hits total): Suite Setup reaches ONE
@@ -53,7 +59,8 @@ Documentation     TS-12 Payment Processing Module — executable mirror of TCS c
 Resource          ../resources/common.resource
 Resource          ../resources/pages/cart_page.resource
 Resource          ../resources/pages/checkout_page.resource
-Suite Setup       Run Keywords    Open Store Session    AND    Clear Cart    AND    Reach Checkout With Product And Address    ${PRODUCT_HANDLE}
+Suite Setup       Run Keywords    Open Store Session    AND    Clear Cart
+Test Setup        Reach Fresh Checkout For Payment Case
 Suite Teardown    Run Keywords    Clear Cart    AND    Close Store Session
 Test Tags         TS-12    UC-12    guest
 
@@ -152,7 +159,6 @@ TC-12-005 Retry Payment After Failure
     ...    Positive.
     [Tags]    priority-high    type-positive    TC-12-005    TB-PAY-001    TB-PAY-002    TB-PAY-003    TB-PAY-004    TB-PAY-005    TB-PAY-006
     Skip If    not ${ALLOW_ORDERS}    Creates a real order — run only in an explicitly authorized session (-v ALLOW_ORDERS:True); team payment policy and order budget apply (see suite Documentation).
-    Reach Checkout With Product And Address    ${PRODUCT_HANDLE}
     Enter Card Details    2    12/30    123
     Click Pay Now
     Checkout Should Not Have Advanced To Confirmation
