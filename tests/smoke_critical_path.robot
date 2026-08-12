@@ -22,7 +22,10 @@ Resource          ../resources/pages/search_results_page.resource
 Resource          ../resources/pages/product_listing.resource
 Resource          ../resources/pages/product_page.resource
 Resource          ../resources/pages/cart_page.resource
-Suite Setup       Open Store Session
+Suite Setup       Run Keywords    Open Store Session    AND    Clear Cart
+# Clear Cart added 12 Aug 2026: TC-A-001 asserts an EMPTY cart, but the trusted persistent
+# profile retains cart state between runs and this suite runs first in a full-inventory run,
+# so it inherited whatever an earlier session left behind (observed: 'My Cart (2)').
 Suite Teardown    Run Keywords    Clear Cart    AND    Close Store Session
 
 *** Variables ***

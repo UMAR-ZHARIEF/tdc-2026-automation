@@ -65,7 +65,31 @@ Open Fresh Context
 Go Offline
     [Documentation]    Client-side offline emulation (Playwright Set Offline) — while offline
     ...    no request leaves this machine; the live store is untouched.
+    ...
+    ...    Set Offline needs an ACTIVE browser context. Under a persistent-profile session an
+    ...    earlier case may have opened and closed a secondary browser (see Open Fresh Context),
+    ...    leaving none current — Set Offline then fails with "Tried to toggle context to
+    ...    offline, no open context" (seen in the full-inventory run, 12 Aug 2026). Ensuring a
+    ...    page exists first makes the keyword independent of what ran before it.
+    Ensure Active Page
     Set Offline    True
 
 Go Online
-    Set Offline    False
+    [Documentation]    Restores connectivity. Tolerates there being no context (nothing to
+    ...    restore) so it is always safe as a teardown.
+    Run Keyword And Ignore Error    Set Offline    False
+
+Ensure Active Page
+    [Documentation]    Guarantees a usable page/context exists when a previous case left none
+    ...    current. Deliberately does NOT call Open Store Session: that launches a persistent
+    ...    context on the profile directory, which fails with "profile is already in use" while
+    ...    any browser still holds it. Opening a page on the existing browser is enough, with a
+    ...    plain secondary browser as the last resort.
+    ${status}    ${err}=    Run Keyword And Ignore Error    Get Url
+    IF    '${status}' == 'FAIL'
+        ${s2}    ${e2}=    Run Keyword And Ignore Error    New Page    ${STORE_URL}
+        IF    '${s2}' == 'FAIL'
+            New Browser    chromium    headless=${HEADLESS}    executablePath=${BRAVE_PATH}
+            New Page    ${STORE_URL}
+        END
+    END
