@@ -11,7 +11,13 @@ Resource          ../common.resource
 *** Variables ***
 ${ADD_TO_CART_ANY}       xpath=//button[normalize-space()='Add to Cart'] | //input[@type='submit' and @value='Add to Cart']
 ${ACTIVE_ADD_TO_CART}    xpath=//button[normalize-space()='Add to Cart' and not(@disabled)] | //input[@type='submit' and @value='Add to Cart' and not(@disabled)]
-${VARIANT_SELECT}        css=form[action*="/cart/add"] select
+# :visible added 12 Aug 2026 (v4 evidence run): the theme renders 2 HIDDEN select elements
+# even on single-variant ('Default Title') products, so the unfiltered count made TC-04-002's
+# runtime guard see "2 variant selector(s)" on a product whose customers see none — the same
+# hidden-duplicate store quirk (and the same :visible remedy) as product_listing's product
+# links. Counting keywords must observe what the CUSTOMER sees; the interaction keywords were
+# already safe (Playwright actionability refuses hidden targets).
+${VARIANT_SELECT}        css=form[action*="/cart/add"] select:visible
 ${BREADCRUMB_LINKS}      css=div[id="breadcrumb"] a
 ${DESCRIPTION_BLOCKS}    css=.product-description, #product-description, .description, .rte
 ${FIRST_PRICE_TEXT}      xpath=(//*[contains(text(),'£')])[1]

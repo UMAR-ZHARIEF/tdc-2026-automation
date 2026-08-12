@@ -56,7 +56,10 @@ TC-04-002 Single-Variant Product Proceeds Without Explicit Selection
     ...    to Cart control. The earlier candidate (grey-jacket) renders a selector, which made
     ...    this case skip on every prior run despite its Executable mode. Runtime data guard
     ...    retained: the case still skips with a reason if the candidate presents variant
-    ...    selectors in the current snapshot. Priority Medium / Positive.
+    ...    selectors in the current snapshot. Guard corrected same day (v4 evidence run): the
+    ...    theme renders 2 HIDDEN select elements even on single-variant products, so the
+    ...    unfiltered count still skipped this case; ${VARIANT_SELECT} now filters to :visible —
+    ...    the customer-visible truth (see product_page.resource). Priority Medium / Positive.
     [Tags]    priority-medium    type-positive    TC-04-002    TB-VAR-001    TB-VAR-002    TB-VAR-003    TB-VAR-004
     Open Product    ${SINGLE_CANDIDATE_HANDLE}
     ${selects}=    Variant Dimension Count
