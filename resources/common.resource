@@ -31,10 +31,17 @@ Open Store Session
     ...    fresh-browser launch.
     ${profile_exists}=    Evaluate    os.path.isdir($ROBOT_PROFILE_DIR)    modules=os
     IF    ${profile_exists}
-        New Persistent Context    userDataDir=${ROBOT_PROFILE_DIR}    browser=chromium
-        ...    headless=${HEADLESS}    executablePath=${BRAVE_PATH}
+        # Launch hardened 12 Aug 2026: in the day's third full evidence run, three suites
+        # (ts11/ts12/ts18) each lost their ENTIRE suite to a flaky persistent-context launch
+        # under machine load — two 30s launch timeouts and one browser death mid-launch
+        # ("Parent suite setup failed", 15 spurious test FAILs). The launch now gets a 60s
+        # budget and one retry; the profile lock dies with a failed process, so a second
+        # attempt is safe, and a launch involves no store traffic.
+        Wait Until Keyword Succeeds    2x    5s    New Persistent Context
+        ...    userDataDir=${ROBOT_PROFILE_DIR}    browser=chromium
+        ...    headless=${HEADLESS}    executablePath=${BRAVE_PATH}    timeout=60 s
     ELSE
-        New Browser    chromium    headless=${HEADLESS}    executablePath=${BRAVE_PATH}
+        New Browser    chromium    headless=${HEADLESS}    executablePath=${BRAVE_PATH}    timeout=60 s
     END
     New Page    about:blank
     # Browser-library equivalent of the old Selenium implicit wait
