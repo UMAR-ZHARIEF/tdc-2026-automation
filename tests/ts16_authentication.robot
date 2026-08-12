@@ -18,7 +18,8 @@ Documentation     TS-16 User Authentication — executable mirror of TCS cases T
 ...               or password." (results/MANUAL_TS16_LOGIN_2026-08-12/). CONSEQUENCES: the
 ...               former "silent failed login" defect (TC-16-003) is STRUCK as an automation
 ...               artifact; the former "no validation" defect (TC-16-006) is DOWNGRADED to a
-...               client-side consistency observation; TC-16-001/002/003/009 are captcha-gated
+...               client-side consistency observation (missing required/empty enforcement on
+...               the login e-mail field; type='email' format checking exists); TC-16-001/002/003/009 are captcha-gated
 ...               documented Skips with manual evidence attached and their implemented steps
 ...               retained (automation does not defeat bot protection); TC-16-005 likewise
 ...               (duplicate-e-mail response sits behind the same captcha). Every executing
@@ -154,9 +155,11 @@ TC-16-006 Empty Login Fields
     ...    server response was ever observed); the manual retest proves the server answers
     ...    failed submissions with the generic "Incorrect email or password." What SURVIVES,
     ...    because it is DOM-inspectable without any submission, is the client-side contrast:
-    ...    the login e-mail field carries none of the HTML5 validation constraints the SIGN-UP
-    ...    e-mail field has (no required attribute, no format validation) — an inconsistency
-    ...    observation, not a defect. This case now performs that observation live
+    ...    the login e-mail field is NOT required — an empty submission passes client-side —
+    ...    unlike the sign-up form's stricter enforcement. (The field does carry type='email',
+    ...    so FORMAT checking exists; the contrast is specifically the missing required/empty
+    ...    enforcement — v6 run readback corrected an earlier overbroad "no format validation"
+    ...    phrasing.) An inconsistency observation, not a defect. This case now performs that observation live
     ...    (verify-then-skip, the TC-04-004 pattern) and documents the captcha-gated submit
     ...    half. Priority High / Negative.
     [Tags]    priority-high    type-negative    captcha-gated    TC-16-006    TB-AUTH-001
