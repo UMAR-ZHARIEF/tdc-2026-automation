@@ -2,7 +2,8 @@
 Documentation     Component object: the product listing grid, as rendered on the homepage
 ...               (featured products), the catalogue and the search results. The visible
 ...               product-link locator lives ONLY here. The store renders hidden duplicate
-...               product links, so all interaction filters to :visible (Suite A finding).
+...               product links, so all interaction filters to :visible (Jul 2026 finding from
+...               the retired prototype smoke suite; holds store-wide).
 Library           Browser
 
 *** Variables ***

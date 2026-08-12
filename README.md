@@ -51,17 +51,37 @@ Results (log.html, report.html, output.xml, failure screenshots) are written to
 
 ## Suites
 
+The inventory is the approved 02 Test Case Specification v2.1 mirrored 1:1 — 18
+suites, 108 tests, nothing else. Status columns are pass/fail/skip from the latest
+full evidence run (12 Aug 2026); every fail is a confirmed store defect and every
+skip carries its documented reason in the run report.
+
 | File | Status | Notes |
 |---|---|---|
-| `tests/smoke_critical_path.robot` | Active — 7/7 passing | Suite A: cross-module guest critical-path smoke; also the historical prototype that validated the tool selection on both candidate stacks |
-| `tests/ts01_store_access.robot` | Active — 4/0/3 | TS-01 Store Access (UC-01): TC-01-001..007 mirrored from the TCS — 4 automated, 3 documented SKIPs (not executable on a live shared store) |
-| `tests/ts02_product_catalogue.robot` | Active — 5/0/1 | TS-02 Product Catalogue (UC-02): TC-02-001..006 — 5 automated (incl. catalogue→PDP click navigation, no-results empty state, nonexistent-product 404), 1 documented SKIP (data-fault injection impossible on a live store) |
-| `tests/ts03_product_detail.robot` | Active — 4/0/4 | TS-03 Product Detail (UC-03): TC-03-001..008 — 4 automated (PDP completeness, back-button return, description-optional purchase path, sold-out view), 4 documented SKIPs (fault injection; breadcrumb trail has no broken link and no category level; no description-expansion control) |
-| `tests/ts04_product_variants.robot` | Active — 4/0/3 | TS-04 Variants (UC-04): TC-04-001..007 — 6 automated with runtime data guards (selection applied, final-choice persistence, default preselected, refresh state, size+colour), 1 designed SKIP (stock cannot be manipulated) |
-| `tests/ts05_add_to_cart.robot` | Active — 5/0/1 | TS-05 Add to Cart (UC-05): TC-05-001..006 — 5 automated (add with variant, duplicate consolidation, sequential additions, offline add leaves cart unchanged, sold-out prevention; cart-clearing teardown), 1 designed SKIP (rapid-click timing) |
+| `tests/ts01_store_access.robot` | 3/0/0 | TS-01 Store Access (UC-01): 3 cases, all automated |
+| `tests/ts02_product_catalogue.robot` | 3/0/3 | TS-02 Product Catalogue (UC-02): 6 cases — 3 automated, 3 design-only SKIPs |
+| `tests/ts03_product_detail.robot` | 6/0/2 | TS-03 Product Detail (UC-03): 8 cases — 6 automated, 2 design-only SKIPs |
+| `tests/ts04_product_variants.robot` | 2/0/5 | TS-04 Variants (UC-04): 7 cases — 4 automated (2 runtime-guarded on catalogue shape, currently skipping), 3 design-only SKIPs |
+| `tests/ts05_add_to_cart.robot` | 5/0/1 | TS-05 Add to Cart (UC-05): 6 cases — 5 automated, 1 design-only SKIP (rapid-click timing) |
+| `tests/ts06_cart_review.robot` | 5/0/2 | TS-06 Cart Review (UC-06): 7 cases — 5 automated, 2 design-only SKIPs |
+| `tests/ts07_cart_management.robot` | 5/0/1 | TS-07 Cart Management (UC-07): 6 cases — 5 automated, 1 design-only SKIP |
+| `tests/ts08_checkout_navigation.robot` | 5/0/1 | TS-08 Checkout Navigation (UC-08): 6 cases — 5 automated, 1 design-only SKIP |
+| `tests/ts09_checkout_validation.robot` | 7/0/0 | TS-09 Checkout Validation (UC-09): 7 cases, all automated |
+| `tests/ts10_shipping_selection.robot` | 4/0/2 | TS-10 Shipping (UC-10): 6 cases — 4 automated, 2 design-only SKIPs |
+| `tests/ts11_discount.robot` | 2/0/4 | TS-11 Discount (UC-11): 6 cases — 2 automated, 4 blocked–no-data SKIPs (no genuine coupon code known) |
+| `tests/ts12_payment.robot` | 3/0/3 | TS-12 Payment (UC-12): 6 cases — 3 automated, 1 order-gated, 1 automation-limited (verified by manual retest), 1 design-only |
+| `tests/ts13_order_confirmation.robot` | 0/0/7 | TS-13 Order Confirmation (UC-13): 7 cases — 5 order-gated (executed in the authorized order session), 2 design-only |
+| `tests/ts14_secondary_services.robot` | 2/4/0 | TS-14 Secondary Services (UC-14): 6 cases, all automated — 4 failing on confirmed defects (dead Wish List / Refer-a-Friend, no support channel) |
+| `tests/ts15_guest_purchase.robot` | 2/0/3 | TS-15 Guest Purchase (UC-15): 5 cases — 2 automated, 2 order-gated, 1 design-only |
+| `tests/ts16_authentication.robot` | 1/2/6 | TS-16 Authentication (UC-16): 9 cases — 3 automated (2 failing on confirmed defects: silent failed login, zero validation), 6 gated on the one-time registered test account |
+| `tests/ts17_search.robot` | 3/1/0 | TS-17 Search (UC-17): 4 cases, all automated — 1 failing on the search-relevance defect |
+| `tests/ts18_content_error_pages.robot` | 3/0/0 | TS-18 Content & Error Pages (UC-18): 3 cases, all automated |
 
-The two retired SeleniumLibrary suites were removed from the working tree after the
-stack retirement; they remain available in the git history.
+Retired and removed from the working tree (recoverable from git history): the two
+SeleniumLibrary suites (stack retirement), and the Suite A smoke prototype
+(12 Aug 2026 — it duplicated TS-01..05 coverage and sat outside the TCS-specified
+108 cases; historically it validated the tool selection, passing 7/7 on both the
+old and current stacks).
 
 ## Rules of engagement
 

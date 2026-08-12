@@ -41,7 +41,8 @@ Open Store Session
     Set Browser Timeout    15 seconds
     Set Retry Assertions For    15 seconds
     # The store renders hidden duplicate elements — take the first match instead of
-    # failing on multiple matches (see Suite A, TC-A-003 finding)
+    # failing on multiple matches (Jul 2026 finding from the retired prototype smoke suite;
+    # the suite is gone from the working tree, the finding still holds store-wide)
     Set Strict Mode    False
 
 Close Store Session
