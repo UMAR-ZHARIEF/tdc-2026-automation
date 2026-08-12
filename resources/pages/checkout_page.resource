@@ -69,29 +69,29 @@ ${PAY_BUTTON}                        css=button#checkout-pay-button    # capture
 ${BILLING_TOGGLE}                    css=input#billingAddressCheckbox    # captured live 2026-08-07
 
 # --- Card fields: cross-origin PCI iframes, random id suffix per load, selected by prefix + pierced ---
-# ⚠️ OPEN FINDING (TS-12 TC-12-001/002/005/006) — 2026-08-12, root cause NOT proven.
-# Each card iframe holds EIGHT inputs: the real field plus SEVEN honeypot decoys
-# (data-honeypot-field, aria-hidden="true", tabindex="-1", class="visually-hidden"). The
-# selectors below use :visible, which targets the one real field independently of DOM order.
+# ROOT CAUSE FOUND 2026-08-12 — the card fields were CROSS-CONTAMINATING each other.
+# Each iframe holds EIGHT inputs: the real field plus SEVEN honeypot decoys
+# (data-honeypot-field, aria-hidden="true", tabindex="-1", class="visually-hidden"), and every
+# frame carries the full set of ids. A frame-scoped but unqualified "input" (or "input:visible")
+# therefore did not reliably resolve to that frame's own real field. A read-back diagnostic
+# proved the damage: after Enter Card Details, the CARD NUMBER field contained "Test Tester" —
+# the cardholder name from the LAST fill — while the expiry and CVV iframes displayed
+# "Enter a valid expiration date" and "Enter the CVV or security code on your card". The card
+# was never valid, so the form never submitted, and because those messages live INSIDE the
+# cross-origin iframes they were invisible to every Get Text body oracle in this file.
+# Naming each real input by id inside its own frame fixes it — verified by read-back:
+# number='2', expiry='12 / 30', cvv='123', name='Test Tester', and the in-frame validation
+# errors gone.
 #
-# THE PAYMENT POST NEVER COMPLETES FROM THE AUTOMATED BROWSER. Fields fill, Pay now clicks,
-# and then nothing: no decline alert for card 2, no Request ID for card 3, and — decisively —
-# card 1 (the APPROVED test card) creates NO ORDER when run with -v ALLOW_ORDERS:True. TC-12-003
-# passes only because garbage card data is rejected client-side, needing no submission at all.
-# Tried and ruled out: longer waits (20s), id-qualified selectors, :visible selectors, and real
-# keystrokes via Type Text with a per-character delay. guard_check.py reports clean, because
-# there is no challenge page and no cart-badge failure to detect.
-#
-# LEADING HYPOTHESIS: the store's graduated, fingerprint-keyed bot mitigation silently DROPS the
-# payment POST, exactly as it was proven to drop cart-mutation POSTs on 7 Aug 2026 — pages served
-# normally, form accepted, request discarded, no error surfaced. Consistent with the fact that the
-# only order this project has ever placed (#1YRC8ZIPW, 5 Aug) was placed through the human-profiled
-# MCP browser; the robot has never successfully placed one. If correct, this is an ENVIRONMENTAL
-# constraint on the test object, not a suite defect, and belongs in the report as such.
-${CARD_NUMBER_FRAME_INPUT}                 [id^="card-fields-number"] >>> input:visible
-${CARD_EXPIRY_FRAME_INPUT}                 [id^="card-fields-expiry"] >>> input:visible
-${CARD_SECURITY_CODE_FRAME_INPUT}          [id^="card-fields-verification_value"] >>> input:visible
-${CARD_NAME_FRAME_INPUT}                   [id^="card-fields-name"] >>> input:visible
+# ⚠️ STILL OPEN after that fix: (a) the card-2 decline alert still does not surface within 20s
+# on the FIRST attempt, and (b) the SECOND and THIRD payment attempts in the same run fail with
+# a Fill Text timeout, because ts12 chains all its payment cases against ONE checkout session
+# reached in Suite Setup and the PCI iframes do not survive a prior submission. Fixing (b) means
+# reaching a fresh checkout per payment case, at the cost of extra page loads.
+${CARD_NUMBER_FRAME_INPUT}                 [id^="card-fields-number"] >>> input#number
+${CARD_EXPIRY_FRAME_INPUT}                 [id^="card-fields-expiry"] >>> input#expiry
+${CARD_SECURITY_CODE_FRAME_INPUT}          [id^="card-fields-verification_value"] >>> input#verification_value
+${CARD_NAME_FRAME_INPUT}                   [id^="card-fields-name"] >>> input#name
 
 # --- Return-to-cart: the modern one-page checkout header may not carry a Cart link (unlike the
 # classic /cart chrome) — this is the ONLY navigation-chrome PROVISIONAL locator in this file.
