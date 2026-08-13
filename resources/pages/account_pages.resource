@@ -219,9 +219,14 @@ Recovery Form Should Be Shown
     ...    message=No password-recovery e-mail field appeared after activating Forgot your password
 
 Submit Recovery For
-    [Documentation]    Submits the recover form for the given address. Dispatches a REAL e-mail
-    ...    to that inbox; the reset itself is never followed (following the link would change the
-    ...    registered account's password and break TC-16-001).
+    [Documentation]    Submits the recover form for the given address. On automated runs this
+    ...    dispatches NO e-mail: the account-form captcha silently swallows automated submissions
+    ...    (proven 13 Aug 2026 — an all-folder mailbox search found no robot-triggered reset
+    ...    e-mail from the 12 Aug runs, while an identical human-submitted request produced one,
+    ...    received 14:52 the same day; evidence: results/MANUAL_TC-16-008_INBOX_2026-08-13/).
+    ...    The e-mail half of the requirement is HUMAN-VERIFIED PASS (13 Aug 2026). The reset
+    ...    link itself is never followed by automation (following it would change the registered
+    ...    account's password and break TC-16-001).
     [Arguments]    ${email}
     Fill Text    ${RECOVERY_EMAIL_INPUT}    ${email}
     Click    ${RECOVERY_SUBMIT}
@@ -237,9 +242,13 @@ Login Email Client Validation Facts
     RETURN    type='${type}', required=${required}, validationMessage='${msg}'
 
 Recovery Dispatch Should Be Confirmed
-    [Documentation]    Asserts the store confirms on-page that a reset e-mail was sent (classic
-    ...    wording: "We've sent you an email with a link to update your password."). Text oracle
-    ...    kept loose — asserts the REQUIREMENT (dispatch confirmed), not one literal rendering.
+    [Documentation]    Asserts the store renders its generic on-page confirmation text (classic
+    ...    wording: "We've sent you an email with a link to update your password."). UI EVIDENCE
+    ...    ONLY: this same text renders whether or not an e-mail is actually dispatched —
+    ...    automated submissions are silently swallowed by the account-form captcha, so NO e-mail
+    ...    is sent on automated runs (proven 13 Aug 2026, results/MANUAL_TC-16-008_INBOX_2026-08-13/;
+    ...    the e-mail half of the requirement is HUMAN-VERIFIED PASS, 13 Aug 2026, separately).
+    ...    Text oracle kept loose — asserts the on-page wording only, not proof of dispatch.
     ${text}=    Get Text    body
     Should Match Regexp    ${text}    (?i)(sent you an email|email with a link|reset your password|password reset|check your (e-?)mail)
-    ...    msg=No on-page confirmation that a password-recovery e-mail was dispatched
+    ...    msg=No on-page confirmation text rendered for the password-recovery request

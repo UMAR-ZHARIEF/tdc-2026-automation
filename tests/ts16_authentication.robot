@@ -40,8 +40,12 @@ Documentation     TS-16 User Authentication — executable mirror of TCS cases T
 ...               Traffic: ~5 page loads per run (TC-16-006 opens the login page for its DOM
 ...               observation; TC-16-007 one register-page load, client-side only; TC-16-008
 ...               login page + recover flow; captcha-gated cases skip before any navigation) —
-...               run sparingly (shared live store). NOTE: each run of TC-16-008 dispatches ONE
-...               real recovery e-mail to the project inbox.
+...               run sparingly (shared live store). NOTE: automated runs of TC-16-008 dispatch
+...               NO recovery e-mail — the account-form captcha silently swallows automated
+...               submissions (proven 13 Aug 2026: an all-folder mailbox search found zero
+...               robot-triggered reset e-mails from the 12 Aug runs, while an identical
+...               human-submitted request produced one, received 14:52 the same day; evidence:
+...               results/MANUAL_TC-16-008_INBOX_2026-08-13/).
 Resource          ../resources/common.resource
 Resource          ../resources/pages/layout.resource
 Resource          ../resources/pages/account_pages.resource
@@ -183,19 +187,26 @@ TC-16-007 Invalid E-Mail Format During Sign Up
 TC-16-008 Password Recovery E-Mail
     [Documentation]    Registered test account exists (12 Aug 2026); login page open. Steps:
     ...    1. Activate "Forgot your password?". 2. Verify the Reset Password form appears.
-    ...    3. Submit the account e-mail and verify the store confirms dispatch on-page.
-    ...    TCS steps 4–5 (read the inbox, follow the link, set a new password, log in with it)
-    ...    are the MANUAL half against the project inbox — the TC-13-007 split — and are
-    ...    deliberately never automated: following the reset link would change the registered
-    ...    credential and break TC-16-001. Each run dispatches ONE real recovery e-mail to the
-    ...    project inbox. Priority Medium / Positive.
+    ...    3. Submit the account e-mail and verify the store renders its generic on-screen
+    ...    confirmation. This automated case exercises the recovery UI half ONLY: the
+    ...    account-form captcha silently swallows automated submissions, so NO e-mail is sent
+    ...    on automated runs — the on-screen confirmation renders regardless and is UI evidence
+    ...    only, not proof the request was processed (proven 13 Aug 2026: an all-folder mailbox
+    ...    search found no robot-triggered reset e-mail from the 12 Aug runs, while an identical
+    ...    human-submitted request produced one — "Customer account password reset" from Sauce
+    ...    Demo, received 14:52 the same day; evidence:
+    ...    results/MANUAL_TC-16-008_INBOX_2026-08-13/). The e-mail half of the requirement is
+    ...    HUMAN-VERIFIED PASS (13 Aug 2026). TCS steps 4–5 (read the inbox, follow the link, set
+    ...    a new password, log in with it) are the MANUAL half against the project inbox — the
+    ...    TC-13-007 split — and are deliberately never automated: following the reset link would
+    ...    change the registered credential and break TC-16-001. Priority Medium / Positive.
     [Tags]    priority-medium    type-positive    TC-16-008    TB-AUTH-005
     Open Login Page
     Open Password Recovery
     Recovery Form Should Be Shown
     Submit Recovery For    ${TEST_ACCOUNT_EMAIL}
     Recovery Dispatch Should Be Confirmed
-    Log    Automated half complete (recover form shown, dispatch confirmed on-page). Manual half: verify arrival in the project inbox and the reset flow separately — never automated here, to preserve the registered credential.
+    Log    Automated half complete: recover form shown, on-screen confirmation rendered — UI evidence only, not proof of dispatch (automated submissions are silently swallowed by the account-form captcha, so no e-mail is sent on automated runs, proven 13 Aug 2026). E-mail half is HUMAN-VERIFIED PASS (13 Aug 2026): a human-submitted request produced the e-mail. The reset flow itself is never automated here, to preserve the registered credential.
 
 TC-16-009 Log Out Returns To Guest State
     [Documentation]    Logged in with the test account (login performed by this case; account
