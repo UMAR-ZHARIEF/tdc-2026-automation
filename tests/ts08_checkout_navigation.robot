@@ -1,9 +1,10 @@
 *** Settings ***
 Documentation     TS-08 Checkout Navigation — executable mirror of TCS cases TC-08-001..006.
-...               Authorities: 02 - Test Case Specification v2.1 and 01 - Test Basis v1.0
-...               (approved 2026-08-05), UC-08 (TB-CHK-001..004). 5 cases automated; 1 documented
+...               Authorities: the team's Test Case Specification and Test Basis, UC-08. 5 cases
+...               automated; 1 documented
 ...               SKIP (TC-08-006: a server-side session timeout cannot be induced on a live store
-...               the team does not control — Design-only, 02 v2.1 §MODES, coordinator-confirmed).
+...               the team does not control — Design-only, per the Test Case Specification's
+...               §MODES, coordinator-confirmed).
 ...               New page object: resources/pages/checkout_page.resource — locators captured
 ...               live 2026-08-07 against the modern ONE-PAGE checkout (/checkouts/cn/...); see
 ...               that file's own Documentation for the capture's scope and the two PROVISIONAL
@@ -54,7 +55,7 @@ TC-08-004 Block Checkout Access When The Cart Is Empty
     ...    held the shared line and the case failed on a precondition that was never established
     ...    (live run 11 Aug 2026). Running first needs no extra /cart/clear hit, keeping the
     ...    two-per-run budget. Priority High / Negative.
-    [Tags]    priority-high    type-negative    TC-08-004    TB-CHK-001    TB-CHK-002    TB-CHK-003    TB-CHK-004
+    [Tags]    priority-high    type-negative    TC-08-004
     Empty Cart Direct Checkout Should Be Refused
 
 TC-08-001 Proceed To Checkout With Valid Cart And Verify Data Transfer
@@ -68,7 +69,7 @@ TC-08-001 Proceed To Checkout With Valid Cart And Verify Data Transfer
     ...    Documentation): the order-summary line doubles the product title ("Grey
     ...    jacketGrey jacket"), so the product-name check below uses "contains", never equality.
     ...    Priority High / Positive.
-    [Tags]    priority-high    type-positive    TC-08-001    TB-CHK-001    TB-CHK-002    TB-CHK-003    TB-CHK-004
+    [Tags]    priority-high    type-positive    TC-08-001
     Open Product    ${PRODUCT_HANDLE}
     ${product_name}=    Product Title
     ${price_text}=    Visible Price Text
@@ -92,7 +93,7 @@ TC-08-002 Proceed To Checkout As A Guest
     ...    click): this whole suite never logs in anywhere, so the checkout TC-08-001 already
     ...    reached IS the guest-checkout evidence; this case adds the explicit no-login-gate
     ...    assertion (never redirected to /account/login). Priority Medium / Positive.
-    [Tags]    priority-medium    type-positive    TC-08-002    TB-CHK-001    TB-CHK-002    TB-CHK-003    TB-CHK-004
+    [Tags]    priority-medium    type-positive    TC-08-002
     Checkout Should Be Reached
     ${url}=    Get Url
     Should Not Contain    ${url}    /account/login
@@ -110,7 +111,7 @@ TC-08-003 Return From Checkout To Cart Without Completing The Order
     ...    outside dry-run. Chained from TC-08-001 (deliberate): reuses the product name/quantity
     ...    TC-08-001 captured via suite variables instead of re-reading the product page.
     ...    Priority Medium / Positive.
-    [Tags]    priority-medium    type-positive    TC-08-003    TB-CHK-001    TB-CHK-002    TB-CHK-003    TB-CHK-004
+    [Tags]    priority-medium    type-positive    TC-08-003
     Return To Cart From Checkout
     Open Cart
     Cart Should Contain    ${PRODUCT_NAME}
@@ -130,7 +131,7 @@ TC-08-005 Handle Cart-Data Transfer Into Checkout
     ...    TC-08-001/003 (deliberate, avoids a further /cart/clear hit): reuses the suite
     ...    variables TC-08-001 captured instead of re-reading the product page. Priority High /
     ...    Negative (02 v2.1 suite-table value).
-    [Tags]    priority-high    type-negative    TC-08-005    TB-CHK-001    TB-CHK-002    TB-CHK-003    TB-CHK-004
+    [Tags]    priority-high    type-negative    TC-08-005
     Open Cart
     Cart Should Contain    ${PRODUCT_NAME}
     Line Quantity Should Be    ${CART_QTY}
@@ -150,5 +151,5 @@ TC-08-006 Handle Session Timeout Or Interruption During Transition To Checkout (
     ...    Not executed: a server-side session timeout/interruption cannot be induced on a live
     ...    store the team does not control (02 v2.1 §MODES Design-only; task brief confirms this
     ...    assignment as a coordinator erratum fix). Priority Medium / Negative.
-    [Tags]    priority-medium    type-negative    design-only    TC-08-006    TB-CHK-001    TB-CHK-002    TB-CHK-003    TB-CHK-004
+    [Tags]    priority-medium    type-negative    design-only    TC-08-006
     Skip    Design-only: a server-side session timeout/interruption cannot be induced on a live store the team does not control. Designed case retained in the TCS.

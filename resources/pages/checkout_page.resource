@@ -255,7 +255,7 @@ Return To Cart From Checkout
 
 Empty Cart Direct Checkout Should Be Refused
     [Documentation]    Navigates directly to /checkout with an empty cart and asserts checkout is
-    ...    REFUSED (TC-08-004; TB-CHK-004). The recovered expectation is that the checkout flow
+    ...    REFUSED (TC-08-004). The recovered expectation is that the checkout flow
     ...    must not be offered when the cart is empty; the store may satisfy that by any
     ...    mechanism. The earlier oracle enumerated only two mechanisms (redirect to /cart, or an
     ...    on-page refusal message) because the real one was unobservable before a live run.
@@ -274,7 +274,7 @@ Empty Cart Direct Checkout Should Be Refused
     Should Not Be True    ${reached_checkout}
     ...    msg=Checkout was REACHED with an empty cart — the store failed to refuse direct /checkout navigation
     IF    not ${redirected_to_cart} and not ${refusal_text}
-        Log    OBSERVATION (TC-08-004, TB-CHK-004): empty-cart checkout is correctly refused, but the storefront silently redirects to the home page — it neither returns the customer to the cart nor explains why checkout was not offered.    level=WARN
+        Log    OBSERVATION (TC-08-004): empty-cart checkout is correctly refused, but the storefront silently redirects to the home page — it neither returns the customer to the cart nor explains why checkout was not offered.    level=WARN
     END
 
 Checkout Page Text
@@ -437,7 +437,7 @@ Page Level Error Region Text
 
 Required Field Validation Should Be Shown
     [Documentation]    Asserts submitting checkout with required fields blank is refused with
-    ...    validation evidence (TC-09-002; TB-VAL-001..005): a validation/required/error message
+    ...    validation evidence (TC-09-002): a validation/required/error message
     ...    in the page text, OR the browser remaining on checkout (/checkouts/) rather than
     ...    advancing — union oracle, mirroring resources/pages/account_pages.resource's
     ...    "Empty Login Validation Should Be Shown" pattern for an un-verified validation surface.
@@ -461,7 +461,7 @@ Required Field Message Should Be Present
 
 Email Format Validation Should Be Shown
     [Documentation]    Asserts submitting checkout with a malformed e-mail is refused with an
-    ...    e-mail/format validation message (TC-09-003; TB-VAL-003).
+    ...    e-mail/format validation message (TC-09-003).
     ...
     ...    THE ALWAYS-TRUE ARM HAS BEEN REMOVED for the same reason as
     ...    `Required Field Validation Should Be Shown`: TC-09-003 never fills the card section, so

@@ -51,7 +51,7 @@ Results (log.html, report.html, output.xml, failure screenshots) are written to
 
 ## Suites
 
-The inventory is the approved 02 Test Case Specification v2.1 mirrored 1:1 — 18
+The inventory is the team's approved Test Case Specification mirrored 1:1 — 18
 suites, 108 tests, nothing else. Status columns are pass/fail/skip from the
 authorized full evidence run of 12 Aug 2026 (`-v ALLOW_ORDERS:True` — order-creating
 cases executed; a separate zero-order regression baseline exists); every fail is a

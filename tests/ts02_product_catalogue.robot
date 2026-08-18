@@ -1,7 +1,6 @@
 *** Settings ***
 Documentation     TS-02 Product Catalogue System — executable mirror of TCS cases TC-02-001..006.
-...               Authorities: 02 - Test Case Specification v2.1 and
-...               01 - Test Basis v1.0 (approved 2026-08-05), UC-02.
+...               Authorities: the team's Test Case Specification and Test Basis, UC-02.
 ...               3 cases automated; 3 design-only documented SKIPs (empty-catalogue and
 ...               detail-page-load-failure conditions cannot be induced on a live store we do
 ...               not control; see each case's reason). Assertions are data-independent: product
@@ -31,7 +30,7 @@ TC-02-001 Browse Catalogue And Open Product Detail Page
     [Documentation]    Customer browses the catalogue, sees product summary info and opens a
     ...    product detail page by clicking a product. The clicked product's own URL is captured
     ...    at runtime and asserted after navigation (data-independent). Priority High / Positive.
-    [Tags]    priority-high    type-positive    TC-02-001    TB-CAT-001    TB-CAT-002    TB-CAT-003    TB-CAT-004    TB-CAT-005    TB-CAT-006
+    [Tags]    priority-high    type-positive    TC-02-001
     Open Home
     Go To Catalogue Via Navigation
     Should Be On Catalogue
@@ -46,7 +45,7 @@ TC-02-002 Search Returns Matching Product Info
     ...    an observation for the test basis); search is the implemented alternative flow.
     ...    Result count is logged, not hard-asserted: "${SEARCH_TERM}" is a known over-matching
     ...    candidate (defect lead — search matches description text). Priority High / Positive.
-    [Tags]    priority-high    type-positive    TC-02-002    TB-CAT-003
+    [Tags]    priority-high    type-positive    TC-02-002
     Open Home
     Search For    ${SEARCH_TERM}
     Should Be On Search Results
@@ -58,7 +57,7 @@ TC-02-003 External Direct Link Opens Product Detail Page
     [Documentation]    Customer opens a product from an external/shared link, bypassing the
     ...    catalogue. Executed in a fresh browser context (no store history/cookies). Verifies
     ...    the PDP renders complete: title heading and price. Priority Medium / Positive.
-    [Tags]    priority-medium    type-positive    TC-02-003    TB-CAT-001    TB-CAT-002    TB-CAT-003    TB-CAT-004    TB-CAT-005    TB-CAT-006
+    [Tags]    priority-medium    type-positive    TC-02-003
     Open Fresh Context
     Open Product    ${DIRECT_HANDLE}
     Product Page Should Be Complete
@@ -68,8 +67,8 @@ TC-02-004 Empty Result Set Shows A Clear Empty State (Design-Only)
     ...    display. Not executed: an empty-catalogue state is a store-side condition that
     ...    cannot be induced on a live third-party store (02 v2.1 §MODES). NOTE: the
     ...    no-results-search adaptation previously used here is redirected as future coverage
-    ...    for TS-17 Search System (TB-SRCH) when that suite is authored. Priority Medium / Negative.
-    [Tags]    priority-medium    type-negative    design-only    TC-02-004    TB-CAT-001    TB-CAT-002    TB-CAT-003    TB-CAT-004    TB-CAT-005    TB-CAT-006
+    ...    for TS-17 Search System when that suite is authored. Priority Medium / Negative.
+    [Tags]    priority-medium    type-negative    design-only    TC-02-004
     Skip    Design-only per 02 v2.1: an empty catalogue state cannot be induced on a live third-party store (store-side condition only).
 
 TC-02-005 Incomplete Product Listing Data (Design-Only)
@@ -78,7 +77,7 @@ TC-02-005 Incomplete Product Listing Data (Design-Only)
     ...    not control. Naturally occurring data-quality findings (placeholder descriptions
     ...    with typos, title/URL mismatch) are handled as manual defect reports instead.
     ...    Priority Medium / Negative.
-    [Tags]    priority-medium    type-negative    design-only    TC-02-005    TB-CAT-001    TB-CAT-002    TB-CAT-003    TB-CAT-004    TB-CAT-005    TB-CAT-006
+    [Tags]    priority-medium    type-negative    design-only    TC-02-005
     Skip    Not executable: cannot inject missing/corrupt product data into a live store we do not control. Naturally occurring data-quality issues are covered by manual defect reports (placeholder descriptions, title/URL mismatch).
 
 TC-02-006 Nonexistent Product Page Fails Safely With Not-Found Message (Design-Only)
@@ -88,5 +87,5 @@ TC-02-006 Nonexistent Product Page Fails Safely With Not-Found Message (Design-O
     ...    that cannot be induced on a live store (02 v2.1 §MODES). NOTE: the nonexistent-URL/404
     ...    adaptation previously used here is redirected as future coverage for TS-18 Content &
     ...    Error Pages when that suite is authored. Priority High / Negative.
-    [Tags]    priority-high    type-negative    design-only    TC-02-006    TB-CAT-001    TB-CAT-002    TB-CAT-003    TB-CAT-004    TB-CAT-005    TB-CAT-006
+    [Tags]    priority-high    type-negative    design-only    TC-02-006
     Skip    Design-only per 02 v2.1: a detail-page load failure cannot be induced on a live store.

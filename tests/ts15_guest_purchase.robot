@@ -1,8 +1,8 @@
 *** Settings ***
 Documentation     TS-15 Guest Purchase Flow — executable mirror of TCS cases TC-15-001..005.
-...               Authorities: 02 - Test Case Specification v2.1 and 01 - Test Basis v1.0
-...               (approved 2026-08-05), UC-15 (TB-AUTH-004, TB-CHK-001; TC-15-004 additionally
-...               traces TB-CART-005 per 02 v2.1 §TRACES). 3 cases automated (2 unconditionally
+...               Authorities: the team's Test Case Specification and Test Basis, UC-15
+...               (TC-15-004 additionally traces an additional Test Basis item per the Test Case
+...               Specification's §TRACES). 3 cases automated (2 unconditionally
 ...               safe, 1 gated further below alongside another gated case); 1 documented SKIP
 ...               (TC-15-002: 02 v2.1 §MODES Design-only — guest-checkout availability is a
 ...               merchant-side configuration the team cannot disable on a live store it does not
@@ -62,7 +62,7 @@ TC-15-001 Guest Completes Purchase Successfully
     ...    an explicit -v ALLOW_ORDERS:True run (team payment policy; see suite Documentation for
     ...    the order-budget note). This whole suite never logs in anywhere, so completing this
     ...    flow IS the guest-purchase evidence. Priority Critical / Positive.
-    [Tags]    priority-critical    type-positive    TC-15-001    TB-AUTH-004    TB-CHK-001
+    [Tags]    priority-critical    type-positive    TC-15-001
     Skip If    not ${ALLOW_ORDERS}    Creates a real order — run only in an explicitly authorized session (-v ALLOW_ORDERS:True); team payment policy and order budget apply (see suite Documentation).
     Reach Checkout With Product And Address    ${PRODUCT_HANDLE}
     Enter Card Details    1    12/30    123
@@ -78,7 +78,7 @@ TC-15-002 Guest Checkout Unavailable (Design-Only)
     ...    disable on a live store it does not control — every other case in this suite already
     ...    confirms guest checkout IS currently enabled (02 v2.1 §MODES Design-only). Priority
     ...    Critical / Negative.
-    [Tags]    priority-critical    type-negative    design-only    TC-15-002    TB-AUTH-004    TB-CHK-001
+    [Tags]    priority-critical    type-negative    design-only    TC-15-002
     Skip    Design-only: guest-checkout availability is a merchant-side configuration that cannot be disabled on a live store the team does not control. Designed case retained in the TCS.
 
 TC-15-003 Guest Abandons Checkout
@@ -88,7 +88,7 @@ TC-15-003 Guest Abandons Checkout
     ...    the cart still holds the item — abandonment must not silently clear it. SAFE, no data
     ...    required; independent of the other cases in this file (adds its own product). Priority
     ...    High / Negative.
-    [Tags]    priority-high    type-negative    TC-15-003    TB-AUTH-004    TB-CHK-001
+    [Tags]    priority-high    type-negative    TC-15-003
     Open Product    ${PRODUCT_HANDLE}
     ${name}=    Product Title
     Add Current Product To Cart
@@ -108,7 +108,7 @@ TC-15-004 Guest Cart Persistence (Same-Context New Page)
     ...    persistence check is manual-scope, out of this automated case — documented here as the
     ...    deliberate interpretation, not an oversight. Independent of the other cases in this file
     ...    (adds its own product). Priority High / Positive.
-    [Tags]    priority-high    type-positive    TC-15-004    TB-AUTH-004    TB-CHK-001    TB-CART-005
+    [Tags]    priority-high    type-positive    TC-15-004
     Open Product    ${PRODUCT_HANDLE}
     Add Current Product To Cart
     ${count_before}=    Current Cart Badge Count
@@ -131,7 +131,7 @@ TC-15-005 Offer Account Creation After Purchase
     ...    TC-15-001, its own separate order (see suite Documentation's order-budget note: up to
     ...    TWO real orders total in this file when both TC-15-001 and TC-15-005 execute under
     ...    ALLOW_ORDERS:True). Priority Medium / Positive.
-    [Tags]    priority-medium    type-positive    known-defect-lead    TC-15-005    TB-AUTH-004    TB-CHK-001
+    [Tags]    priority-medium    type-positive    known-defect-lead    TC-15-005
     Skip If    not ${ALLOW_ORDERS}    Creates a real order — run only in an explicitly authorized session (-v ALLOW_ORDERS:True); team payment policy and order budget apply (see suite Documentation).
     Reach Checkout With Product And Address    ${PRODUCT_HANDLE}
     Enter Card Details    1    12/30    123

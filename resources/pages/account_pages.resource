@@ -3,9 +3,9 @@ Documentation     Page object: classic Shopify customer authentication forms —
 ...               (/account/login: customer[email], customer[password], Sign In submit) and the
 ...               registration page (/account/register: customer[first_name], customer[last_name],
 ...               customer[email], customer[password], Create submit). Built for TS-16 User
-...               Authentication (UC-16, TB-AUTH-001..007) under the zero-store-traffic
+...               Authentication (UC-16) under the zero-store-traffic
 ...               constraint: every locator below is PROVISIONAL — inferred from Shopify classic
-...               theme conventions and Test Basis v1.0 observations (TB-AUTH-001/002), not from
+...               theme conventions and Test Basis v1.0 observations, not from
 ...               a live visit to these two pages. Each is flagged individually; live-verify
 ...               before relying on this file outside dry-run. Error/validation oracles are
 ...               written as UNION checks (a locator-based surface OR a body-text regex) so a
@@ -84,7 +84,7 @@ Login Error Surface Or Text Should Be Present
 
 Empty Login Validation Should Be Shown
     [Documentation]    Asserts submitting the login form with both fields empty is refused with
-    ...    clear validation (TB-AUTH-001; TC-16-006). Union oracle: an explicit validation/error
+    ...    clear validation (TC-16-006). Union oracle: an explicit validation/error
     ...    message, OR — if the theme relies on native HTML5 "required" field validation, which
     ...    blocks submission client-side with a browser tooltip this stack cannot read as DOM
     ...    text — the page simply remains on the login form with no session created.
@@ -123,7 +123,7 @@ Submit Registration
 
 Registration Email Format Error Should Be Shown
     [Documentation]    Asserts a clear e-mail-format error is shown after submitting a malformed
-    ...    e-mail on the registration form (TB-AUTH-002; TC-16-007). Union oracle across three
+    ...    e-mail on the registration form (TC-16-007). Union oracle across three
     ...    arms: the PROVISIONAL error-surface element is present, or the page text names an
     ...    e-mail/format problem, or — if the theme's e-mail input uses type="email", which makes
     ...    the browser block submission of "user@@test" client-side with a native tooltip this

@@ -137,7 +137,7 @@ Breadcrumb Link Count
 
 Click Breadcrumb Home Link
     [Documentation]    Clicks the first (Home) link in the two-level breadcrumb trail
-    ...    (TB-PDP-003: Home — product name).
+    ...    (Home — product name).
     Click    ${BREADCRUMB_LINKS} >> nth=0
 
 Description Block Count

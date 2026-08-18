@@ -1,13 +1,14 @@
 *** Settings ***
 Documentation     TS-07 Cart Management — executable mirror of TCS cases TC-07-001..007.
-...               Authorities: 02 - Test Case Specification v2.1 and 01 - Test Basis v1.0
-...               (approved 2026-08-05), UC-07 (TB-CUP-001..005). 5 cases automated; 1
+...               Authorities: the team's Test Case Specification and Test Basis, UC-07. 5 cases
+...               automated; 1
 ...               documented SKIP (stock-limit capping cannot be induced on a live store).
-...               TC-07-006 was removed together with 02 v2.1's deletion of the non-functional
-...               annex (competition Don't #1); the removal is recorded in 02's change log and
+...               TC-07-006 was removed together with the Test Case Specification's deletion of
+...               the non-functional annex (competition Don't #1); the removal is recorded in the
+...               Test Case Specification's change log and
 ...               the ID gap is intentional (no renumbering). TC-07-002 reworded: the theme
 ...               offers no increment/decrement controls, only a free-text quantity input
-...               (TB-CUP-001) — the case verifies that input path instead. TC-07-004 uses soft,
+...               — the case verifies that input path instead. TC-07-004 uses soft,
 ...               observation-style assertions (Log per attempt) since the store's exact
 ...               invalid-input policy is undocumented; the observed behaviour becomes the
 ...               evidence, and only internal consistency (total vs. displayed quantity) is
@@ -55,11 +56,11 @@ Establish Shared Cart Line
 TC-07-001 Modify Item Quantity Via Quantity Input
     [Documentation]    The customer sets the cart line's quantity input to 3 and applies the
     ...    Update control: the quantity shows 3, the line total equals 3x the unit price, and the
-    ...    header count reflects 3 (TB-CUP-001/002). State chained from Suite Setup's shared cart
+    ...    header count reflects 3. State chained from Suite Setup's shared cart
     ...    line (deliberate — repeated /cart/clear navigations trip the store's bot protection):
     ...    the cart already holds one unit; this test edits its quantity directly.
     ...    Priority High / Positive.
-    [Tags]    priority-high    type-positive    TC-07-001    TB-CUP-001    TB-CUP-002    TB-CUP-003    TB-CUP-004    TB-CUP-005
+    [Tags]    priority-high    type-positive    TC-07-001
     Open Cart
     Set Line Quantity    3
     Update Cart
@@ -73,12 +74,12 @@ TC-07-001 Modify Item Quantity Via Quantity Input
 
 TC-07-002 Quantity Input Editing Behaviour
     [Documentation]    The theme offers no increment/decrement controls — quantity is edited only
-    ...    via the free-text input (TB-CUP-001). The customer sets quantity to 2, then back to 1;
+    ...    via the free-text input. The customer sets quantity to 2, then back to 1;
     ...    totals recalculate correctly on each Update. State chained from TC-07-001 (deliberate
     ...    — repeated /cart/clear navigations trip the store's bot protection): the line already
     ...    exists (at quantity 3 on entry); this test edits it to 2, then to 1, on that same line.
     ...    Priority High / Positive.
-    [Tags]    priority-high    type-positive    TC-07-002    TB-CUP-001    TB-CUP-002    TB-CUP-003    TB-CUP-004    TB-CUP-005
+    [Tags]    priority-high    type-positive    TC-07-002
     ${unit_price}=    Currency Text To Number    ${UNIT_PRICE_TEXT}
     Open Cart
     Set Line Quantity    2
@@ -106,7 +107,7 @@ TC-07-004 Invalid Quantity Input Handling
     ...    on entry); this test's own empty-cart re-add guard inside the FOR loop already handles
     ...    the case where an invalid value empties the line mid-test, so no separate setup add is
     ...    performed here. Priority Medium / Negative.
-    [Tags]    priority-medium    type-negative    TC-07-004    TB-CUP-001    TB-CUP-002    TB-CUP-003    TB-CUP-004    TB-CUP-005
+    [Tags]    priority-medium    type-negative    TC-07-004
     ${unit_price}=    Currency Text To Number    ${UNIT_PRICE_TEXT}
     Open Cart
     FOR    ${value}    IN    @{INVALID_QUANTITIES}
@@ -145,14 +146,14 @@ TC-07-004 Invalid Quantity Input Handling
 
 TC-07-003 Remove Item Via Remove Link
     [Documentation]    The customer clicks the cart line's Remove control: the line disappears,
-    ...    the empty-cart state renders, and the header count reflects the removal
-    ...    (TB-CUP-004/005). State chained from TC-07-004 (deliberate — repeated /cart/clear
+    ...    the empty-cart state renders, and the header count reflects the removal. State
+    ...    chained from TC-07-004 (deliberate — repeated /cart/clear
     ...    navigations trip the store's bot protection): TC-07-004's invalid-input handling can
     ...    end with the line intact or already removed (the store's exact policy per value is
     ...    undocumented), so this test re-establishes one unit first if the cart is already empty
     ...    on entry — mirroring TC-07-004's own guard — before exercising the Remove control.
     ...    Priority High / Positive.
-    [Tags]    priority-high    type-positive    TC-07-003    TB-CUP-001    TB-CUP-002    TB-CUP-003    TB-CUP-004    TB-CUP-005
+    [Tags]    priority-high    type-positive    TC-07-003
     Open Cart
     ${was_empty}=    Cart Is Empty
     IF    ${was_empty}
@@ -169,12 +170,12 @@ TC-07-003 Remove Item Via Remove Link
 TC-07-007 Removing Last Item Yields Empty-Cart State
     [Documentation]    With exactly one item in the cart — added by this test, not chained, since
     ...    TC-07-003's own assertions guarantee an empty cart on entry — removing it transitions
-    ...    the cart page cleanly to the empty-cart state and the header count reads 0
-    ...    (TB-CUP-004/005 / TB-CART-001 empty-state expectation). State chained from TC-07-003
+    ...    the cart page cleanly to the empty-cart state and the header count reads 0 (the
+    ...    empty-state expectation). State chained from TC-07-003
     ...    (deliberate — repeated /cart/clear navigations trip the store's bot protection): no
     ...    Clear Cart is needed here because TC-07-003 already verified an empty cart.
     ...    Priority Medium / Negative.
-    [Tags]    priority-medium    type-negative    TC-07-007    TB-CUP-001    TB-CUP-002    TB-CUP-003    TB-CUP-004    TB-CUP-005
+    [Tags]    priority-medium    type-negative    TC-07-007
     Open Product    ${PRODUCT_HANDLE}
     Add Current Product To Cart
     Open Cart
@@ -186,5 +187,5 @@ TC-07-005 Stock-Limit Capping (Design-Only)
     [Documentation]    TCS expects a quantity increase beyond available stock to be capped with a
     ...    notification. Not executed: stock levels are unknown and cannot be manipulated on a
     ...    live store the team does not control. Priority High / Negative.
-    [Tags]    priority-high    type-negative    design-only    TC-07-005    TB-CUP-001    TB-CUP-002    TB-CUP-003    TB-CUP-004    TB-CUP-005
+    [Tags]    priority-high    type-negative    design-only    TC-07-005
     Skip    Design-only: stock levels are unknown and cannot be manipulated on a live store. Designed case retained in the TCS.

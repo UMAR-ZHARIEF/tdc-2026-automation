@@ -1,8 +1,9 @@
 *** Settings ***
 Documentation     TS-12 Payment Processing Module — executable mirror of TCS cases
-...               TC-12-001..006. Authorities: 02 - Test Case Specification v2.1 and 01 - Test
-...               Basis v1.0 (approved 2026-08-05), UC-12 (TB-PAY-001..006). 4 cases automated
-...               (3 unconditionally, 1 gated); 2 documented SKIPs (TC-12-004: 02 v2.1 §MODES
+...               TC-12-001..006. Authorities: the team's Test Case Specification and Test
+...               Basis, UC-12. 4 cases automated
+...               (3 unconditionally, 1 gated); 2 documented SKIPs (TC-12-004: the Test Case
+...               Specification's §MODES
 ...               Design-only — the order total is server-computed, so there is no public-UI way
 ...               to submit a mismatched payment amount on a live store the team does not
 ...               control; TC-12-005: automation-limited — SETTLED 12 Aug 2026 by the Phase H
@@ -90,7 +91,7 @@ TC-12-002 Payment Declined
     ...    filled). Card fields are observed to CLEAR after a failed attempt (verified 5 Aug
     ...    2026) — logged as evidence here, and acted on by TC-12-006/003/005, which each
     ...    re-enter card fields for exactly this reason. Priority Critical / Negative.
-    [Tags]    priority-critical    type-negative    TC-12-002    TB-PAY-001    TB-PAY-002    TB-PAY-003    TB-PAY-004    TB-PAY-005    TB-PAY-006
+    [Tags]    priority-critical    type-negative    TC-12-002
     Enter Card Details    2    12/30    123
     Click Pay Now
     ${alert_text}=    Payment Alert Should Contain    ${PAYMENT_DECLINED_ALERT_TEXT}
@@ -107,7 +108,7 @@ TC-12-006 Payment Gateway Timeout
     ...    re-entered here because TC-12-002's failed attempt cleared them (verified 5 Aug 2026).
     ...    Chained from TC-12-002 (deliberate — same checkout page, a declined attempt leaves the
     ...    session open for retry). Priority Critical / Negative.
-    [Tags]    priority-critical    type-negative    TC-12-006    TB-PAY-001    TB-PAY-002    TB-PAY-003    TB-PAY-004    TB-PAY-005    TB-PAY-006
+    [Tags]    priority-critical    type-negative    TC-12-006
     Enter Card Details    3    12/30    123
     Click Pay Now
     # ASSERTED: the payment is refused and no order is created — card 3's reliable observable.
@@ -120,7 +121,7 @@ TC-12-006 Payment Gateway Timeout
     # than meaningful, so its presence is recorded as evidence either way (12 Aug 2026).
     ${banner_present}=    Checkout Problem Banner Present
     ${has_request_id}=    Evaluate    "Request ID" in $alert_text
-    Log    OBSERVATION (TC-12-006, TB-PAY-*): after the card-3 gateway-failure attempt the checkout-problem banner was present=${banner_present} and a Request ID was present=${has_request_id}. Customer-facing text does NOT otherwise distinguish a gateway failure from a plain decline.    level=WARN
+    Log    OBSERVATION (TC-12-006): after the card-3 gateway-failure attempt the checkout-problem banner was present=${banner_present} and a Request ID was present=${has_request_id}. Customer-facing text does NOT otherwise distinguish a gateway failure from a plain decline.    level=WARN
     Log    Post-gateway-failure page text (observation evidence): ${alert_text}
 
 TC-12-003 Invalid Card Information
@@ -132,7 +133,7 @@ TC-12-003 Invalid Card Information
     ...    the gateway, never order-creating. Card fields are re-entered because TC-12-006's
     ...    attempt cleared them (verified 5 Aug 2026). Chained from TC-12-006 (deliberate — same
     ...    checkout page). Priority Critical / Negative.
-    [Tags]    priority-critical    type-negative    TC-12-003    TB-PAY-001    TB-PAY-002    TB-PAY-003    TB-PAY-004    TB-PAY-005    TB-PAY-006
+    [Tags]    priority-critical    type-negative    TC-12-003
     Enter Card Details    ${NON_PUBLISHED_CARD_NUMBER}    12/30    123
     Click Pay Now
     Payment Rejection Should Be Shown
@@ -150,7 +151,7 @@ TC-12-001 Successful Payment
     ...    Documentation for the full order-budget note. Chained from TC-12-003 (deliberate — same
     ...    checkout page; card fields re-entered because TC-12-003's attempt cleared them).
     ...    Priority Critical / Positive.
-    [Tags]    priority-critical    type-positive    TC-12-001    TB-PAY-001    TB-PAY-002    TB-PAY-003    TB-PAY-004    TB-PAY-005    TB-PAY-006
+    [Tags]    priority-critical    type-positive    TC-12-001
     Skip If    not ${ALLOW_ORDERS}    Creates a real order — run only in an explicitly authorized session (-v ALLOW_ORDERS:True); team payment policy and order budget apply (see suite Documentation).
     Enter Card Details    1    12/30    123
     Click Pay Now
@@ -176,7 +177,7 @@ TC-12-005 Retry Payment After Failure
     ...    automated failure is an AUTOMATION LIMITATION, not a store defect. The case is now an
     ...    unconditional documented Skip (evidence: results/MANUAL_TC-12-005_2026-08-12/).
     ...    Priority High / Positive.
-    [Tags]    priority-high    type-positive    automation-limited    TC-12-005    TB-PAY-001    TB-PAY-002    TB-PAY-003    TB-PAY-004    TB-PAY-005    TB-PAY-006
+    [Tags]    priority-high    type-positive    automation-limited    TC-12-005
     [Setup]    NONE
     Skip    Automation-limited — SETTLED 12 Aug 2026 by the Phase H manual confirmation retest: the identical decline -> in-place retry flow (no reload) SUCCEEDS for a human (order #V860ENJ8W), so the requirement is VERIFIED and this is NOT a store defect; only this automated stack's retry never completes (two authorized runs 12 Aug 2026, in place and after reload — every step green, no order). Evidence: results/MANUAL_TC-12-005_2026-08-12/. Automated execution withheld: it cannot currently return a truthful verdict and would waste order budget. For a deliberate maintenance re-attempt remove this Skip and the [Setup] NONE line; the ALLOW_ORDERS gate below still applies.
     Skip If    not ${ALLOW_ORDERS}    Creates a real order — run only in an explicitly authorized session (-v ALLOW_ORDERS:True); team payment policy and order budget apply (see suite Documentation).
@@ -217,6 +218,6 @@ TC-12-004 Payment Amount Mismatch (Design-Only)
     ...    the order total is server-computed from the live cart/shipping/discount state — there
     ...    is no public-UI way to submit a payment against a mismatched amount on a live store the
     ...    team does not control (02 v2.1 §MODES Design-only). Priority Critical / Negative.
-    [Tags]    priority-critical    type-negative    design-only    TC-12-004    TB-PAY-001    TB-PAY-002    TB-PAY-003    TB-PAY-004    TB-PAY-005    TB-PAY-006
+    [Tags]    priority-critical    type-negative    design-only    TC-12-004
     [Setup]    NONE
     Skip    Design-only: the order total is server-computed from the live checkout state; there is no public-UI way to submit a mismatched payment amount on a live store the team does not control. Designed case retained in the TCS.

@@ -1,9 +1,10 @@
 *** Settings ***
 Documentation     TS-09 Checkout Validation System — executable mirror of TCS cases
-...               TC-09-001..007. Authorities: 02 - Test Case Specification v2.1 and 01 - Test
-...               Basis v1.0 (approved 2026-08-05), UC-09 (TB-VAL-001..005; TC-09-007 additionally
-...               traces TB-AUTH-007 per 02 v2.1 §TRACES). All 7 cases automated — no skip-mirror
-...               (none of TC-09-001..007 appears in 02 v2.1's Design-only/Blocked-no-data lists).
+...               TC-09-001..007. Authorities: the team's Test Case Specification and Test
+...               Basis, UC-09 (TC-09-007 additionally traces an additional Test Basis item per
+...               the Test Case Specification's §TRACES). All 7 cases automated — no skip-mirror
+...               (none of TC-09-001..007 appears in the Test Case Specification's
+...               Design-only/Blocked-no-data lists).
 ...               SAFETY: this suite NEVER enters any of the store's three published test-card
 ...               values (1 approved-and-order-creating / 2 declined / 3 gateway-failure) — the
 ...               ALLOW_ORDERS gate that TS-12/13/15 use does not even apply here, because no card
@@ -59,7 +60,7 @@ TC-09-001 Submit Valid Checkout Details
     ...    state — the Shipping method section resolves to "International Shipping" and the Cost
     ...    summary shows "Shipping £20.00" — which stands in as the section-validation-passed
     ...    evidence. NO Pay click. Priority High / Positive.
-    [Tags]    priority-high    type-positive    TC-09-001    TB-VAL-001    TB-VAL-002    TB-VAL-003    TB-VAL-004    TB-VAL-005
+    [Tags]    priority-high    type-positive    TC-09-001
     Fill Contact Email    ${FICTITIOUS_EMAIL}
     Fill Delivery Address
     Shipping Method Should Be Displayed
@@ -74,7 +75,7 @@ TC-09-005 Leave Optional Field Blank
     ...    /cost-summary render stands in as the validation-passed evidence. Chained from
     ...    TC-09-001 (deliberate — same checkout page, no re-navigation). NO Pay click. Priority
     ...    Medium / Positive.
-    [Tags]    priority-medium    type-positive    TC-09-005    TB-VAL-001    TB-VAL-002    TB-VAL-003    TB-VAL-004    TB-VAL-005
+    [Tags]    priority-medium    type-positive    TC-09-005
     Fill Contact Email    ${FICTITIOUS_EMAIL}
     Fill Delivery Address    company=${EMPTY}    address2=${EMPTY}    phone=${EMPTY}
     Shipping Method Should Be Displayed
@@ -89,7 +90,7 @@ TC-09-007 Marketing Consent State At Checkout
     ...    TC-09-001/005 (deliberate — same checkout page); restores a full valid fill afterward so
     ...    the following field-validation cases start from a known-good baseline. NO Pay click.
     ...    Priority Low / Negative.
-    [Tags]    priority-low    type-negative    TC-09-007    TB-AUTH-007
+    [Tags]    priority-low    type-negative    TC-09-007
     ${default_state}=    Consent Checkbox State
     Log    Marketing consent default state (observation, captured live 2026-08-07: pre-ticked): ${default_state}
     Should Be True    ${default_state}
@@ -108,7 +109,7 @@ TC-09-002 Leave Required Fields Empty
     ...    Now — the card fields are never touched (still empty), so the payment gateway is
     ...    unreachable regardless; only client-side/form validation is under test. Chained from
     ...    TC-09-007 (deliberate — same checkout page). Priority High / Negative.
-    [Tags]    priority-high    type-negative    TC-09-002    TB-VAL-001    TB-VAL-002    TB-VAL-003    TB-VAL-004    TB-VAL-005
+    [Tags]    priority-high    type-negative    TC-09-002
     Fill Contact Email    ${EMPTY}
     Fill Delivery Address    first_name=${EMPTY}    last_name=${EMPTY}    address1=${EMPTY}
     ...    postal_code=${EMPTY}    city=${EMPTY}
@@ -124,7 +125,7 @@ TC-09-003 Enter Invalid Email Format
     ...    address is restored first (TC-09-002 left required fields blank) so the malformed
     ...    e-mail is isolated as the only invalid input. Chained from TC-09-002 (deliberate — same
     ...    checkout page). Priority High / Negative.
-    [Tags]    priority-high    type-negative    TC-09-003    TB-VAL-001    TB-VAL-002    TB-VAL-003    TB-VAL-004    TB-VAL-005
+    [Tags]    priority-high    type-negative    TC-09-003
     Fill Contact Email    abc@abc
     Fill Delivery Address
     Click Pay Now
@@ -144,7 +145,7 @@ TC-09-006 Enter Invalid Postal Code Or Address
     ...    Valid e-mail is restored first (TC-09-003 broke it) so the address is isolated as the
     ...    only unrealistic input. Chained from TC-09-003 (deliberate — same checkout page).
     ...    Priority Medium / Negative.
-    [Tags]    priority-medium    type-negative    TC-09-006    TB-VAL-001    TB-VAL-002    TB-VAL-003    TB-VAL-004    TB-VAL-005
+    [Tags]    priority-medium    type-negative    TC-09-006
     Fill Contact Email    ${FICTITIOUS_EMAIL}
     Fill Delivery Address    postal_code=00000    city=X
     Click Pay Now
@@ -167,7 +168,7 @@ TC-09-004 Enter Invalid Payment Fields
     ...    generically rejected, never order-creating). Chained from TC-09-006 (deliberate — same
     ...    checkout page); runs last in the file for exactly this reason. Priority High /
     ...    Negative.
-    [Tags]    priority-high    type-negative    TC-09-004    TB-VAL-001    TB-VAL-002    TB-VAL-003    TB-VAL-004    TB-VAL-005
+    [Tags]    priority-high    type-negative    TC-09-004
     Fill Contact Email    ${FICTITIOUS_EMAIL}
     Fill Delivery Address
     Enter Card Details    ${GARBAGE_CARD_NUMBER}    12/30    123

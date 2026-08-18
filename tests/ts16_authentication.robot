@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     TS-16 User Authentication — executable mirror of TCS cases TC-16-001..009.
-...               Authorities: 02 - Test Case Specification v2.1 and 01 - Test Basis v1.0
-...               (approved 2026-08-05), UC-16 (TB-AUTH-001..007). 2 cases automated end-to-end
+...               Authorities: the team's Test Case Specification and Test Basis, UC-16. 2 cases
+...               automated end-to-end
 ...               (TC-16-007 client-side sign-up validation; TC-16-008 recovery UI half, live-
 ...               passed 12 Aug 2026); 1 verify-then-skip (TC-16-006 captures the client-side
 ...               validation-contrast observation live, no submission); 6 documented SKIPs.
@@ -25,8 +25,8 @@ Documentation     TS-16 User Authentication — executable mirror of TCS cases T
 ...               (duplicate-e-mail response sits behind the same captcha). Every executing
 ...               case ends in guest state. TC-16-008's inbox half stays manual (TC-13-007
 ...               split; the reset link is never followed — it would change the registered
-...               credential). TC-16-003 mode was amended to Executable (02 v2.1 audit addendum
-...               A4); its execution is now human, not automated.
+...               credential). TC-16-003 mode was amended to Executable (the Test Case
+...               Specification's audit addendum A4); its execution is now human, not automated.
 ...               Resource: resources/pages/account_pages.resource — the login/register field
 ...               and session-marker locators are LIVE-VERIFIED (executed runs + the 12 Aug
 ...               2026 registration); the recover-form and error-surface locators remain
@@ -73,7 +73,7 @@ TC-16-001 Successful Login
     ...    Ends in guest state via teardown. Priority Critical / Positive (suite value; the
     ...    superseded detail table's "High" is overridden per 02 v2.1's suite-wins rule,
     ...    alignment anomaly item 24).
-    [Tags]    priority-critical    type-positive    captcha-gated    TC-16-001    TB-AUTH-001    TB-AUTH-002    TB-AUTH-003    TB-AUTH-004    TB-AUTH-005    TB-AUTH-006    TB-AUTH-007
+    [Tags]    priority-critical    type-positive    captcha-gated    TC-16-001
     [Teardown]    Ensure Logged Out
     Skip    Captcha-gated for automation (discovered 12 Aug 2026): the login submit is hCaptcha-protected and automated submissions are silently swallowed — the form stays filled, the page never navigates, no error renders (fail-screenshot evidence, results/ts16_live_2026-08-12/). The flow itself is HUMAN-VERIFIED the same day: the account logged straight in at creation (header switched to My Account / Log Out). Steps retained below for a future maintenance re-attempt; automation does not defeat bot protection.
     Log In With    ${TEST_ACCOUNT_EMAIL}    ${TEST_ACCOUNT_PASSWORD}
@@ -91,7 +91,7 @@ TC-16-002 Login With Incorrect Password
     ...    "silent failed login" automated results were artifacts, not store behaviour.
     ...    Priority Critical / Negative (suite value; alignment anomaly item 25 overrides the
     ...    superseded detail table's "High").
-    [Tags]    priority-critical    type-negative    captcha-gated    TC-16-002    TB-AUTH-001    TB-AUTH-002    TB-AUTH-003    TB-AUTH-004    TB-AUTH-005    TB-AUTH-006    TB-AUTH-007
+    [Tags]    priority-critical    type-negative    captcha-gated    TC-16-002
     [Teardown]    Ensure Logged Out
     Skip    Captcha-gated for automation; requirement HUMAN-VERIFIED PASS 12 Aug 2026 — wrong password on the registered account produced the generic "Incorrect email or password." error (screenshot evidence, results/MANUAL_TS16_LOGIN_2026-08-12/). Automated submits are swallowed by hCaptcha and never reach the server. Steps retained below for a future maintenance re-attempt.
     Log In With    ${TEST_ACCOUNT_EMAIL}    Wrong-${TEST_ACCOUNT_PASSWORD}
@@ -117,7 +117,7 @@ TC-16-003 Login With Non-Existing Account
     ...    properly non-revealing (it does not disclose whether the account exists — the exact
     ...    A17 requirement). Requirement judged MET on manual evidence; the same generic
     ...    server-side error path serves nonexistent-account and wrong-password submissions.
-    [Tags]    priority-high    type-negative    captcha-gated    TC-16-003    TB-AUTH-001    TB-AUTH-002    TB-AUTH-003    TB-AUTH-004    TB-AUTH-005    TB-AUTH-006    TB-AUTH-007
+    [Tags]    priority-high    type-negative    captcha-gated    TC-16-003
     Skip    Captcha-gated for automation; requirement HUMAN-VERIFIED 12 Aug 2026 — the store answers failed logins with the generic, non-revealing "Incorrect email or password." (screenshot evidence, results/MANUAL_TS16_LOGIN_2026-08-12/). The previous automated FAILs ("no feedback") are RE-GRADED as artifacts: hCaptcha silently swallowed automated submissions, so the server never produced its error. Steps retained below for a future maintenance re-attempt.
     Open Login Page
     ${email}=    Generate Fictitious Nonexistent Email
@@ -135,7 +135,7 @@ TC-16-004 Successful Registration (Not Automated — SKIP)
     ...    duplicate account each time. PERFORMED ONCE BY HAND on 12 Aug 2026 — the submit is
     ...    hCaptcha-gated (a human solved the challenge), so the flow is also not automatable
     ...    in principle; the registered account is live.
-    [Tags]    priority-high    type-positive    TC-16-004    TB-AUTH-001    TB-AUTH-002    TB-AUTH-003    TB-AUTH-004    TB-AUTH-005    TB-AUTH-006    TB-AUTH-007
+    [Tags]    priority-high    type-positive    TC-16-004
     Skip    One-time action ALREADY PERFORMED (12 Aug 2026): the registered test account exists (Tdc Fictitious, project inbox; hCaptcha on the registration submit solved by a human). Not repeatable (duplicate accounts) and not automatable (automation does not defeat bot protection). Designed case retained in the TCS.
 
 TC-16-005 Register With Existing Email (Captcha-Gated — SKIP)
@@ -147,7 +147,7 @@ TC-16-005 Register With Existing Email (Captcha-Gated — SKIP)
     ...    12 Aug 2026 during the one-time account creation). Automation does not attempt to
     ...    defeat bot protection; the case is coverable in the Phase H manual round, where a
     ...    human passes the captcha.
-    [Tags]    priority-high    type-negative    TC-16-005    TB-AUTH-001    TB-AUTH-002    TB-AUTH-003    TB-AUTH-004    TB-AUTH-005    TB-AUTH-006    TB-AUTH-007
+    [Tags]    priority-high    type-negative    TC-16-005
     Skip    Not automatable — the registration submit is hCaptcha-gated (observed live 12 Aug 2026): reaching the server's duplicate-e-mail response would require defeating bot protection, which automation does not do. The registered account exists; the case is coverable manually in Phase H (a human passes the captcha). Designed case retained in the TCS.
 
 TC-16-006 Empty Login Fields
@@ -166,10 +166,10 @@ TC-16-006 Empty Login Fields
     ...    phrasing.) An inconsistency observation, not a defect. This case now performs that observation live
     ...    (verify-then-skip, the TC-04-004 pattern) and documents the captcha-gated submit
     ...    half. Priority High / Negative.
-    [Tags]    priority-high    type-negative    captcha-gated    TC-16-006    TB-AUTH-001
+    [Tags]    priority-high    type-negative    captcha-gated    TC-16-006
     Open Login Page
     ${facts}=    Login Email Client Validation Facts
-    Log    OBSERVATION (TC-16-006, TB-AUTH-001): client-side validation facts for the login e-mail field (no submission involved): ${facts}. Contrast: the sign-up e-mail field enforces HTML5 format validation (TC-16-007 asserts it live). The login form relies wholly on the server's generic error for feedback — an inconsistency OBSERVATION; feedback itself exists (human-verified 12 Aug 2026).    level=WARN
+    Log    OBSERVATION (TC-16-006): client-side validation facts for the login e-mail field (no submission involved): ${facts}. Contrast: the sign-up e-mail field enforces HTML5 format validation (TC-16-007 asserts it live). The login form relies wholly on the server's generic error for feedback — an inconsistency OBSERVATION; feedback itself exists (human-verified 12 Aug 2026).    level=WARN
     Skip    Submit-half captcha-gated for automation; the server's failed-submission feedback is HUMAN-VERIFIED (generic "Incorrect email or password.", 12 Aug 2026, results/MANUAL_TS16_LOGIN_2026-08-12/). The client-side validation-contrast observation above was captured live by this run. Former "no validation at all" defect DOWNGRADED to that observation.
 
 TC-16-007 Invalid E-Mail Format During Sign Up
@@ -177,7 +177,7 @@ TC-16-007 Invalid E-Mail Format During Sign Up
     ...    enter a malformed e-mail (e.g. "user@@test"). 2. Activate Create. 3. Observe
     ...    validation. Expected: registration is refused with a clear e-mail-format error; no
     ...    account is created. Priority Medium / Negative.
-    [Tags]    priority-medium    type-negative    TC-16-007    TB-AUTH-002
+    [Tags]    priority-medium    type-negative    TC-16-007
     Open Register Page
     Fill Registration Details    ${FICTITIOUS_FIRST_NAME}    ${FICTITIOUS_LAST_NAME}    ${MALFORMED_EMAIL}    ${FICTITIOUS_PASSWORD}
     Submit Registration
@@ -200,7 +200,7 @@ TC-16-008 Password Recovery E-Mail
     ...    a new password, log in with it) are the MANUAL half against the project inbox — the
     ...    TC-13-007 split — and are deliberately never automated: following the reset link would
     ...    change the registered credential and break TC-16-001. Priority Medium / Positive.
-    [Tags]    priority-medium    type-positive    TC-16-008    TB-AUTH-005
+    [Tags]    priority-medium    type-positive    TC-16-008
     Open Login Page
     Open Password Recovery
     Recovery Form Should Be Shown
@@ -215,7 +215,7 @@ TC-16-009 Log Out Returns To Guest State
     ...    no longer accessible without login (answered with the login page). Expected: the
     ...    session ends; the UI and access rights return to the guest state. Priority Medium /
     ...    Positive.
-    [Tags]    priority-medium    type-positive    captcha-gated    TC-16-009    TB-AUTH-006
+    [Tags]    priority-medium    type-positive    captcha-gated    TC-16-009
     [Teardown]    Ensure Logged Out
     Skip    Captcha-gated for automation: the case's login precondition cannot be established (hCaptcha swallows automated login submissions, 12 Aug 2026). The logout mechanism itself is LIVE-OBSERVED working the same day: activating the header Log Out control ends the session and returns the guest header (observed during the one-time account creation). Steps retained below for a future maintenance re-attempt.
     Log In With    ${TEST_ACCOUNT_EMAIL}    ${TEST_ACCOUNT_PASSWORD}

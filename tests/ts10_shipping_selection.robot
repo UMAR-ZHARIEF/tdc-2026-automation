@@ -1,12 +1,13 @@
 *** Settings ***
 Documentation     TS-10 Shipping Selection System — executable mirror of TCS cases
-...               TC-10-001..006. Authorities: 02 - Test Case Specification v2.1 and 01 - Test
-...               Basis v1.0 (approved 2026-08-05), UC-10 (TB-SHP-001..003). 4 cases automated; 2
-...               documented SKIP (TC-10-004/005: 02 v2.1 §MODES Design-only — re-verified by a
+...               TC-10-001..006. Authorities: the team's Test Case Specification and Test
+...               Basis, UC-10. 4 cases automated; 2
+...               documented SKIP (TC-10-004/005: the Test Case Specification's §MODES Design-only — re-verified by a
 ...               live destination sweep 12 Aug 2026; see each case's Skip message. The sweep
 ...               CLOSES Test Basis open item TBD-008 "Non-Malaysian shipping methods —
 ...               unobserved").
-...               Store-reality (02 v2.1 Change Log #6, extended by the 12 Aug 2026 sweep):
+...               Store-reality (the Test Case Specification's Change Log #6, extended by the
+...               12 Aug 2026 sweep):
 ...               shipping is single-method PER DESTINATION — "International Shipping £20.00"
 ...               for Malaysian addresses and for every other destination probed (India,
 ...               Netherlands, Peru, and the worldwide catch-all zone, probed via Vanuatu),
@@ -53,7 +54,7 @@ TC-10-001 Display Of Available Shipping Methods
     ...    single checkout-reach case: it owns both halves of the A12 two-phase oracle, so it runs
     ...    BEFORE any other case fills an address. Every other executing case in this file is
     ...    chained after it, reusing the now-addressed checkout. Priority High / Positive.
-    [Tags]    priority-high    type-positive    TC-10-001    TB-SHP-001
+    [Tags]    priority-high    type-positive    TC-10-001
     Pre Address Shipping Message Should Be Shown
     Fill Contact Email    ${FICTITIOUS_EMAIL}
     Fill Delivery Address
@@ -70,10 +71,10 @@ TC-10-002 Check Whether Destination-Appropriate Shipping Methods Are Offered
     ...    Destination-appropriateness was additionally demonstrated live on 12 Aug 2026:
     ...    switching the checkout destination to the United Kingdom replaced the method with
     ...    "Standard Shipping £10.00" and recalculated the total accordingly — recorded as
-    ...    observation evidence for TB-SHP-001/003 (and closing TBD-008). Chained from TC-10-001
+    ...    observation evidence (and closing TBD-008). Chained from TC-10-001
     ...    (deliberate — the MY address is already entered; no re-navigation). Priority High /
     ...    Negative.
-    [Tags]    priority-high    type-negative    TC-10-002    TB-SHP-001    TB-SHP-002    TB-SHP-003
+    [Tags]    priority-high    type-negative    TC-10-002
     ${page_text}=    Checkout Page Text
     Log    Shipping-section text for a Malaysian (MY) address (observation, 02 v2.1 §REWORDS: expected a single "International Shipping" method as at 5 Aug 2026): ${page_text}
     Shipping Method Should Be Displayed
@@ -86,7 +87,7 @@ TC-10-003 International Shipping
     ...    so this case asserts the method's name AND its cost line are both shown — the
     ...    text-based equivalent of "selected and applied". Chained from TC-10-001/002 (deliberate
     ...    — same checkout page). Priority High / Positive.
-    [Tags]    priority-high    type-positive    TC-10-003    TB-SHP-001    TB-SHP-002    TB-SHP-003
+    [Tags]    priority-high    type-positive    TC-10-003
     Shipping Method Should Be Displayed
     Checkout Page Should Contain    ${SHIPPING_COST_TEXT}
 
@@ -98,7 +99,7 @@ TC-10-006 Shipping Cost Added To Order Total Correctly
     ...    (verified 5 Aug 2026: £55.00 + £20.00 = £75.00). Chained from TC-10-001..003
     ...    (deliberate — same checkout page, address already resolved). Priority High / Negative
     ...    (02 v2.1 suite-table value).
-    [Tags]    priority-high    type-negative    TC-10-006    TB-SHP-002
+    [Tags]    priority-high    type-negative    TC-10-006
     Checkout Page Should Contain    ${SHIPPING_COST_TEXT}
     Checkout Page Should Contain    £75.00
 
@@ -113,7 +114,7 @@ TC-10-004 Change Shipping Method (Design-Only)
     ...    destination offers more than one simultaneously, so the precondition "more than one
     ...    method offered" remains unreachable from the public UI (02 v2.1 §MODES Design-only).
     ...    Priority High / Positive.
-    [Tags]    priority-high    type-positive    design-only    TC-10-004    TB-SHP-001    TB-SHP-002    TB-SHP-003
+    [Tags]    priority-high    type-positive    design-only    TC-10-004
     Skip    Design-only, re-verified 12 Aug 2026 by a live destination sweep (MY/IN/NL/PE and the worldwide catch-all zone -> International Shipping £20.00; UK alone -> Standard Shipping £10.00): two methods exist store-wide but never together for one address, so "select a different method" has no reachable precondition on the public UI. Designed case retained in the TCS.
 
 TC-10-005 No Shipping Available (Design-Only)
@@ -124,5 +125,5 @@ TC-10-005 No Shipping Available (Design-Only)
     ...    Vanuatu — with "International Shipping £20.00"; no selectable destination lacks a
     ...    shipping method, so the unsupported-address precondition cannot be reached from the
     ...    public UI (02 v2.1 §MODES Design-only). Priority High / Negative.
-    [Tags]    priority-high    type-negative    design-only    TC-10-005    TB-SHP-001    TB-SHP-002    TB-SHP-003
+    [Tags]    priority-high    type-negative    design-only    TC-10-005
     Skip    Design-only, re-verified 12 Aug 2026 by a live probe: a worldwide catch-all shipping zone exists (every destination probed, incl. Vanuatu, is answered with International Shipping £20.00), so no selectable destination lacks a method and the unsupported-address precondition is unreachable. Designed case retained in the TCS.

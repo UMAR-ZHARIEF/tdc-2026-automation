@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     TS-05 Add to Cart — executable mirror of TCS cases TC-05-001..006.
-...               Authorities: 02 - Test Case Specification v2.1 and
-...               01 - Test Basis v1.0 (approved 2026-08-05), UC-05. 5 cases automated; 1
+...               Authorities: the team's Test Case Specification and Test Basis, UC-05. 5 cases
+...               automated; 1
 ...               documented SKIP (each add triggers an immediate page reload, closing the
 ...               deterministic rapid-click window; assessed manually). After an add the theme
 ...               remains on the product page and updates the header badge, so cart-content
@@ -32,7 +32,7 @@ TC-05-001 Product With Selected Variant Is Added To The Cart
     [Documentation]    The customer adds a product (with its active variant) to the cart; the
     ...    cart count updates and the item is confirmed. The product name is captured at run
     ...    time from the page heading. Priority High / Positive.
-    [Tags]    priority-high    type-positive    TC-05-001    TB-ATC-001    TB-ATC-002    TB-ATC-003    TB-ATC-004
+    [Tags]    priority-high    type-positive    TC-05-001
     Open Product    ${VARIANT_HANDLE}
     ${name}=    Product Title
     Set Suite Variable    ${FIRST_PRODUCT}    ${name}
@@ -43,7 +43,7 @@ TC-05-002 Duplicate Addition Consolidates Into One Line
     [Documentation]    Adding a product already in the cart consolidates into the existing
     ...    line's quantity rather than creating a duplicate line: cart count reaches 2 while a
     ...    single quantity field holds the value 2. Priority Medium / Positive.
-    [Tags]    priority-medium    type-positive    TC-05-002    TB-ATC-001    TB-ATC-002    TB-ATC-003    TB-ATC-004
+    [Tags]    priority-medium    type-positive    TC-05-002
     Open Product    ${VARIANT_HANDLE}
     Add Current Product To Cart
     Cart Badge Should Show    2
@@ -56,7 +56,7 @@ TC-05-003 Sequential Additions Update The Cart Independently
     [Documentation]    A different product added from its own detail page appears as its own
     ...    cart line with the count updated accurately for each addition.
     ...    Priority Medium / Positive.
-    [Tags]    priority-medium    type-positive    TC-05-003    TB-ATC-001    TB-ATC-002    TB-ATC-003    TB-ATC-004
+    [Tags]    priority-medium    type-positive    TC-05-003
     Open Product    ${SECOND_HANDLE}
     ${name2}=    Product Title
     Add Current Product To Cart
@@ -71,7 +71,7 @@ TC-05-004 Rapid Repeated Clicks (Design-Only)
     ...    corrupted entries. Not executed as automation: each add triggers an immediate page
     ...    reload, closing the timing window a deterministic automated test would need; the
     ...    behaviour is assessed manually. Priority High / Negative.
-    [Tags]    priority-high    type-negative    not-automatable    TC-05-004    TB-ATC-001    TB-ATC-002    TB-ATC-003    TB-ATC-004
+    [Tags]    priority-high    type-negative    not-automatable    TC-05-004
     Skip    Not automatable deterministically: each add triggers an immediate page reload, closing the rapid-click timing window. Assessed manually; designed case retained in the TCS. (02 v2.1 mode: Executable — covered by the manual execution round; this is an automation-only limitation.)
 
 TC-05-005 Offline Add Attempt Leaves The Cart Unchanged
@@ -80,7 +80,7 @@ TC-05-005 Offline Add Attempt Leaves The Cart Unchanged
     ...    offline the add attempt fails, and after reconnection the cart still holds exactly
     ...    the three items from the preceding cases. No request leaves the machine while
     ...    offline. Priority High / Negative.
-    [Tags]    priority-high    type-negative    TC-05-005    TB-ATC-001    TB-ATC-002    TB-ATC-003    TB-ATC-004
+    [Tags]    priority-high    type-negative    TC-05-005
     Open Product    ${SECOND_HANDLE}
     Go Offline
     ${status}    ${error}=    Run Keyword And Ignore Error    Add Current Product To Cart
@@ -94,7 +94,7 @@ TC-05-006 Sold-Out Product Offers No Add Action
     [Documentation]    An out-of-stock product must not offer a normal add-to-cart action at
     ...    the moment of intent: the sold-out page presents no active add control.
     ...    Priority High / Negative (02 v2.1 §REWORDS: documented evidence-based exception,
-    ...    anchored to TB-PDP-004; overrides the earlier suite-table Medium value).
-    [Tags]    priority-high    type-negative    TC-05-006    TB-ATC-001    TB-ATC-002    TB-ATC-003    TB-ATC-004    TB-CAT-006    TB-PDP-004
+    ...    anchored to that earlier finding; overrides the earlier suite-table Medium value).
+    [Tags]    priority-high    type-negative    TC-05-006
     Open Product    ${SOLD_OUT_HANDLE}
     Sold Out State Should Be Indicated

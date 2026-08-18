@@ -1,11 +1,11 @@
 *** Settings ***
-Documentation     Page object: oracle logic for TS-14 Secondary & Support Services (UC-14,
-...               TB-SEC-001..004) — built on top of layout.resource's Wish list / Refer a
+Documentation     Page object: oracle logic for TS-14 Secondary & Support Services (UC-14) —
+...               built on top of layout.resource's Wish list / Refer a
 ...               Friend / social-links chrome rather than redefining locators. Provides: a
 ...               generic before/after response-fingerprint check (used for the inert
-...               wishlist/refer-a-friend/guest-wishlist remnants — TB-SEC-002/003), a Don't
-...               #3-compliant social-link sweep (TB-SEC-004: presence and href only, never
-...               navigated to), a pre-purchase support-channel sweep (TB-SEC-001), and an
+...               wishlist/refer-a-friend/guest-wishlist remnants), a Don't
+...               #3-compliant social-link sweep (presence and href only, never
+...               navigated to), a pre-purchase support-channel sweep, and an
 ...               observation-only referral-sharing check that passes on either branch.
 Library           Browser
 Resource          ../common.resource
@@ -35,7 +35,7 @@ Current Page Fingerprint
 Page Response Should Have Changed
     [Documentation]    Asserts a control produced a meaningful response — its activation
     ...    changed either the URL or the page's visible-element count relative to the given
-    ...    "before" fingerprint. TB-SEC-002/003 (click-verified 5 Aug 2026): the Wish list and
+    ...    "before" fingerprint (click-verified 5 Aug 2026): the Wish list and
     ...    Refer a Friend controls are documented inert Sauce-app remnants that produce no
     ...    response, so this oracle is EXPECTED TO FAIL live when applied to them — the FAIL is
     ...    the harvested defect evidence (known-defect-lead), not test breakage.
@@ -47,7 +47,7 @@ Page Response Should Have Changed
 All Social Links Should Have External Targets
     [Documentation]    Sweeps every social link found via layout.resource's ${SOCIAL_LINKS}
     ...    locator: asserts each has a non-empty href pointing off-store, and logs the target as
-    ...    the recorded evidence (TB-SEC-004 recorded targets: facebook.com/shopify,
+    ...    the recorded evidence (recorded targets: facebook.com/shopify,
     ...    twitter.com/sauce_io [defunct], instagram.com/shopify, a personal Pinterest board).
     ...    Per competition Don't #3, targets are never navigated to or clicked — presence and
     ...    href value only.
@@ -64,7 +64,7 @@ All Social Links Should Have External Targets
 Support Channel Should Be Present On Current Page
     [Documentation]    Union oracle: asserts a working pre-purchase support/contact affordance
     ...    is present on the current page — a mailto: link, a tel: link, or a link whose text
-    ...    contains "contact" (TB-SEC-001). Per Test Basis v1.0 (observed 5 Aug 2026) none exists
+    ...    contains "contact". Per Test Basis v1.0 (observed 5 Aug 2026) none exists
     ...    pre-purchase — the sole channel is a defunct post-purchase mailto to a third-party
     ...    address — so this oracle is EXPECTED TO FAIL on every pre-purchase page swept here;
     ...    the FAIL is the harvested defect evidence (known-defect-lead), not test breakage. The
@@ -75,9 +75,9 @@ Support Channel Should Be Present On Current Page
     ${tel_hits}=    Get Element Count    css=a[href^="tel:"]:visible
     ${contact_hits}=    Get Element Count    xpath=//a[contains(normalize-space(),'Contact') or contains(normalize-space(),'contact')]
     ${total}=    Evaluate    ${mailto_hits} + ${tel_hits} + ${contact_hits}
-    Log    Support-channel sweep on ${page_label}: mailto=${mailto_hits}, tel=${tel_hits}, contact-text=${contact_hits} (TB-SEC-001 evidence).
+    Log    Support-channel sweep on ${page_label}: mailto=${mailto_hits}, tel=${tel_hits}, contact-text=${contact_hits} (evidence).
     Should Be True    ${total} > 0
-    ...    msg=No pre-purchase support/contact affordance found on ${page_label} (TB-SEC-001 known defect: the sole channel is a defunct post-purchase mailto)
+    ...    msg=No pre-purchase support/contact affordance found on ${page_label} (known defect: the sole channel is a defunct post-purchase mailto)
 
 Referral Mechanism Observation
     [Documentation]    Observation-logger, NOT a defect-lead: checks the current page for a

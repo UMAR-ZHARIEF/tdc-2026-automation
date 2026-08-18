@@ -1,8 +1,9 @@
 *** Settings ***
 Documentation     TS-11 Coupon & Discount System — executable mirror of TCS cases TC-11-001..006.
-...               Authorities: 02 - Test Case Specification v2.1 and 01 - Test Basis v1.0
-...               (approved 2026-08-05), UC-11 (TB-DISC-001..004). 2 cases automated; 4 documented
-...               SKIP — all Blocked-no-data (02 v2.1 §MODES; Test Basis item TBD-002): no genuine
+...               Authorities: the team's Test Case Specification and Test Basis, UC-11. 2 cases
+...               automated; 4 documented
+...               SKIP — all Blocked-no-data (the Test Case Specification's §MODES; Test Basis
+...               item TBD-002): no genuine
 ...               valid or expired coupon code is known to the team, so TC-11-001 (apply valid),
 ...               TC-11-002 (apply expired, 02 v2.1 A14 precondition/expected wording), TC-11-004
 ...               (remove applied coupon) and TC-11-006 (discount calculation) all need data that
@@ -47,7 +48,7 @@ TC-11-003 Apply Invalid Coupon
     ...    present, and the Cost summary total is confirmed unchanged (still £75.00 — TC-10-006
     ...    verified 5 Aug 2026: £55.00 + £20.00). Chained from Suite Setup's single checkout reach
     ...    (deliberate — same checkout page, already addressed). Priority High / Negative.
-    [Tags]    priority-high    type-negative    TC-11-003    TB-DISC-001    TB-DISC-002    TB-DISC-003    TB-DISC-004
+    [Tags]    priority-high    type-negative    TC-11-003
     Checkout Page Should Contain    £75.00
     Apply Discount Code    ${INVALID_DISCOUNT_CODE}
     ${error_text}=    Discount Rejection Should Be Shown
@@ -61,7 +62,7 @@ TC-11-005 Skip Coupon / Proceed Without A Discount Code
     ...    (deliberate — same checkout page; the earlier invalid-code attempt left no lasting
     ...    discount applied, which this case's own total check also re-confirms). Priority Medium
     ...    / Positive.
-    [Tags]    priority-medium    type-positive    TC-11-005    TB-DISC-001    TB-DISC-002    TB-DISC-003    TB-DISC-004
+    [Tags]    priority-medium    type-positive    TC-11-005
     Checkout Page Should Contain    £75.00
     Shipping Method Should Be Displayed
 
@@ -69,14 +70,14 @@ TC-11-001 Apply Valid Coupon (Blocked — No Data)
     [Documentation]    Precondition: coupon available. Steps: 1. Enter valid coupon. Expected:
     ...    discount applied successfully. Blocked-no-data (02 v2.1 §MODES; Test Basis item
     ...    TBD-002): no genuine valid coupon code is known to the team. Priority High / Positive.
-    [Tags]    priority-high    type-positive    blocked-no-data    TC-11-001    TB-DISC-001    TB-DISC-002    TB-DISC-003    TB-DISC-004
+    [Tags]    priority-high    type-positive    blocked-no-data    TC-11-001
     Skip    Blocked-no-data (TBD-002): no genuine valid coupon code is known to the team. Designed case retained in the TCS; activates once a valid code is provided (maintenance testing).
 
 TC-11-002 Apply Expired Coupon (Blocked — No Data)
     [Documentation]    Precondition (02 v2.1 A14): a genuine expired coupon code is known. Steps:
     ...    1. Enter expired coupon. Expected (A14 append): coupon rejected (no expired code is
     ...    known — Blocked-no-data). Priority High / Negative.
-    [Tags]    priority-high    type-negative    blocked-no-data    TC-11-002    TB-DISC-001    TB-DISC-002    TB-DISC-003    TB-DISC-004
+    [Tags]    priority-high    type-negative    blocked-no-data    TC-11-002
     Skip    Blocked-no-data (TBD-002): no genuine expired coupon code is known to the team. Designed case retained in the TCS; activates once an expired code is provided (maintenance testing).
 
 TC-11-004 Remove Applied Coupon (Blocked — No Data)
@@ -84,7 +85,7 @@ TC-11-004 Remove Applied Coupon (Blocked — No Data)
     ...    total returns to original amount. Blocked-no-data (02 v2.1 §MODES; TBD-002): requires a
     ...    valid coupon applied first, and no genuine valid coupon code is known to the team.
     ...    Priority Medium / Positive.
-    [Tags]    priority-medium    type-positive    blocked-no-data    TC-11-004    TB-DISC-001    TB-DISC-002    TB-DISC-003    TB-DISC-004
+    [Tags]    priority-medium    type-positive    blocked-no-data    TC-11-004
     Skip    Blocked-no-data (TBD-002): requires a valid coupon applied first, and no genuine valid coupon code is known to the team. Designed case retained in the TCS; activates once a valid code is provided (maintenance testing).
 
 TC-11-006 Discount Calculation / Total Recalculation After Discount (Blocked — No Data)
@@ -92,5 +93,5 @@ TC-11-006 Discount Calculation / Total Recalculation After Discount (Blocked —
     ...    correct discount amount applied. Blocked-no-data (02 v2.1 §MODES; TBD-002): requires a
     ...    valid coupon applied first, and no genuine valid coupon code is known to the team.
     ...    Priority High / Positive.
-    [Tags]    priority-high    type-positive    blocked-no-data    TC-11-006    TB-DISC-001    TB-DISC-002    TB-DISC-003    TB-DISC-004
+    [Tags]    priority-high    type-positive    blocked-no-data    TC-11-006
     Skip    Blocked-no-data (TBD-002): requires a valid coupon applied first, and no genuine valid coupon code is known to the team. Designed case retained in the TCS; activates once a valid code is provided (maintenance testing).

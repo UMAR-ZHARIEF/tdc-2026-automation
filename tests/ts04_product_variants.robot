@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     TS-04 Product Variant Handling — executable mirror of TCS cases TC-04-001..007.
-...               Authorities: 02 - Test Case Specification v2.1 and
-...               01 - Test Basis v1.0 (approved 2026-08-05), UC-04. 4 cases executing fully
+...               Authorities: the team's Test Case Specification and Test Basis, UC-04. 4 cases
+...               executing fully
 ...               (TC-04-001/002/003/007, each behind a runtime data guard that self-skips with
 ...               a stated reason if the catalogue drifts); 3 documented design-only SKIPs
 ...               (TC-04-004/006 verify-then-skip: the safeguard/refresh check runs and is
@@ -36,7 +36,7 @@ TC-04-001 Variant Selection Is Applied And Reflected
     [Documentation]    The customer selects a product variant and the page reflects the active
     ...    choice. The first variant dimension is changed to its second option and the selected
     ...    label is asserted to have changed. Priority High / Positive.
-    [Tags]    priority-high    type-positive    TC-04-001    TB-VAR-001    TB-VAR-002    TB-VAR-003    TB-VAR-004
+    [Tags]    priority-high    type-positive    TC-04-001
     Open Product    ${VARIANT_HANDLE}
     ${selects}=    Variant Dimension Count
     Should Be True    ${selects} >= 1    msg=No variant selectors found on the variant product page
@@ -60,7 +60,7 @@ TC-04-002 Single-Variant Product Proceeds Without Explicit Selection
     ...    theme renders 2 HIDDEN select elements even on single-variant products, so the
     ...    unfiltered count still skipped this case; ${VARIANT_SELECT} now filters to :visible —
     ...    the customer-visible truth (see product_page.resource). Priority Medium / Positive.
-    [Tags]    priority-medium    type-positive    TC-04-002    TB-VAR-001    TB-VAR-002    TB-VAR-003    TB-VAR-004
+    [Tags]    priority-medium    type-positive    TC-04-002
     Open Product    ${SINGLE_CANDIDATE_HANDLE}
     ${selects}=    Variant Dimension Count
     Skip If    ${selects} > 0    Candidate product presents ${selects} variant selector(s); no single-variant product identified in the current catalogue snapshot.
@@ -69,7 +69,7 @@ TC-04-002 Single-Variant Product Proceeds Without Explicit Selection
 TC-04-003 Final Selection Persists Across Multiple Changes
     [Documentation]    Alternative flow: the customer changes the variant selection several
     ...    times; only the final choice remains active. Priority Medium / Positive.
-    [Tags]    priority-medium    type-positive    TC-04-003    TB-VAR-001    TB-VAR-002    TB-VAR-003    TB-VAR-004
+    [Tags]    priority-medium    type-positive    TC-04-003
     Open Product    ${VARIANT_HANDLE}
     ${options}=    Variant Option Count    0
     Skip If    ${options} < 2    Variant dimension offers fewer than two options in the current catalogue snapshot.
@@ -87,7 +87,7 @@ TC-04-004 A Default Variant Is Always Preselected
     ...    possible. Verify-then-skip per 02 v2.1 A10/§MODES: the safeguard is re-verified live
     ...    (fails loudly if the store changes), then the case ends with a documented design-only
     ...    Skip. Priority High / Negative.
-    [Tags]    priority-high    type-negative    design-only    TC-04-004    TB-VAR-001    TB-VAR-002    TB-VAR-003    TB-VAR-004
+    [Tags]    priority-high    type-negative    design-only    TC-04-004
     Open Product    ${VARIANT_HANDLE}
     All Variant Dimensions Should Have Defaults
     Skip    Design-only per 02 v2.1: an unselected add is unreachable by design — every variant dimension loads with a default preselected (safeguard re-verified by this run).
@@ -96,7 +96,7 @@ TC-04-005 Selected Variant Becomes Out Of Stock (Design-Only)
     [Documentation]    TCS expects notification when a selected variant sells out while the
     ...    customer is on the page. Not executed: stock levels cannot be manipulated on a live
     ...    store the team does not control. Priority High / Negative.
-    [Tags]    priority-high    type-negative    design-only    TC-04-005    TB-VAR-001    TB-VAR-002    TB-VAR-003    TB-VAR-004
+    [Tags]    priority-high    type-negative    design-only    TC-04-005
     Skip    Not executable: stock levels cannot be manipulated on a live store the team does not control. Designed case retained in the TCS.
 
 TC-04-006 Page Refresh Yields A Valid Variant State
@@ -105,7 +105,7 @@ TC-04-006 Page Refresh Yields A Valid Variant State
     ...    Verify-then-skip per 02 v2.1 §MODES ("keep design-only"): the observed behaviour
     ...    (restored or reset) is checked and logged as guard evidence, then the case ends with
     ...    a documented design-only Skip. Priority Medium / Negative.
-    [Tags]    priority-medium    type-negative    design-only    TC-04-006    TB-VAR-001    TB-VAR-002    TB-VAR-003    TB-VAR-004
+    [Tags]    priority-medium    type-negative    design-only    TC-04-006
     Open Product    ${VARIANT_HANDLE}
     ${options}=    Variant Option Count    0
     Skip If    ${options} < 2    Variant dimension offers fewer than two options in the current catalogue snapshot.
@@ -132,7 +132,7 @@ TC-04-007 Size And Colour Are Selectable Together
     ...    availability), which made this case skip on every prior run. Runtime data guards
     ...    retained: skips if the product offers fewer than two variant dimensions, or if a
     ...    dimension offers fewer than two options. Priority Low / Positive.
-    [Tags]    priority-low    type-positive    TC-04-007    TB-VAR-001    TB-VAR-002    TB-VAR-003    TB-VAR-004
+    [Tags]    priority-low    type-positive    TC-04-007
     Open Product    ${TWO_DIMENSION_HANDLE}
     ${selects}=    Variant Dimension Count
     Skip If    ${selects} < 2    Product offers ${selects} variant dimension(s) in the current snapshot; two are required for this case.

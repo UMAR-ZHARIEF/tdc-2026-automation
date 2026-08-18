@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     TS-18 Content & Error Pages — executable mirror of TCS cases TC-18-001..003.
-...               Authorities: 02 - Test Case Specification v2.1 and 01 - Test Basis v1.0
-...               (approved 2026-08-05), UC-18 (TB-SEC-005..007). All 3 cases automated (new
+...               Authorities: the team's Test Case Specification and Test Basis, UC-18. All 3
+...               cases automated (new
 ...               suite; no skips).
 ...               New resource: resources/pages/content_pages.resource — blog article and
 ...               sitemap-only/404 markers. Its locators are PROVISIONAL (inferred from Test
@@ -21,7 +21,7 @@ Documentation     TS-18 Content & Error Pages — executable mirror of TCS cases
 ...               the link count is logged as observation evidence, not hard-asserted to an
 ...               exact number, mirroring TC-03-001's own treatment of the analogous
 ...               uncertain-count situation. TC-18-002's three pages are sitemap-only and
-...               unlinked from navigation by design (Test Basis TB-SEC-006); that status is
+...               unlinked from navigation by design (per the Test Basis); that status is
 ...               logged as an observation per case, not probed for or asserted.
 ...               Page Object Model: element locators live in resources/pages/ — this file
 ...               contains business-readable steps only.
@@ -43,15 +43,15 @@ TC-18-001 Content Pages Load And Navigate
     ...    2. Open About Us. 3. Verify page load, breadcrumbs, and navigation back. Expected:
     ...    both content areas load and navigate correctly; placeholder content is recorded as
     ...    an observation, not asserted as a defect (the Blog carries one default placeholder
-    ...    post — TB-SEC-005). Priority Low / Positive.
-    [Tags]    priority-low    type-positive    TC-18-001    TB-SEC-005
+    ...    post). Priority Low / Positive.
+    [Tags]    priority-low    type-positive    TC-18-001
     Open Home
     Go To Blog Via Navigation
     Open Blog Post
     Article Page Should Be Loaded
     ${article_url}=    Current Page Url
     ${bc}=    Article Breadcrumb Level Count
-    Log    Blog article breadcrumb link count: ${bc} (expected trail: Home - News - article; observation evidence, not hard-asserted to an exact number). Placeholder-content quality, if any, is likewise logged as an observation per TB-SEC-005, not asserted as a defect.
+    Log    Blog article breadcrumb link count: ${bc} (expected trail: Home - News - article; observation evidence, not hard-asserted to an exact number). Placeholder-content quality, if any, is likewise logged as an observation, not asserted as a defect.
     Go Back
     ${after_back_url}=    Current Page Url
     Should Not Be Equal    ${after_back_url}    ${article_url}
@@ -59,21 +59,21 @@ TC-18-001 Content Pages Load And Navigate
     Open Home
     Go To About Us Via Navigation
     About Us Page Should Be Loaded
-    Log    About Us page loaded; placeholder-content quality, if any, is logged as an observation per TB-SEC-005, not asserted as a defect.
+    Log    About Us page loaded; placeholder-content quality, if any, is logged as an observation, not asserted as a defect.
 
 TC-18-002 Sitemap-Only Pages Load
     [Documentation]    Store accessible. Steps: 1. Open /pages/terms, /pages/login-prompt, and
     ...    /pages/share-review directly. 2. Verify each loads. 3. Record their linkage status
     ...    (unlinked from navigation) and content findings. Expected: all three pages load;
     ...    their unreachability from navigation and content-governance findings are recorded as
-    ...    observations (Test Basis TB-SEC-006: full Terms of Service unlinked from any
+    ...    observations (per the Test Basis: full Terms of Service unlinked from any
     ...    navigation; an exposed internal app-test page whose self-stated 3-second prompt does
     ...    not fire; a feedback headline with no form). Priority Low / Positive.
-    [Tags]    priority-low    type-positive    TC-18-002    TB-SEC-006
+    [Tags]    priority-low    type-positive    TC-18-002
     FOR    ${path}    IN    pages/terms    pages/login-prompt    pages/share-review
         Open Content Page By Path    ${path}
         Content Page Should Be Loaded    ${path}
-        Log    Page "${path}" loaded — sitemap-only, unlinked from site navigation (TB-SEC-006 content-governance observation; recorded here, not asserted as a defect).
+        Log    Page "${path}" loaded — sitemap-only, unlinked from site navigation (content-governance observation; recorded here, not asserted as a defect).
     END
 
 TC-18-003 Invalid URL Returns 404 Page
@@ -81,6 +81,6 @@ TC-18-003 Invalid URL Returns 404 Page
     ...    /products/does-not-exist). 2. Verify the response and page. Expected: an HTTP 404
     ...    with the store's error page and working navigation (verified 5 Aug 2026). Priority
     ...    Medium / Negative.
-    [Tags]    priority-medium    type-negative    TC-18-003    TB-SEC-007
+    [Tags]    priority-medium    type-negative    TC-18-003
     Open Nonexistent Product Page    does-not-exist
     404 Error Page Should Be Rendered With Navigation

@@ -1,9 +1,9 @@
 *** Settings ***
 Documentation     TS-06 Cart Review — executable mirror of TCS cases TC-06-001..007.
-...               Authorities: 02 - Test Case Specification v2.1 and 01 - Test Basis v1.0
-...               (approved 2026-08-05), UC-06 (TB-CART-001..006). 5 cases automated; 2
+...               Authorities: the team's Test Case Specification and Test Basis, UC-06. 5 cases
+...               automated; 2
 ...               documented SKIP (mid-session price change and stock-invalidation cannot be
-...               induced on a live store the team does not control). TB-CART-002 known display
+...               induced on a live store the team does not control). Known display
 ...               defect: the product title renders duplicated on the cart page and triplicated
 ...               in the header's mini-cart drawer — assertions use "contains", never exact
 ...               equality, against line titles; TC-06-006 logs the drawer's actual title text as
@@ -39,19 +39,19 @@ TC-06-003 Empty-Cart State
     ...    from Suite Setup's single cart clear (deliberate: repeated /cart/clear navigations
     ...    trip the store's bot protection) — so the cart is already empty here and no further
     ...    clearing is performed. Priority Medium / Negative.
-    [Tags]    priority-medium    type-negative    TC-06-003    TB-CART-001    TB-CART-002    TB-CART-003    TB-CART-004    TB-CART-005    TB-CART-006
+    [Tags]    priority-medium    type-negative    TC-06-003
     Open Cart
     Empty Cart State Should Be Shown
 
 TC-06-001 View Cart Items And Calculate Totals
     [Documentation]    The customer adds a known product to the cart and opens the cart page: the
     ...    line is present at quantity 1, the line total equals the unit price, and the cart
-    ...    total equals the sum of line totals (TB-CART-002/003). Runs after TC-06-003
+    ...    total equals the sum of line totals. Runs after TC-06-003
     ...    (deliberate — repeated /cart/clear navigations trip the store's bot protection): the
     ...    cart is still empty at this point (TC-06-003 only observes, it does not add), so this
     ...    test establishes the one-item state that TC-06-002/006/007 build on next.
     ...    Priority High / Positive.
-    [Tags]    priority-high    type-positive    TC-06-001    TB-CART-001    TB-CART-002    TB-CART-003    TB-CART-004    TB-CART-005    TB-CART-006
+    [Tags]    priority-high    type-positive    TC-06-001
     Open Product    ${PRODUCT_HANDLE}
     ${price_text}=    Visible Price Text
     ${name}=    Product Title
@@ -76,7 +76,7 @@ TC-06-002 Cart-View Duplicate Consolidation
     ...    bot protection): the cart already holds one unit from TC-06-001, so only one further
     ...    add is performed here to reach the tested quantity of 2.
     ...    Priority High / Positive.
-    [Tags]    priority-high    type-positive    TC-06-002    TB-CART-001    TB-CART-002    TB-CART-003    TB-CART-004    TB-CART-005    TB-CART-006
+    [Tags]    priority-high    type-positive    TC-06-002
     Open Product    ${PRODUCT_HANDLE}
     ${price_text}=    Visible Price Text
     Add Current Product To Cart
@@ -93,14 +93,14 @@ TC-06-006 Mini-Cart Drawer Access And Contents
     [Documentation]    With items already in the cart (one line, quantity 2, chained from
     ...    TC-06-001/002), opening the header's mini-cart drawer from the home page reveals the
     ...    product link, a quantity input, a Remove link and a checkout submit; closing the
-    ...    toggle hides it again. Known display defect TB-CART-002: the line title renders
+    ...    toggle hides it again. Known display defect: the line title renders
     ...    triplicated in the drawer, so the title is asserted to CONTAIN the product name (never
     ...    equality) and the actual text is logged as evidence. State chained from TC-06-001/002
     ...    (deliberate — repeated /cart/clear navigations trip the store's bot protection): this
     ...    case reuses the existing cart state rather than adding again, and reuses the product
     ...    name TC-06-001 captured (via a suite variable) instead of re-opening the product page.
     ...    Priority High / Positive.
-    [Tags]    priority-high    type-positive    TC-06-006    TB-CART-001    TB-CART-002    TB-CART-003    TB-CART-004    TB-CART-005    TB-CART-006
+    [Tags]    priority-high    type-positive    TC-06-006
     Open Home
     Mini Cart Drawer Should Be Hidden
     Open Mini Cart Drawer
@@ -110,7 +110,7 @@ TC-06-006 Mini-Cart Drawer Access And Contents
     Mini Cart Drawer Should Contain Remove Link
     Mini Cart Drawer Should Contain Checkout Control
     ${title}=    Mini Cart Drawer Line Title Text
-    Log    Mini-cart drawer line title (observation evidence, known triplication defect TB-CART-002): ${title}
+    Log    Mini-cart drawer line title (observation evidence, known triplication defect): ${title}
     Should Contain    ${title}    ${PRODUCT_NAME}
     ...    msg=Drawer line title did not contain the product name
     Close Mini Cart Drawer
@@ -123,7 +123,7 @@ TC-06-007 Cart Order-Note Entry
     ...    TC-06-001/002/006 (deliberate — repeated /cart/clear navigations trip the store's bot
     ...    protection): the cart already holds items, so this case only needs a non-empty cart
     ...    and performs no further add. Priority Low / Positive.
-    [Tags]    priority-low    type-positive    TC-06-007    TB-CART-001    TB-CART-002    TB-CART-003    TB-CART-004    TB-CART-005    TB-CART-006
+    [Tags]    priority-low    type-positive    TC-06-007
     Open Cart
     Fill Order Note    ${NOTE_TEXT}
     Update Cart
@@ -134,12 +134,12 @@ TC-06-004 Cart Total Mismatch After Mid-Session Price Change (Design-Only)
     [Documentation]    TCS expects the cart to self-correct if a product's price changes while it
     ...    sits in the cart. Not executed: product prices cannot be changed on a live store the
     ...    team does not control. Priority High / Negative.
-    [Tags]    priority-high    type-negative    design-only    TC-06-004    TB-CART-001    TB-CART-002    TB-CART-003    TB-CART-004    TB-CART-005    TB-CART-006
+    [Tags]    priority-high    type-negative    design-only    TC-06-004
     Skip    Design-only: product prices cannot be changed on a live store the team does not control. Designed case retained in the TCS.
 
 TC-06-005 Stale/Invalidated Cart Item (Design-Only)
     [Documentation]    TCS expects the cart to flag or remove an item that becomes unavailable
     ...    while sitting in the cart. Not executed: product availability cannot be manipulated on
     ...    a live store the team does not control. Priority High / Negative.
-    [Tags]    priority-high    type-negative    design-only    TC-06-005    TB-CART-001    TB-CART-002    TB-CART-003    TB-CART-004    TB-CART-005    TB-CART-006
+    [Tags]    priority-high    type-negative    design-only    TC-06-005
     Skip    Design-only: product availability cannot be manipulated on a live store the team does not control. Designed case retained in the TCS.
