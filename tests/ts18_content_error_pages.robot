@@ -73,7 +73,7 @@ TC-18-002 Sitemap-Only Pages Load
     FOR    ${path}    IN    pages/terms    pages/login-prompt    pages/share-review
         Open Content Page By Path    ${path}
         Content Page Should Be Loaded    ${path}
-        Log    Page "${path}" loaded — sitemap-only, unlinked from site navigation (content-governance observation; recorded here, not asserted as a defect).
+        Log    Page "${path}" loaded: sitemap-only, unlinked from site navigation (content-governance observation; recorded here, not asserted as a defect).
     END
 
 TC-18-003 Invalid URL Returns 404 Page

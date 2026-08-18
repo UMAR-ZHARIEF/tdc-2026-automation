@@ -35,9 +35,9 @@ Search Result Titles
 All Result Titles Should Relate To Query
     [Documentation]    TRUE relevance oracle: every visible result title must
     ...    relate to the given query term. Each title is logged as evidence; per the Test Case
-    ...    Specification's §FRESH CASES (6 results observed for "jacket" on 5 Aug 2026, of which 4
+    ...    Specification's §FRESH CASES (6 results observed for "jacket", of which 4
     ...    were
-    ...    unrelated — placeholder-description matching), a live FAIL here is the intended,
+    ...    unrelated: placeholder-description matching), a live FAIL here is the intended,
     ...    harvested search-relevance defect evidence, not test breakage.
     [Arguments]    ${query}
     @{titles}=    Search Result Titles
@@ -49,14 +49,14 @@ All Result Titles Should Relate To Query
         END
         Log    Result title "${title}" relates to query "${query}": ${related}
     END
-    Log    Search relevance check for "${query}" — unrelated result title(s): ${unrelated} (non-empty is the harvested defect evidence).
+    Log    Search relevance check for "${query}": unrelated result title(s): ${unrelated} (non-empty is the harvested defect evidence).
     Should Be Empty    ${unrelated}
     ...    msg=Search-relevance defect (known-defect-lead): result title(s) unrelated to "${query}": ${unrelated}
 
 No Search Performed Message Should Be Shown
     [Documentation]    Asserts the empty-query results page shows the graceful "No search
     ...    performed" state rather than an error or blank page (TC-17-002; verified
-    ...    5 Aug 2026 per the Test Case Specification's §FRESH CASES).
+    ...    live per the Test Case Specification's §FRESH CASES).
     ${page_text}=    Get Text    body
     Should Match Regexp    ${page_text}    (?i)no search performed
     ...    msg=Expected a graceful "No search performed" message for an empty search query
@@ -64,8 +64,8 @@ No Search Performed Message Should Be Shown
 Zero Results Message Should Be Shown
     [Documentation]    Asserts a nonsense query yields the functional zero-results state
     ...    (TC-17-003). The recovered expectation is that the store tells the
-    ...    customer plainly that nothing matched — the exact wording is the store's choice.
-    ...    LIVE RUN 12 Aug 2026 established the actual wording: "No results found for zzzqxv".
+    ...    customer plainly that nothing matched; the exact wording is the store's choice.
+    ...    LIVE RUN established the actual wording: "No results found for zzzqxv".
     ...    The earlier pattern demanded a literal "0 results found", which the store has never
     ...    used, so a correct zero-results page was reported as a failure. The oracle now
     ...    accepts either phrasing of the same message.

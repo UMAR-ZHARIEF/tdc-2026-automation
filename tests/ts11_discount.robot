@@ -67,7 +67,7 @@ TC-11-005 Skip Coupon / Proceed Without A Discount Code
     Checkout Page Should Contain    £75.00
     Shipping Method Should Be Displayed
 
-TC-11-001 Apply Valid Coupon (Blocked — No Data)
+TC-11-001 Apply Valid Coupon (Blocked, No Data)
     [Documentation]    Precondition: coupon available. Steps: 1. Enter valid coupon. Expected:
     ...    discount applied successfully. Blocked-no-data (the Test Case Specification's §MODES;
     ...    Test Basis item TBD-002): no genuine valid coupon code is known to the team. Priority
@@ -75,14 +75,14 @@ TC-11-001 Apply Valid Coupon (Blocked — No Data)
     [Tags]    priority-high    type-positive    blocked-no-data    TC-11-001
     Skip    Blocked-no-data (TBD-002): no genuine valid coupon code is known to the team. Designed case retained in the TCS; activates once a valid code is provided (maintenance testing).
 
-TC-11-002 Apply Expired Coupon (Blocked — No Data)
+TC-11-002 Apply Expired Coupon (Blocked, No Data)
     [Documentation]    Precondition (the Test Case Specification's A14): a genuine expired coupon
     ...    code is known. Steps: 1. Enter expired coupon. Expected (A14 append): coupon rejected
     ...    (no expired code is known: Blocked-no-data). Priority High / Negative.
     [Tags]    priority-high    type-negative    blocked-no-data    TC-11-002
     Skip    Blocked-no-data (TBD-002): no genuine expired coupon code is known to the team. Designed case retained in the TCS; activates once an expired code is provided (maintenance testing).
 
-TC-11-004 Remove Applied Coupon (Blocked — No Data)
+TC-11-004 Remove Applied Coupon (Blocked, No Data)
     [Documentation]    Precondition: valid coupon applied. Steps: 1. Remove coupon. Expected:
     ...    total returns to original amount. Blocked-no-data (the Test Case Specification's
     ...    §MODES; TBD-002): requires a valid coupon applied first, and no genuine valid coupon
@@ -90,7 +90,7 @@ TC-11-004 Remove Applied Coupon (Blocked — No Data)
     [Tags]    priority-medium    type-positive    blocked-no-data    TC-11-004
     Skip    Blocked-no-data (TBD-002): requires a valid coupon applied first, and no genuine valid coupon code is known to the team. Designed case retained in the TCS; activates once a valid code is provided (maintenance testing).
 
-TC-11-006 Discount Calculation / Total Recalculation After Discount (Blocked — No Data)
+TC-11-006 Discount Calculation / Total Recalculation After Discount (Blocked, No Data)
     [Documentation]    Precondition: valid coupon applied. Steps: 1. Verify total. Expected:
     ...    correct discount amount applied. Blocked-no-data (the Test Case Specification's §MODES;
     ...    TBD-002): requires a valid coupon applied first, and no genuine valid coupon code is

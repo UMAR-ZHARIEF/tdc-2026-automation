@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation     Page object: product detail page (PDP) — title, price, add-to-cart control,
+Documentation     Page object: product detail page (PDP): title, price, add-to-cart control,
 ...               variant selectors, breadcrumb trail and description. Every PDP locator
 ...               lives ONLY here. Theme facts encoded: the add control is an
 ...               <input type=submit> OR a <button> (union locator); the breadcrumb sits in
@@ -11,9 +11,9 @@ Resource          ../common.resource
 *** Variables ***
 ${ADD_TO_CART_ANY}       xpath=//button[normalize-space()='Add to Cart'] | //input[@type='submit' and @value='Add to Cart']
 ${ACTIVE_ADD_TO_CART}    xpath=//button[normalize-space()='Add to Cart' and not(@disabled)] | //input[@type='submit' and @value='Add to Cart' and not(@disabled)]
-# :visible added 12 Aug 2026 (v4 evidence run): the theme renders 2 HIDDEN select elements
+# :visible added after a live evidence run: the theme renders 2 HIDDEN select elements
 # even on single-variant ('Default Title') products, so the unfiltered count made TC-04-002's
-# runtime guard see "2 variant selector(s)" on a product whose customers see none — the same
+# runtime guard see "2 variant selector(s)" on a product whose customers see none, the same
 # hidden-duplicate store quirk (and the same :visible remedy) as product_listing's product
 # links. Counting keywords must observe what the CUSTOMER sees; the interaction keywords were
 # already safe (Playwright actionability refuses hidden targets).
@@ -43,11 +43,11 @@ Product Price Should Be Displayed
 Product Title
     [Documentation]    Returns the PRODUCT h1's text. The theme renders TWO h1 elements on the
     ...    PDP: an EMPTY h1#logo (the site logo, first in the DOM) and the real product-title
-    ...    h1 — discovered by live verification 7 Aug 2026, when the unscoped first-h1 grab
+    ...    h1, discovered by live verification, when the unscoped first-h1 grab
     ...    returned an empty string and downstream contains-oracles passed vacuously. The
     ...    :not(#logo) filter targets the real title.
     ${name}=    Get Text    h1:not(#logo)
-    Should Not Be Empty    ${name}    msg=Product title element rendered empty (h1:not(#logo)) — page incomplete or theme changed
+    Should Not Be Empty    ${name}    msg=Product title element rendered empty (h1:not(#logo)): page incomplete or theme changed
     RETURN    ${name}
 
 Product Name Should Be Displayed
@@ -68,8 +68,8 @@ Active Add To Cart Should Be Present
 
 Add Current Product To Cart
     [Documentation]    Clicks the active add control, then WAITS until the header cart badge
-    ...    ("My Cart (N)") INCREMENTS — the semantic proof the add actually landed. Root-caused
-    ...    by live verification 7 Aug 2026: the theme's add is a full form submission with a
+    ...    ("My Cart (N)") INCREMENTS: the semantic proof the add actually landed. Root-caused
+    ...    by live verification: the theme's add is a full form submission with a
     ...    page reload; a caller that navigates away right after the click aborts the in-flight
     ...    submission and the item silently never lands (earlier suites were unaffected only
     ...    because their own post-add badge assertions forced the reload to complete first). A
@@ -88,7 +88,7 @@ Cart Badge Count Should Exceed
     [Arguments]    ${before}
     ${text}=    Get Text    body
     ${now}=    Evaluate    int(re.search(r'My Cart \\((\\d+)\\)', $text).group(1))    modules=re
-    Should Be True    ${now} > ${before}    msg=Cart badge did not increment past ${before} — the add submission has not landed
+    Should Be True    ${now} > ${before}    msg=Cart badge did not increment past ${before}: the add submission has not landed
 
 Sold Out State Should Be Indicated
     [Documentation]    A sold-out product must show a Sold Out indicator or offer no active
@@ -137,7 +137,7 @@ Breadcrumb Link Count
 
 Click Breadcrumb Home Link
     [Documentation]    Clicks the first (Home) link in the two-level breadcrumb trail
-    ...    (Home — product name).
+    ...    (Home, product name).
     Click    ${BREADCRUMB_LINKS} >> nth=0
 
 Description Block Count

@@ -96,7 +96,7 @@ TC-12-002 Payment Declined
     Enter Card Details    2    12/30    123
     Click Pay Now
     ${alert_text}=    Payment Alert Should Contain    ${PAYMENT_DECLINED_ALERT_TEXT}
-    Log    Post-decline page text (observation evidence — card fields expected to have cleared afterward, verified 5 Aug 2026): ${alert_text}
+    Log    Post-decline page text (observation evidence: card fields expected to have cleared afterward, verified live): ${alert_text}
     Checkout Should Not Have Advanced To Confirmation
 
 TC-12-006 Payment Gateway Timeout
@@ -113,14 +113,14 @@ TC-12-006 Payment Gateway Timeout
     [Tags]    priority-critical    type-negative    TC-12-006
     Enter Card Details    3    12/30    123
     Click Pay Now
-    # ASSERTED: the payment is refused and no order is created — card 3's reliable observable.
+    # ASSERTED: the payment is refused and no order is created: card 3's reliable observable.
     ${alert_text}=    Payment Alert Should Contain    ${PAYMENT_DECLINED_ALERT_TEXT}
     Checkout Should Not Have Advanced To Confirmation
     # OBSERVED, NOT ASSERTED: the extra "There was a problem with our checkout / Request ID:"
-    # banner. It was captured on 5 Aug 2026 and is what distinguishes a gateway failure from a
+    # banner. It was captured live and is what distinguishes a gateway failure from a
     # plain decline in the customer-facing UI, but this file's own Documentation records it as a
     # RECURRING TRANSIENT banner. Asserting an intermittent artifact makes the case flaky rather
-    # than meaningful, so its presence is recorded as evidence either way (12 Aug 2026).
+    # than meaningful, so its presence is recorded as evidence either way.
     ${banner_present}=    Checkout Problem Banner Present
     ${has_request_id}=    Evaluate    "Request ID" in $alert_text
     Log    OBSERVATION (TC-12-006): after the card-3 gateway-failure attempt the checkout-problem banner was present=${banner_present} and a Request ID was present=${has_request_id}. Customer-facing text does NOT otherwise distinguish a gateway failure from a plain decline.    level=WARN
@@ -156,12 +156,12 @@ TC-12-001 Successful Payment
     ...    checkout page; card fields re-entered because TC-12-003's attempt cleared them).
     ...    Priority Critical / Positive.
     [Tags]    priority-critical    type-positive    TC-12-001
-    Skip If    not ${ALLOW_ORDERS}    Creates a real order — run only in an explicitly authorized session (-v ALLOW_ORDERS:True); team payment policy and order budget apply (see suite Documentation).
+    Skip If    not ${ALLOW_ORDERS}    Creates a real order: run only in an explicitly authorized session (-v ALLOW_ORDERS:True); team payment policy and order budget apply (see suite Documentation).
     Enter Card Details    1    12/30    123
     Click Pay Now
     Order Confirmation Should Be Reached
     ${confirmation_text}=    Confirmation Number Text
-    Log    Order confirmation evidence (verified format #1YRC8ZIPW, 5 Aug 2026): ${confirmation_text}
+    Log    Order confirmation evidence (verified format #1YRC8ZIPW): ${confirmation_text}
 
 TC-12-005 Retry Payment After Failure
     [Documentation]    Precondition: previous payment failed. Steps (the Test Case Specification's
@@ -184,25 +184,25 @@ TC-12-005 Retry Payment After Failure
     ...    Priority High / Positive.
     [Tags]    priority-high    type-positive    automation-limited    TC-12-005
     [Setup]    NONE
-    Skip    Automation-limited — SETTLED 12 Aug 2026 by the Phase H manual confirmation retest: the identical decline -> in-place retry flow (no reload) SUCCEEDS for a human (order #V860ENJ8W), so the requirement is VERIFIED and this is NOT a store defect; only this automated stack's retry never completes (two authorized runs 12 Aug 2026, in place and after reload — every step green, no order). Evidence: results/MANUAL_TC-12-005_2026-08-12/. Automated execution withheld: it cannot currently return a truthful verdict and would waste order budget. For a deliberate maintenance re-attempt remove this Skip and the [Setup] NONE line; the ALLOW_ORDERS gate below still applies.
-    Skip If    not ${ALLOW_ORDERS}    Creates a real order — run only in an explicitly authorized session (-v ALLOW_ORDERS:True); team payment policy and order budget apply (see suite Documentation).
+    Skip    Automation-limited: SETTLED by a later live Phase H manual confirmation retest, the identical decline -> in-place retry flow (no reload) SUCCEEDS for a human (order #V860ENJ8W), so the requirement is VERIFIED and this is NOT a store defect; only this automated stack's retry never completes (two authorized runs, in place and after reload: every step green, no order). Evidence: results/MANUAL_TC-12-005_2026-08-12/. Automated execution withheld: it cannot currently return a truthful verdict and would waste order budget. For a deliberate maintenance re-attempt remove this Skip and the [Setup] NONE line; the ALLOW_ORDERS gate below still applies.
+    Skip If    not ${ALLOW_ORDERS}    Creates a real order: run only in an explicitly authorized session (-v ALLOW_ORDERS:True); team payment policy and order budget apply (see suite Documentation).
     Enter Card Details    2    12/30    123
     Click Pay Now
     Checkout Should Not Have Advanced To Confirmation
-    # ✅ SETTLED 12 Aug 2026 — MANUAL CONFIRMATION RETEST (Phase H), performed by the Test
+    # ✅ SETTLED live: MANUAL CONFIRMATION RETEST (Phase H), performed by the Test
     # Automation Developer by hand in a normal, non-automation Brave window, mirroring this case
     # variable-for-variable (grey-jacket; same fictitious identity and e-mail; card 2 / 12/30 /
     # 123 / Test Tester): Pay now -> the exact decline alert appeared and the card fields
-    # cleared (matching the 5 Aug observation) -> card fields re-entered IN PLACE, NO RELOAD,
+    # cleared (matching the earlier observation) -> card fields re-entered IN PLACE, NO RELOAD,
     # with card 1 -> Pay now -> confirmation page "Thank you, Test!", order #V860ENJ8W,
     # Grey jacket £55.00 + £20.00 shipping = £75.00 GBP, payment method "•••• 1". Screenshots:
     # results/MANUAL_TC-12-005_2026-08-12/.
-    # VERDICT — reading (b) below: AUTOMATION LIMITATION, not a store defect. The store accepts
+    # VERDICT, reading (b) below: AUTOMATION LIMITATION, not a store defect. The store accepts
     # a successful retry after a decline in the same checkout session for a human, without even
     # a reload. The automated retry (this stack) never completes whether retried in place or
-    # after Reload Checkout Page — both attempted under authorization on 12 Aug 2026 (every step
+    # after Reload Checkout Page, both attempted under authorization (every step
     # green: card 2 entered, decline correctly refused, card 1 re-entered cleanly, Pay now
-    # clicked — then no confirmation and no order; contrast TC-12-001's single card-1 payment on
+    # clicked, then no confirmation and no order; contrast TC-12-001's single card-1 payment on
     # a fresh checkout, which DID create #5NUU58KV8). Root cause inside the stack remains
     # unidentified and is deliberately not pursued further: the requirement itself is settled,
     # so the case is Skip-documented above and the steps below are RETAINED, non-executing, for

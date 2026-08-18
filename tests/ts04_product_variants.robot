@@ -90,7 +90,7 @@ TC-04-004 A Default Variant Is Always Preselected
     [Tags]    priority-high    type-negative    design-only    TC-04-004
     Open Product    ${VARIANT_HANDLE}
     All Variant Dimensions Should Have Defaults
-    Skip    Design-only per the Test Case Specification: an unselected add is unreachable by design — every variant dimension loads with a default preselected (safeguard re-verified by this run).
+    Skip    Design-only per the Test Case Specification: an unselected add is unreachable by design; every variant dimension loads with a default preselected (safeguard re-verified by this run).
 
 TC-04-005 Selected Variant Becomes Out Of Stock (Design-Only)
     [Documentation]    TCS expects notification when a selected variant sells out while the

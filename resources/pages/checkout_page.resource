@@ -2,34 +2,34 @@
 Documentation     Page object: the modern ONE-PAGE checkout (/checkouts/cn/...), reached from the
 ...               cart page's #checkout control. Live sections observed: Contact / Delivery /
 ...               Shipping method / Payment / Credit card / Finalize order / Order summary /
-...               Discount / Cost summary. Every locator below marked "captured live 2026-08-07"
+...               Discount / Cost summary. Every locator below marked "captured live"
 ...               comes from a real DOM capture of that page (archived at "claude's self created
-...               docs/build sources/checkout_dom_capture_2026-08-07.json") — these are REAL,
+...               docs/build sources/checkout_dom_capture.json"): these are REAL,
 ...               verified handles, not provisional inference, EXCEPT the two locators
 ...               individually flagged PROVISIONAL below (the checkout header has no captured
 ...               Cart link, and the post-payment confirmation page was never captured at all,
 ...               since reaching it spends the store's real payment gateway and this task ran
 ...               under a zero-store-traffic constraint).
-...               Element ids such as TextFieldP0-45 are RANDOMLY GENERATED per page load — never
+...               Element ids such as TextFieldP0-45 are RANDOMLY GENERATED per page load; never
 ...               used here. Stable handles are element NAMES, but a hidden autofill-helper form
 ...               duplicates every one of those names elsewhere in the DOM, so every name-based
 ...               locator below is filtered with :not([id^="autofill"]) to exclude that hidden
 ...               duplicate. Card fields are cross-origin PCI iframes
-...               (checkout.pci.shopifyinc.com) with a random id suffix per load — selected by
+...               (checkout.pci.shopifyinc.com) with a random id suffix per load, selected by
 ...               prefix and pierced with the Browser library's ">>>" deep-selector syntax.
-...               Known page quirks (observe/log only — NEVER assert absence): a recurring
+...               Known page quirks (observe/log only, NEVER assert absence): a recurring
 ...               transient banner "There was a problem with our checkout" plus roughly 140
 ...               console errors is a technical-health characteristic of this live checkout, not
 ...               a per-test failure signal (TC-12-006 is the one case that asserts the banner's
 ...               PRESENCE, which is a different, expected-result use, not an absence check); the
-...               order-summary line doubles the product title ("Grey jacketGrey jacket") — every
+...               order-summary line doubles the product title ("Grey jacketGrey jacket"); every
 ...               product-name check in this suite family uses "contains", never equality.
 ...               Shipping has NO radio controls: a single method is offered, so every shipping
 ...               oracle here is TEXT-BASED (section/summary text), never radio-based. No stable
 ...               container locator was captured for the Order summary / Cost summary / alert /
 ...               error regions either (the capture recorded interactive controls, not prose
 ...               regions), so every summary/total/alert/error reader in this file works from the
-...               page's visible text rather than a scoped element — the same technique
+...               page's visible text rather than a scoped element, the same technique
 ...               resources/pages/cart_page.resource already uses for "Cart Should Contain".
 ...               Page Object Model: element locators live only here; suites contain
 ...               business-readable steps only.
@@ -40,46 +40,46 @@ Resource          cart_page.resource
 
 *** Variables ***
 # --- Cart -> checkout transition (physically on /cart; owned here as the checkout entry point) ---
-${CART_CHECKOUT_BUTTON}              css=input#checkout    # captured live 2026-08-07; value "Check Out"
+${CART_CHECKOUT_BUTTON}              css=input#checkout    # captured live; value "Check Out"
 
 # --- Contact ---
-${CONTACT_EMAIL_INPUT}               css=input#email    # captured live 2026-08-07; stable id
+${CONTACT_EMAIL_INPUT}               css=input#email    # captured live; stable id
 
 # --- Delivery address (name-based; hidden autofill-helper duplicate filtered out) ---
-${FIRST_NAME_INPUT}                  css=input[name="firstName"]:not([id^="autofill"])    # captured live 2026-08-07
-${LAST_NAME_INPUT}                   css=input[name="lastName"]:not([id^="autofill"])    # captured live 2026-08-07
-${COMPANY_INPUT}                     css=input[name="company"]:not([id^="autofill"])    # captured live 2026-08-07; optional field
-${ADDRESS1_INPUT}                    css=input[name="address1"]:not([id^="autofill"])    # captured live 2026-08-07
-${ADDRESS2_INPUT}                    css=input[name="address2"]:not([id^="autofill"])    # captured live 2026-08-07; optional field
-${POSTAL_CODE_INPUT}                 css=input[name="postalCode"]:not([id^="autofill"])    # captured live 2026-08-07
-${CITY_INPUT}                        css=input[name="city"]:not([id^="autofill"])    # captured live 2026-08-07
-${PHONE_INPUT}                       css=input[name="phone"]:not([id^="autofill"])    # captured live 2026-08-07; optional field
-${COUNTRY_SELECT}                    css=select[name="countryCode"]    # captured live 2026-08-07; Malaysia = value "MY"
-${ZONE_SELECT}                       css=select[name="zone"]    # captured live 2026-08-07; observed default "KUL"; Selangor selected by label
+${FIRST_NAME_INPUT}                  css=input[name="firstName"]:not([id^="autofill"])    # captured live
+${LAST_NAME_INPUT}                   css=input[name="lastName"]:not([id^="autofill"])    # captured live
+${COMPANY_INPUT}                     css=input[name="company"]:not([id^="autofill"])    # captured live; optional field
+${ADDRESS1_INPUT}                    css=input[name="address1"]:not([id^="autofill"])    # captured live
+${ADDRESS2_INPUT}                    css=input[name="address2"]:not([id^="autofill"])    # captured live; optional field
+${POSTAL_CODE_INPUT}                 css=input[name="postalCode"]:not([id^="autofill"])    # captured live
+${CITY_INPUT}                        css=input[name="city"]:not([id^="autofill"])    # captured live
+${PHONE_INPUT}                       css=input[name="phone"]:not([id^="autofill"])    # captured live; optional field
+${COUNTRY_SELECT}                    css=select[name="countryCode"]    # captured live; Malaysia = value "MY"
+${ZONE_SELECT}                       css=select[name="zone"]    # captured live; observed default "KUL"; Selangor selected by label
 
 # --- Marketing consent ---
-${MARKETING_OPT_IN}                  css=input#marketing_opt_in    # captured live 2026-08-07; observed PRE-TICKED (TC-09-007 evidence)
+${MARKETING_OPT_IN}                  css=input#marketing_opt_in    # captured live; observed PRE-TICKED (TC-09-007 evidence)
 
 # --- Discount ---
-${DISCOUNT_INPUT}                    css=input[name="reductions"]    # captured live 2026-08-07
-${DISCOUNT_APPLY_BUTTON}             css=button[aria-label="Apply Discount Code"]    # captured live 2026-08-07
+${DISCOUNT_INPUT}                    css=input[name="reductions"]    # captured live
+${DISCOUNT_APPLY_BUTTON}             css=button[aria-label="Apply Discount Code"]    # captured live
 
 # --- Payment ---
-${PAY_BUTTON}                        css=button#checkout-pay-button    # captured live 2026-08-07; stable id, "Pay now"
-${BILLING_TOGGLE}                    css=input#billingAddressCheckbox    # captured live 2026-08-07
+${PAY_BUTTON}                        css=button#checkout-pay-button    # captured live; stable id, "Pay now"
+${BILLING_TOGGLE}                    css=input#billingAddressCheckbox    # captured live
 
 # --- Card fields: cross-origin PCI iframes, random id suffix per load, selected by prefix + pierced ---
-# ROOT CAUSE FOUND 2026-08-12 — the card fields were CROSS-CONTAMINATING each other.
+# ROOT CAUSE FOUND live: the card fields were CROSS-CONTAMINATING each other.
 # Each iframe holds EIGHT inputs: the real field plus SEVEN honeypot decoys
 # (data-honeypot-field, aria-hidden="true", tabindex="-1", class="visually-hidden"), and every
 # frame carries the full set of ids. A frame-scoped but unqualified "input" (or "input:visible")
 # therefore did not reliably resolve to that frame's own real field. A read-back diagnostic
-# proved the damage: after Enter Card Details, the CARD NUMBER field contained "Test Tester" —
-# the cardholder name from the LAST fill — while the expiry and CVV iframes displayed
+# proved the damage: after Enter Card Details, the CARD NUMBER field contained "Test Tester"
+# (the cardholder name from the LAST fill), while the expiry and CVV iframes displayed
 # "Enter a valid expiration date" and "Enter the CVV or security code on your card". The card
 # was never valid, so the form never submitted, and because those messages live INSIDE the
 # cross-origin iframes they were invisible to every Get Text body oracle in this file.
-# Naming each real input by id inside its own frame fixes it — verified by read-back:
+# Naming each real input by id inside its own frame fixes it: verified by read-back:
 # number='2', expiry='12 / 30', cvv='123', name='Test Tester', and the in-frame validation
 # errors gone.
 #
@@ -94,17 +94,17 @@ ${CARD_SECURITY_CODE_FRAME_INPUT}          [id^="card-fields-verification_value"
 ${CARD_NAME_FRAME_INPUT}                   [id^="card-fields-name"] >>> input#name
 
 # --- Return-to-cart: the modern one-page checkout header may not carry a Cart link (unlike the
-# classic /cart chrome) — this is the ONLY navigation-chrome PROVISIONAL locator in this file.
-${RETURN_TO_CART_LINK}               css=a[href="/cart"]    # PROVISIONAL — live-verify before relying on this outside dry-run; documented fallback is Go Back (browser history)
+# classic /cart chrome); this is the ONLY navigation-chrome PROVISIONAL locator in this file.
+${RETURN_TO_CART_LINK}               css=a[href="/cart"]    # PROVISIONAL, live-verify before relying on this outside dry-run; documented fallback is Go Back (browser history)
 
-# --- Post-payment confirmation page: NOT covered by the 2026-08-07 capture (reaching it spends
-# the real payment gateway) — every locator/text pattern below is PROVISIONAL, inferred only from
+# --- Post-payment confirmation page: NOT covered by the live capture (reaching it spends
+# the real payment gateway); every locator/text pattern below is PROVISIONAL, inferred only from
 # the verified TEXT evidence in the Test Case Specification (order #1YRC8ZIPW format: "Thank you"
 # heading, confirmation number, order details sections, Continue shopping -> storefront). All
 # TS-13/TS-15
 # gated cases that depend on these run only under an explicit ALLOW_ORDERS-authorized session, so
 # a human is present to course-correct if any of this needs live re-verification.
-${CONTINUE_SHOPPING_LINK}            xpath=//a[contains(normalize-space(),'Continue shopping') or contains(normalize-space(),'Continue Shopping')]    # PROVISIONAL — live-verify before relying on this outside dry-run
+${CONTINUE_SHOPPING_LINK}            xpath=//a[contains(normalize-space(),'Continue shopping') or contains(normalize-space(),'Continue Shopping')]    # PROVISIONAL, live-verify before relying on this outside dry-run
 
 # --- Text oracles (no stable container locators captured; see file Documentation) ---
 ${PRE_ADDRESS_SHIPPING_TEXT}         Enter your shipping address to view available shipping methods
@@ -119,12 +119,12 @@ ${FICTITIOUS_LAST_NAME}              Tester
 ${FICTITIOUS_FULL_NAME}              Test Tester
 # ⚠️ MUST USE A RESOLVABLE DOMAIN. Shopify's checkout validates the e-mail domain and
 # refuses to submit with "This specified domain cannot be resolved." The previous value
-# used the .test TLD, which by definition never resolves — so the payment form never
+# used the .test TLD, which by definition never resolves, so the payment form never
 # submitted, no gateway alert could ever appear, and card 1 created no order under
 # ALLOW_ORDERS. That single validation line sat in the checkout body text all along,
 # above the Delivery section, unnoticed because every payment oracle searched only for
-# payment wording (found 12 Aug 2026). example.com is IANA-reserved for documentation:
-# obviously fictitious, permanently resolvable, and it accepts no mail — so nothing is
+# payment wording (found live). example.com is IANA-reserved for documentation:
+# obviously fictitious, permanently resolvable, and it accepts no mail, so nothing is
 # ever delivered to a real person. The team project inbox stays reserved for the cases
 # that genuinely need to READ a confirmation e-mail.
 ${FICTITIOUS_EMAIL}                  tdc.checkout.fictitious@example.com
@@ -140,7 +140,7 @@ Open Checkout From Cart
 
 Reach Checkout With Product
     [Documentation]    Convenience suite-setup helper: adds the given product handle to an (already
-    ...    emptied) cart and transitions into checkout in one call — most suites in this family
+    ...    emptied) cart and transitions into checkout in one call; most suites in this family
     ...    make this their single checkout-reach action. Leaves Contact/Delivery untouched, since
     ...    some suites need the pre-address state as their own first case's precondition.
     [Arguments]    ${handle}
@@ -156,9 +156,9 @@ Reach Fresh Checkout For Payment Case
     ...
     ...    WHY PER-CASE RATHER THAN PER-SUITE: the suite previously reached checkout once in
     ...    Suite Setup and chained every payment case against it. The cross-origin PCI card
-    ...    iframes do NOT survive a prior payment submission — the second and third cases in a
-    ...    run failed with a Fill Text timeout on the card-number field while the first succeeded
-    ...    (12 Aug 2026). Reaching a fresh checkout per case costs a few extra page loads and
+    ...    iframes do NOT survive a prior payment submission; the second and third cases in a
+    ...    run failed with a Fill Text timeout on the card-number field while the first succeeded.
+    ...    Reaching a fresh checkout per case costs a few extra page loads and
     ...    removes an entire class of order-dependent failure.
     ...    Cases that Skip (order-gated or design-only) exit before touching this state.
     Clear Cart
@@ -166,7 +166,7 @@ Reach Fresh Checkout For Payment Case
 
 Reach Checkout With Product And Address
     [Documentation]    As `Reach Checkout With Product`, additionally filling the Contact e-mail
-    ...    and the standard fictitious Delivery address — leaves checkout ready for a
+    ...    and the standard fictitious Delivery address; leaves checkout ready for a
     ...    shipping/discount/payment interaction. Used by suites whose cases do not need to
     ...    observe the pre-address checkout state.
     [Arguments]    ${handle}    ${email}=${FICTITIOUS_EMAIL}
@@ -177,9 +177,9 @@ Reach Checkout With Product And Address
 Reload Checkout Page
     [Documentation]    Reloads the current checkout so a retry gets a fresh payment session while
     ...    the cart and entered address are preserved server-side. Introduced because a declined
-    ...    attempt leaves the page interactive — the card fields refill and Pay now still clicks —
-    ...    but the submission silently never completes (12 Aug 2026, TC-12-005). The reload did
-    ...    NOT fix that automated retry, and the 12 Aug 2026 manual retest settled the question:
+    ...    attempt leaves the page interactive (the card fields refill and Pay now still clicks),
+    ...    but the submission silently never completes (TC-12-005). The reload did
+    ...    NOT fix that automated retry, and a later live manual retest settled the question:
     ...    a human retry succeeds in place with NO reload (order #V860ENJ8W). Retained solely for
     ...    TC-12-005's non-executing procedure and future maintenance re-attempts.
     Reload
@@ -187,7 +187,7 @@ Reload Checkout Page
 
 Checkout Should Be Reached
     [Documentation]    Asserts the browser has transitioned from /cart into the modern one-page
-    ...    checkout (URL family /checkouts/cn/..., captured live 2026-08-07).
+    ...    checkout (URL family /checkouts/cn/..., captured live).
     Get Url    contains    /checkouts/
 
 Checkout Should Not Have Advanced To Confirmation
@@ -195,14 +195,14 @@ Checkout Should Not Have Advanced To Confirmation
     ...    markers. Used by every declined/rejected/failed payment case in this suite family.
     ...
     ...    THIS NO LONGER TESTS THE URL. It previously asserted `Get Url contains /checkouts/`,
-    ...    which is unconditionally true for any case that never reaches payment — and Shopify's
+    ...    which is unconditionally true for any case that never reaches payment, and Shopify's
     ...    one-page checkout keeps the /checkouts/cn/<token> prefix through the thank-you step,
     ...    so the check could not catch a wrongly-approved payment either. It made TC-09-002 and
-    ...    TC-09-003 incapable of failing (12 Aug 2026). Absence of the confirmation markers is
+    ...    TC-09-003 incapable of failing. Absence of the confirmation markers is
     ...    the thing actually worth asserting, and it holds regardless of URL shape.
     ${text}=    Checkout Page Text
     Should Not Match Regexp    ${text}    (?i)(thank you[,!\\s]|your order is confirmed|order number|confirmation number)
-    ...    msg=Checkout appears to have advanced to an order confirmation — an order may have been created when none was expected
+    ...    msg=Checkout appears to have advanced to an order confirmation: an order may have been created when none was expected
 
 Fill Contact Email
     [Documentation]    Types the given address into the Contact section's e-mail field.
@@ -211,11 +211,11 @@ Fill Contact Email
 
 Fill Delivery Address
     [Documentation]    Fills the Delivery section. Defaults to the team's standard fictitious
-    ...    identity (Test Tester, 1 Test Street, 40000 Shah Alam, Selangor, MY) captured live
-    ...    2026-08-07; any field can be overridden by callers (for example TC-09-002's blanked
+    ...    identity (Test Tester, 1 Test Street, 40000 Shah Alam, Selangor, MY) captured live;
+    ...    any field can be overridden by callers (for example TC-09-002's blanked
     ...    required fields, or TC-09-006's unrealistic postal code/city). Company, address2 and
     ...    phone are optional on the live form and are only filled when a non-empty value is
-    ...    supplied. Country is fixed to Malaysia (MY) and zone to Selangor on every call — the
+    ...    supplied. Country is fixed to Malaysia (MY) and zone to Selangor on every call, the
     ...    suites' shared shipping oracle (International Shipping £20.00) depends on this
     ...    destination.
     [Arguments]    ${first_name}=${FICTITIOUS_FIRST_NAME}    ${last_name}=${FICTITIOUS_LAST_NAME}
@@ -260,8 +260,8 @@ Empty Cart Direct Checkout Should Be Refused
     ...    must not be offered when the cart is empty; the store may satisfy that by any
     ...    mechanism. The earlier oracle enumerated only two mechanisms (redirect to /cart, or an
     ...    on-page refusal message) because the real one was unobservable before a live run.
-    ...    LIVE RUN 11 Aug 2026 established it: the storefront refuses by redirecting to the HOME
-    ...    page — no /cart redirect and no explanatory message. The oracle therefore asserts the
+    ...    A live run established it: the storefront refuses by redirecting to the HOME
+    ...    page (no /cart redirect and no explanatory message). The oracle therefore asserts the
     ...    requirement itself (the checkout flow is not reached) and records the mechanism, plus
     ...    the absence of any explanation, as an observation for the defect/observation log.
     Go To    ${STORE_URL}checkout
@@ -273,20 +273,20 @@ Empty Cart Direct Checkout Should Be Refused
     ...    (?i)(empty|no items|nothing to checkout|add.{0,15}item)
     Log    Empty-cart /checkout landed on: ${url} | redirected to cart: ${redirected_to_cart} | explanatory message shown: ${refusal_text}
     Should Not Be True    ${reached_checkout}
-    ...    msg=Checkout was REACHED with an empty cart — the store failed to refuse direct /checkout navigation
+    ...    msg=Checkout was REACHED with an empty cart: the store failed to refuse direct /checkout navigation
     IF    not ${redirected_to_cart} and not ${refusal_text}
-        Log    OBSERVATION (TC-08-004): empty-cart checkout is correctly refused, but the storefront silently redirects to the home page — it neither returns the customer to the cart nor explains why checkout was not offered.    level=WARN
+        Log    OBSERVATION (TC-08-004): empty-cart checkout is correctly refused, but the storefront silently redirects to the home page; it neither returns the customer to the cart nor explains why checkout was not offered.    level=WARN
     END
 
 Checkout Page Text
-    [Documentation]    Returns the checkout page's full visible text — the shared runtime-capture
+    [Documentation]    Returns the checkout page's full visible text, the shared runtime-capture
     ...    primitive behind every summary/total/alert/error/observation reader in this file (no
-    ...    stable container locator was captured for any of those prose regions on 2026-08-07).
+    ...    stable container locator was captured for any of those prose regions).
     ${text}=    Get Text    body
     RETURN    ${text}
 
 Checkout Page Should Contain
-    [Documentation]    Asserts the checkout page's visible text contains the given string —
+    [Documentation]    Asserts the checkout page's visible text contains the given string:
     ...    generic text oracle reused across section/summary/product-name checks in this suite
     ...    family (mirrors resources/pages/cart_page.resource's "Cart Should Contain"). Use for
     ...    product-name checks too: the order-summary line doubles the title ("Grey
@@ -296,8 +296,8 @@ Checkout Page Should Contain
     ...    two-column table (Item | Value), so its rendered text separates label from amount
     ...    with a NEWLINE, not a space: "Shipping\\n£20.00", "Total\\nGBP\\n£75.00". A raw
     ...    "contains" against the literal "Shipping £20.00" therefore fails even though the
-    ...    page is entirely correct — this produced five false failures across TS-09 and TS-10
-    ...    on 12 Aug 2026. Collapsing whitespace runs to single spaces makes the oracle
+    ...    page is entirely correct; this produced five false failures across TS-09 and TS-10.
+    ...    Collapsing whitespace runs to single spaces makes the oracle
     ...    tolerant of the table layout without weakening what it actually checks.
     ...
     ...    THE COMPARISON RETRIES. Browser's own `Get Text ... contains` retries for the
@@ -311,13 +311,13 @@ Checkout Page Should Contain
 
 Checkout Text Should Contain Normalised
     [Documentation]    Single whitespace-normalised containment check on the checkout page text.
-    ...    Internal helper for `Checkout Page Should Contain` — call that instead, so the
+    ...    Internal helper for `Checkout Page Should Contain`; call that instead, so the
     ...    retry wrapper applies. Guards against an EMPTY needle first, the same protection
-    ...    `Cart Should Contain` gained on 7 Aug 2026: "contains ''" passes against any page and
+    ...    `Cart Should Contain` gained: "contains ''" passes against any page and
     ...    silently voids the oracle whenever a runtime capture returns empty.
     [Arguments]    ${text}
     Should Not Be Empty    ${text}
-    ...    msg=Checkout Page Should Contain called with an EMPTY expected text — the runtime capture that produced it failed; the oracle would be vacuous
+    ...    msg=Checkout Page Should Contain called with an EMPTY expected text: the runtime capture that produced it failed; the oracle would be vacuous
     ${page}=    Get Text    body
     ${page_norm}=    Evaluate    " ".join($page.split())
     ${want_norm}=    Evaluate    " ".join($text.split())
@@ -326,26 +326,26 @@ Checkout Text Should Contain Normalised
 
 Pre Address Shipping Message Should Be Shown
     [Documentation]    Asserts the Shipping method section shows its pre-address prompt (captured
-    ...    live 2026-08-07): "Enter your shipping address to view available shipping methods".
+    ...    live): "Enter your shipping address to view available shipping methods".
     ...    First half of the TC-10-001 / A12 two-phase oracle.
     Get Text    body    contains    ${PRE_ADDRESS_SHIPPING_TEXT}
 
 Shipping Method Should Be Displayed
     [Documentation]    Asserts the configured shipping method's name is shown after a valid
-    ...    address is entered (captured live 2026-08-07: "International Shipping"). Second half
+    ...    address is entered (captured live: "International Shipping"). Second half
     ...    of the TC-10-001 / A12 two-phase oracle.
     Get Text    body    contains    ${SHIPPING_METHOD_NAME_TEXT}
 
 Shipping Cost Line Text
     [Documentation]    Returns the checkout page's visible text for callers to log/assert the Cost
-    ...    summary's shipping line (captured live 2026-08-07: "Shipping £20.00"). Text-based
-    ...    oracle — the live checkout has no shipping radio controls to assert against instead.
+    ...    summary's shipping line (captured live: "Shipping £20.00"). Text-based
+    ...    oracle: the live checkout has no shipping radio controls to assert against instead.
     ${text}=    Checkout Page Text
     RETURN    ${text}
 
 Order Total Text
     [Documentation]    Returns the checkout page's visible text for callers to log/assert the Cost
-    ...    summary's Total line (captured live 2026-08-07: subtotal £55.00 + shipping £20.00 =
+    ...    summary's Total line (captured live: subtotal £55.00 + shipping £20.00 =
     ...    Total GBP £75.00).
     ${text}=    Checkout Page Text
     RETURN    ${text}
@@ -356,14 +356,14 @@ Untick Marketing Consent
 
 Consent Checkbox State
     [Documentation]    Returns the marketing-consent checkbox's current checked state as a
-    ...    boolean (captured live 2026-08-07: observed PRE-TICKED by default — TC-09-007
+    ...    boolean (captured live: observed PRE-TICKED by default, TC-09-007
     ...    evidence).
     ${checked}=    Get Checkbox State    ${MARKETING_OPT_IN}
     RETURN    ${checked}
 
 Toggle Billing Address Same As Shipping
-    [Documentation]    Clicks the billing-address toggle checkbox (captured live 2026-08-07);
-    ...    exposed here for completeness — not exercised by name in this batch's suite cases.
+    [Documentation]    Clicks the billing-address toggle checkbox (captured live);
+    ...    exposed here for completeness, not exercised by name in this batch's suite cases.
     Click    ${BILLING_TOGGLE}
 
 Apply Discount Code
@@ -374,15 +374,15 @@ Apply Discount Code
 
 Discount Error Surface Text
     [Documentation]    Returns the checkout page's visible text for callers to assert/log the
-    ...    discount-rejection error surface after an invalid code is applied. Text-based oracle —
-    ...    no stable discount-error container locator was captured (2026-08-07).
+    ...    discount-rejection error surface after an invalid code is applied. Text-based oracle:
+    ...    no stable discount-error container locator was captured live.
     ${text}=    Checkout Page Text
     RETURN    ${text}
 
 Discount Rejection Should Be Shown
     [Documentation]    Waits for the checkout to surface a rejection message after an invalid
     ...    discount code, then returns the page text for evidence logging. The code is applied
-    ...    asynchronously, so a single immediate read can miss a message that is on its way —
+    ...    asynchronously, so a single immediate read can miss a message that is on its way;
     ...    this polls for up to 15s before concluding. If no rejection wording has appeared by
     ...    then, the failure is a genuine finding (the store accepted an invalid code without
     ...    telling the customer), not a timing artifact.
@@ -392,7 +392,7 @@ Discount Rejection Should Be Shown
 
 Discount Rejection Wording Should Be Present
     [Documentation]    Single check for any rejection wording in the checkout page text.
-    ...    Internal helper for `Discount Rejection Should Be Shown` — call that instead.
+    ...    Internal helper for `Discount Rejection Should Be Shown`; call that instead.
     ${text}=    Checkout Page Text
     Should Match Regexp    ${text}
     ...    (?i)(invalid|not found|expired|does.?n.?t (apply|exist)|error|couldn.?t be (applied|found)|isn.?t valid|not valid|unable to apply|enter a valid)
@@ -401,11 +401,11 @@ Discount Rejection Wording Should Be Present
 Field Error Text Near
     [Documentation]    Best-effort field-level validation-error reader: returns text from the
     ...    nearest enclosing container around the NAMED field's input (accepts "email",
-    ...    "firstName", "lastName", "address1", "postalCode" or "city" — deliberately a semantic
+    ...    "firstName", "lastName", "address1", "postalCode" or "city", deliberately a semantic
     ...    name, not a raw locator, so callers in tests/ never need to hold a css=/xpath= string).
-    ...    No stable per-field error-message container id/class was captured live (the 2026-08-07
+    ...    No stable per-field error-message container id/class was captured live (the live
     ...    capture recorded controls only, not validation-error markup, since no invalid
-    ...    submission was made under the zero-store-traffic constraint) — PROVISIONAL,
+    ...    submission was made under the zero-store-traffic constraint): PROVISIONAL,
     ...    supplementary evidence only; never crashes (returns an empty string if no enclosing
     ...    container is found or the name is unrecognised). Callers should use the page-level
     ...    union oracles below as the hard assertion.
@@ -430,8 +430,8 @@ Field Error Text Near
 
 Page Level Error Region Text
     [Documentation]    Returns the checkout page's visible text so callers can assert/log a
-    ...    page-level validation-error region. Text-based oracle — no stable page-level
-    ...    error-region container id/class was captured live (2026-08-07); same union-oracle
+    ...    page-level validation-error region. Text-based oracle: no stable page-level
+    ...    error-region container id/class was captured live; same union-oracle
     ...    philosophy as resources/pages/account_pages.resource.
     ${text}=    Checkout Page Text
     RETURN    ${text}
@@ -440,21 +440,21 @@ Required Field Validation Should Be Shown
     [Documentation]    Asserts submitting checkout with required fields blank is refused with
     ...    validation evidence (TC-09-002): a validation/required/error message
     ...    in the page text, OR the browser remaining on checkout (/checkouts/) rather than
-    ...    advancing — union oracle, mirroring resources/pages/account_pages.resource's
+    ...    advancing; union oracle, mirroring resources/pages/account_pages.resource's
     ...    "Empty Login Validation Should Be Shown" pattern for an un-verified validation surface.
     ...
     ...    THE ALWAYS-TRUE ARM HAS BEEN REMOVED. This previously accepted "the browser is still
     ...    on /checkouts/" as evidence of validation. TC-09-002 never fills the card section, so
-    ...    payment cannot proceed and the URL can never leave /checkouts/ — the OR was
+    ...    payment cannot proceed and the URL can never leave /checkouts/; the OR was
     ...    unconditionally satisfied and the case could not fail whether the store validated or
-    ...    not (12 Aug 2026). The oracle now asserts the validation message itself, which is the
+    ...    not. The oracle now asserts the validation message itself, which is the
     ...    actual recovered requirement; if the store genuinely shows nothing, that FAIL is a
     ...    finding worth recording, exactly as the silent failed-login defect was.
     Wait Until Keyword Succeeds    10s    1s    Required Field Message Should Be Present
 
 Required Field Message Should Be Present
     [Documentation]    Single check for required-field validation wording. Internal helper for
-    ...    `Required Field Validation Should Be Shown` — call that instead.
+    ...    `Required Field Validation Should Be Shown`; call that instead.
     ${page_text}=    Checkout Page Text
     Should Match Regexp    ${page_text}
     ...    (?i)(required|can.?t be blank|fill (in|out)|this field|enter (your|a valid)|missing)
@@ -472,7 +472,7 @@ Email Format Validation Should Be Shown
 
 Email Format Message Should Be Present
     [Documentation]    Single check for e-mail-format validation wording. Internal helper for
-    ...    `Email Format Validation Should Be Shown` — call that instead.
+    ...    `Email Format Validation Should Be Shown`; call that instead.
     ${page_text}=    Checkout Page Text
     Should Match Regexp    ${page_text}
     ...    (?i)(invalid email|email.{0,15}(invalid|not valid|format)|enter a valid email)
@@ -482,7 +482,7 @@ Payment Rejection Should Be Shown
     [Documentation]    Asserts a payment attempt with invalid/garbage card data is rejected: the
     ...    browser must NOT advance to order confirmation (hard, safety-relevant assertion). A
     ...    payment-error/rejection message in the page text is additionally captured and logged as
-    ...    supporting evidence (soft — exact wording was not observable under this task's
+    ...    supporting evidence (soft: exact wording was not observable under this task's
     ...    zero-store-traffic constraint before a live run).
     ${page_text}=    Checkout Page Text
     ${message_hit}=    Run Keyword And Return Status    Should Match Regexp    ${page_text}
@@ -492,13 +492,13 @@ Payment Rejection Should Be Shown
 
 Enter Card Number
     [Documentation]    Types into the card-number PCI iframe (cross-origin, random id suffix per
-    ...    load — selected by prefix and pierced with the Browser library ">>>" syntax).
+    ...    load, selected by prefix and pierced with the Browser library ">>>" syntax).
     ...
     ...    USES Type Text, NOT Fill Text. The field auto-formats as you type, inserting spaces
     ...    into the digits ("4111 1111 1111 1111"). Fill Text sets a value and then verifies the
     ...    field still holds exactly what was set, so the formatter's rewrite makes it retry
-    ...    until it times out — a 16-digit number timed out at 15s while a single-digit store
-    ...    test value ("2") filled fine, which is what exposed the cause (12 Aug 2026).
+    ...    until it times out; a 16-digit number timed out at 15s while a single-digit store
+    ...    test value ("2") filled fine, which is what exposed the cause.
     ...    Typing character by character lets the formatter do its work.
     [Arguments]    ${value}
     Type Text    ${CARD_NUMBER_FRAME_INPUT}    ${value}    delay=30ms    clear=False
@@ -533,8 +533,8 @@ Click Pay Now
 Payment Alert Text
     [Documentation]    Returns the checkout page's visible text for callers to assert/log a
     ...    payment alert (for example the card-2 decline message, or the card-3 gateway-failure
-    ...    alert plus Request ID). Text-based oracle — no stable alert-container locator was
-    ...    captured (2026-08-07). NOTE: this is an immediate one-shot read. For asserting that a
+    ...    alert plus Request ID). Text-based oracle: no stable alert-container locator was
+    ...    captured live. NOTE: this is an immediate one-shot read. For asserting that a
     ...    payment alert APPEARED, use `Payment Alert Should Contain`, which waits.
     ${text}=    Checkout Page Text
     RETURN    ${text}
@@ -543,8 +543,8 @@ Payment Alert Should Contain
     [Documentation]    Waits for the given wording to appear in the checkout page text after a
     ...    payment attempt, then returns the full text for evidence logging. Submitting a card
     ...    is a gateway round-trip taking seconds, so reading the page immediately after
-    ...    Click Pay Now can precede the alert entirely — that produced two false failures in
-    ...    TS-12 on 12 Aug 2026 even though the card details were filled and Pay now was clicked
+    ...    Click Pay Now can precede the alert entirely; that produced two false failures in
+    ...    TS-12 even though the card details were filled and Pay now was clicked
     ...    successfully. Polls for up to 20s; a failure after that is a genuine finding.
     [Arguments]    ${expected}
     Wait Until Keyword Succeeds    20s    1s    Payment Alert Wording Should Be Present    ${expected}
@@ -553,7 +553,7 @@ Payment Alert Should Contain
 
 Payment Alert Wording Should Be Present
     [Documentation]    Single whitespace-normalised check for payment-alert wording.
-    ...    Internal helper for `Payment Alert Should Contain` — call that instead.
+    ...    Internal helper for `Payment Alert Should Contain`; call that instead.
     [Arguments]    ${expected}
     ${text}=    Checkout Page Text
     ${text_norm}=    Evaluate    " ".join($text.split())
@@ -563,7 +563,7 @@ Payment Alert Wording Should Be Present
 
 Checkout Problem Banner Present
     [Documentation]    Returns True when the recurring transient banner "There was a problem with
-    ...    our checkout" is currently visible. Captured 2026-08-07 as a technical-health
+    ...    our checkout" is currently visible. Captured live as a technical-health
     ...    characteristic of this live checkout: callers must never assert its ABSENCE elsewhere
     ...    (it is known to appear intermittently regardless of test action); TC-12-006 is the one
     ...    case in this suite family that asserts its PRESENCE, which is a distinct, expected
@@ -574,9 +574,9 @@ Checkout Problem Banner Present
 
 Order Confirmation Should Be Reached
     [Documentation]    Asserts the browser has reached the post-payment order-confirmation page
-    ...    (verified live confirmation page, order #1YRC8ZIPW format, 5 Aug 2026): a "Thank you"
+    ...    (verified live confirmation page, order #1YRC8ZIPW format): a "Thank you"
     ...    heading is present and a confirmation-number pattern is found in the page text.
-    ...    PROVISIONAL text pattern (see file Documentation) — only reachable under an
+    ...    PROVISIONAL text pattern (see file Documentation); only reachable under an
     ...    ALLOW_ORDERS-authorized run.
     Get Text    body    contains    Thank you
     ${page_text}=    Checkout Page Text
@@ -586,14 +586,14 @@ Order Confirmation Should Be Reached
 Confirmation Page Should Contain
     [Documentation]    Asserts the post-payment confirmation page's visible text contains the
     ...    given string (product name, totals, order-detail sections). Same underlying mechanic as
-    ...    "Checkout Page Should Contain" — kept as a separately named keyword for call-site
+    ...    "Checkout Page Should Contain", kept as a separately named keyword for call-site
     ...    honesty once payment has succeeded and the browser has moved past checkout onto the
-    ...    confirmation page. Guards against an EMPTY needle first (see `Cart Should Contain`,
-    ...    7 Aug 2026) and normalises whitespace, since the confirmation page renders its order
+    ...    confirmation page. Guards against an EMPTY needle first (see `Cart Should Contain`)
+    ...    and normalises whitespace, since the confirmation page renders its order
     ...    details as tables whose label and value are separated by a newline rather than a space.
     [Arguments]    ${text}
     Should Not Be Empty    ${text}
-    ...    msg=Confirmation Page Should Contain called with an EMPTY expected text — the runtime capture that produced it failed; the oracle would be vacuous
+    ...    msg=Confirmation Page Should Contain called with an EMPTY expected text: the runtime capture that produced it failed; the oracle would be vacuous
     ${page}=    Get Text    body
     ${page_norm}=    Evaluate    " ".join($page.split())
     ${want_norm}=    Evaluate    " ".join($text.split())
@@ -602,21 +602,21 @@ Confirmation Page Should Contain
 
 Confirmation Number Text
     [Documentation]    Returns the confirmation page's visible text for callers to log/assert the
-    ...    order/confirmation number (verified format, e.g. "#1YRC8ZIPW", 5 Aug 2026) as
+    ...    order/confirmation number (verified format, e.g. "#1YRC8ZIPW") as
     ...    execution-log evidence (TC-13-002). No stable container locator was captured for the
-    ...    confirmation page (see file Documentation) — text-based oracle.
+    ...    confirmation page (see file Documentation); text-based oracle.
     ${text}=    Checkout Page Text
     RETURN    ${text}
 
 Click Continue Shopping
     [Documentation]    Clicks the confirmation page's "Continue shopping" control, returning to
-    ...    the storefront (verified behaviour 5 Aug 2026). PROVISIONAL locator (see file
-    ...    Documentation) — only reachable under an ALLOW_ORDERS-authorized run.
+    ...    the storefront (verified behaviour live). PROVISIONAL locator (see file
+    ...    Documentation); only reachable under an ALLOW_ORDERS-authorized run.
     Click    ${CONTINUE_SHOPPING_LINK}
 
 Post Purchase Account Offer Present
     [Documentation]    Returns True if the confirmation page presents an account-creation offer.
-    ...    Observed 5 Aug 2026: none present — TC-15-005 asserts this True and is expected to FAIL
+    ...    Observed live: none present; TC-15-005 asserts this True and is expected to FAIL
     ...    live (known-defect-lead evidence per the Test Case Specification's §REWORDS), the same
     ...    pattern used by
     ...    tests/ts14_secondary_services.robot and tests/ts17_search.robot.

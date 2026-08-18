@@ -92,7 +92,7 @@ TC-09-007 Marketing Consent State At Checkout
     ...    known-good baseline. NO Pay click. Priority Low / Negative.
     [Tags]    priority-low    type-negative    TC-09-007
     ${default_state}=    Consent Checkbox State
-    Log    Marketing consent default state (observation, captured live 2026-08-07: pre-ticked): ${default_state}
+    Log    Marketing consent default state (observation, captured live: pre-ticked): ${default_state}
     Should Be True    ${default_state}
     ...    msg=Marketing consent checkbox was not pre-ticked by default (recorded-observation expectation)
     Untick Marketing Consent
@@ -150,7 +150,7 @@ TC-09-006 Enter Invalid Postal Code Or Address
     Fill Delivery Address    postal_code=00000    city=X
     Click Pay Now
     ${page_text}=    Checkout Page Text
-    Log    Unrealistic-address Pay attempt — page response (observation; store-acceptance behaviour for postcode "00000" / city "X" not previously observed): ${page_text}
+    Log    Unrealistic-address Pay attempt: page response (observation; store-acceptance behaviour for postcode "00000" / city "X" not previously observed): ${page_text}
     ${url}=    Get Url
     Should Contain    ${url}    sauce-demo.myshopify.com
     ...    msg=Page navigated away from the store domain after the unrealistic-address payment attempt (possible crash/dead-end)

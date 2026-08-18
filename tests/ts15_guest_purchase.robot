@@ -65,13 +65,13 @@ TC-15-001 Guest Completes Purchase Successfully
     ...    the order-budget note). This whole suite never logs in anywhere, so completing this
     ...    flow IS the guest-purchase evidence. Priority High / Positive.
     [Tags]    priority-high    type-positive    TC-15-001
-    Skip If    not ${ALLOW_ORDERS}    Creates a real order — run only in an explicitly authorized session (-v ALLOW_ORDERS:True); team payment policy and order budget apply (see suite Documentation).
+    Skip If    not ${ALLOW_ORDERS}    Creates a real order: run only in an explicitly authorized session (-v ALLOW_ORDERS:True); team payment policy and order budget apply (see suite Documentation).
     Reach Checkout With Product And Address    ${PRODUCT_HANDLE}
     Enter Card Details    1    12/30    123
     Click Pay Now
     Order Confirmation Should Be Reached
     ${confirmation_text}=    Confirmation Number Text
-    Log    Guest purchase completed — order confirmation evidence (verified format #1YRC8ZIPW, 5 Aug 2026): ${confirmation_text}
+    Log    Guest purchase completed; order confirmation evidence (verified format #1YRC8ZIPW): ${confirmation_text}
 
 TC-15-002 Guest Checkout Unavailable (Design-Only)
     [Documentation]    Scenario: guest checkout unavailable. Precondition: guest checkout
@@ -121,7 +121,7 @@ TC-15-004 Guest Cart Persistence (Same-Context New Page)
     Should Be Equal As Integers    ${count_after}    ${count_before}
     ...    msg=Cart did not persist across closing and reopening a page in the same context: badge was ${count_before} before, ${count_after} after
     Should Be True    ${count_after} > 0
-    ...    msg=Cart badge reads 0 after reopening the page — the cart did not persist at all
+    ...    msg=Cart badge reads 0 after reopening the page: the cart did not persist at all
 
 TC-15-005 Offer Account Creation After Purchase
     [Documentation]    Precondition: guest order completed. Steps: 1. Complete a test purchase.
@@ -136,12 +136,12 @@ TC-15-005 Offer Account Creation After Purchase
     ...    TWO real orders total in this file when both TC-15-001 and TC-15-005 execute under
     ...    ALLOW_ORDERS:True). Priority Low / Positive.
     [Tags]    priority-low    type-positive    known-defect-lead    TC-15-005
-    Skip If    not ${ALLOW_ORDERS}    Creates a real order — run only in an explicitly authorized session (-v ALLOW_ORDERS:True); team payment policy and order budget apply (see suite Documentation).
+    Skip If    not ${ALLOW_ORDERS}    Creates a real order: run only in an explicitly authorized session (-v ALLOW_ORDERS:True); team payment policy and order budget apply (see suite Documentation).
     Reach Checkout With Product And Address    ${PRODUCT_HANDLE}
     Enter Card Details    1    12/30    123
     Click Pay Now
     Order Confirmation Should Be Reached
     ${offer_present}=    Post Purchase Account Offer Present
-    Log    Post-purchase account-creation offer presence (observation, captured live 2026-08-07: none observed): ${offer_present}
+    Log    Post-purchase account-creation offer presence (observation, captured live: none observed): ${offer_present}
     Should Be True    ${offer_present}
-    ...    msg=No post-purchase account-creation offer was presented (known-defect-lead: observed 5 Aug 2026 — expected FAIL when authorized)
+    ...    msg=No post-purchase account-creation offer was presented (known-defect-lead: observed live; expected FAIL when authorized)

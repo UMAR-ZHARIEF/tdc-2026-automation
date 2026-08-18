@@ -72,7 +72,7 @@ TC-05-004 Rapid Repeated Clicks (Design-Only)
     ...    reload, closing the timing window a deterministic automated test would need; the
     ...    behaviour is assessed manually. Priority High / Negative.
     [Tags]    priority-high    type-negative    not-automatable    TC-05-004
-    Skip    Not automatable deterministically: each add triggers an immediate page reload, closing the rapid-click timing window. Assessed manually; designed case retained in the TCS. (the Test Case Specification's mode: Executable — covered by the manual execution round; this is an automation-only limitation.)
+    Skip    Not automatable deterministically: each add triggers an immediate page reload, closing the rapid-click timing window. Assessed manually; designed case retained in the TCS. (the Test Case Specification's mode: Executable, covered by the manual execution round; this is an automation-only limitation.)
 
 TC-05-005 Offline Add Attempt Leaves The Cart Unchanged
     [Documentation]    A network failure during an add attempt must not corrupt the cart or

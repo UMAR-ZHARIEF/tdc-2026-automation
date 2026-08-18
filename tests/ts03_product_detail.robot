@@ -95,7 +95,7 @@ TC-03-007 Expand Full Product Description
     Open Product    ${PDP_HANDLE}
     ${desc}=    Description Block Count
     Should Be True    ${desc} > 0    msg=Description block not rendered on the product detail page
-    Log    No expansion control exists for the description (verified 5 Aug 2026) — the theme's DOM defines no such element to probe.
+    Log    No expansion control exists for the description (verified live); the theme's DOM defines no such element to probe.
 
 TC-03-008 Breadcrumb Category Step-Back
     [Documentation]    TCS models stepping back through a category hierarchy via breadcrumbs.

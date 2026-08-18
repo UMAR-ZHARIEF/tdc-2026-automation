@@ -1,22 +1,22 @@
 *** Settings ***
-Documentation     Page object: persistent site chrome present on every storefront page —
+Documentation     Page object: persistent site chrome present on every storefront page:
 ...               the header (cart badge, search box, mini-cart drawer) and sidebar navigation.
 ...               Locators for these shared elements live ONLY here. The mini-cart drawer is a
-...               plain top-level container (id="drawer", no distinguishing class — it is NOT
+...               plain top-level container (id="drawer", no distinguishing class; it is NOT
 ...               selectable via a ".drawer" class); its open/closed state and contents are
 ...               detected instead via its visible form[action="/cart"] content, which is
 ...               present (hidden when closed) on every page once the cart holds an item.
 ...               Also holds the Blog and About Us site-navigation entry points (TS-18 Content
-...               & Error Pages) — relocated here from content_pages.resource
+...               & Error Pages), relocated here from content_pages.resource
 ...               (coordinator-directed housekeeping move: same "persistent site chrome"
 ...               concern as ${CATALOGUE_NAV} below). Unlike the rest of this file's
-...               already-live locators, ${BLOG_NAV_LINK} and ${ABOUT_NAV_LINK} are PROVISIONAL
-...               — live-verify before relying on them outside dry-run.
+...               already-live locators, ${BLOG_NAV_LINK} and ${ABOUT_NAV_LINK} are PROVISIONAL:
+...               live-verify before relying on them outside dry-run.
 ...               Also holds the Wish list, Refer a Friend, and social-links chrome for TS-14
-...               Secondary & Support Services — coordinator-granted addition.
+...               Secondary & Support Services, coordinator-granted addition.
 ...               The Wish list and Refer a Friend controls are documented inert remnants of the
-...               defunct Sauce app (click-verified 5 Aug 2026: no response); ${WISHLIST_LINK},
-...               ${REFER_FRIEND_LINK} and ${SOCIAL_LINKS} are PROVISIONAL — live-verify before
+...               defunct Sauce app (click-verified live: no response); ${WISHLIST_LINK},
+...               ${REFER_FRIEND_LINK} and ${SOCIAL_LINKS} are PROVISIONAL: live-verify before
 ...               relying on them outside dry-run. Oracle/sweep logic built on these locators
 ...               lives in resources/pages/secondary_services.resource, not here.
 Library           Browser
@@ -24,11 +24,11 @@ Library           Browser
 *** Variables ***
 ${SEARCH_BOX}             css=input[name="q"]:visible
 ${CATALOGUE_NAV}          css=a[href*="/collections/"]:visible
-${BLOG_NAV_LINK}          xpath=//a[contains(normalize-space(),'Blog') or contains(normalize-space(),'News')]    # PROVISIONAL — live-verify before commit; nav label unconfirmed (URL family /blogs/news)
-${ABOUT_NAV_LINK}         xpath=//a[contains(normalize-space(),'About')]    # PROVISIONAL — live-verify before commit
-${WISHLIST_LINK}          xpath=//a[contains(normalize-space(),'Wish list') or contains(normalize-space(),'Wish List') or contains(normalize-space(),'Wishlist')]    # PROVISIONAL — live-verify before commit; documented inert Sauce-app remnant
-${REFER_FRIEND_LINK}      xpath=//a[contains(normalize-space(),'Refer a friend') or contains(normalize-space(),'Refer a Friend')]    # PROVISIONAL — live-verify before commit; documented inert Sauce-app remnant
-${SOCIAL_LINKS}           css=a[href*="facebook.com"]:visible, a[href*="twitter.com"]:visible, a[href*="instagram.com"]:visible, a[href*="pinterest.com"]:visible    # PROVISIONAL — live-verify before commit; recorded targets (facebook.com/shopify, twitter.com/sauce_io [defunct], instagram.com/shopify, a personal Pinterest board)
+${BLOG_NAV_LINK}          xpath=//a[contains(normalize-space(),'Blog') or contains(normalize-space(),'News')]    # PROVISIONAL: live-verify before commit; nav label unconfirmed (URL family /blogs/news)
+${ABOUT_NAV_LINK}         xpath=//a[contains(normalize-space(),'About')]    # PROVISIONAL: live-verify before commit
+${WISHLIST_LINK}          xpath=//a[contains(normalize-space(),'Wish list') or contains(normalize-space(),'Wish List') or contains(normalize-space(),'Wishlist')]    # PROVISIONAL: live-verify before commit; documented inert Sauce-app remnant
+${REFER_FRIEND_LINK}      xpath=//a[contains(normalize-space(),'Refer a friend') or contains(normalize-space(),'Refer a Friend')]    # PROVISIONAL: live-verify before commit; documented inert Sauce-app remnant
+${SOCIAL_LINKS}           css=a[href*="facebook.com"]:visible, a[href*="twitter.com"]:visible, a[href*="instagram.com"]:visible, a[href*="pinterest.com"]:visible    # PROVISIONAL: live-verify before commit; recorded targets (facebook.com/shopify, twitter.com/sauce_io [defunct], instagram.com/shopify, a personal Pinterest board)
 ${DRAWER_TOGGLE}          css=a.toggle-drawer.cart.desktop
 ${DRAWER_FORM_VISIBLE}    css=form[action="/cart"]:visible
 ${DRAWER_PRODUCT_LINK}    css=form[action="/cart"] a[href*="/products/"]:visible
@@ -45,9 +45,9 @@ Cart Badge Should Show
 Current Cart Badge Count
     [Documentation]    Returns the header cart badge's current count as an integer. Use this when
     ...    a case needs to compare the cart against its OWN starting state rather than an absolute
-    ...    number — suites chain cases against a shared cart, so a hard-coded expectation like
-    ...    "1" silently depends on which cases ran first (TC-15-004 failed this way on
-    ...    12 Aug 2026: an earlier case had left one item, so the badge read 2, not 1).
+    ...    number; suites chain cases against a shared cart, so a hard-coded expectation like
+    ...    "1" silently depends on which cases ran first (TC-15-004 failed this way:
+    ...    an earlier case had left one item, so the badge read 2, not 1).
     ${text}=    Get Text    body
     ${count}=    Evaluate    int(re.search(r'My Cart \\((\\d+)\\)', $text).group(1))    modules=re
     RETURN    ${count}
@@ -79,13 +79,13 @@ Go To About Us Via Navigation
     Click    ${ABOUT_NAV_LINK}
 
 Activate Wish List Control
-    [Documentation]    Clicks the Wish list menu control (documented inert Sauce-app remnant —
-    ...    click-verified 5 Aug 2026 to produce no response).
+    [Documentation]    Clicks the Wish list menu control (documented inert Sauce-app remnant;
+    ...    click-verified live to produce no response).
     Click    ${WISHLIST_LINK}
 
 Activate Refer A Friend Control
-    [Documentation]    Clicks the Refer a Friend control (documented inert Sauce-app remnant —
-    ...    click-verified 5 Aug 2026 to produce no response).
+    [Documentation]    Clicks the Refer a Friend control (documented inert Sauce-app remnant;
+    ...    click-verified live to produce no response).
     Click    ${REFER_FRIEND_LINK}
 
 Social Link Count
@@ -95,7 +95,7 @@ Social Link Count
     RETURN    ${n}
 
 Social Link Target At Index
-    [Documentation]    Returns the href of the social link at the given zero-based index —
+    [Documentation]    Returns the href of the social link at the given zero-based index,
     ...    never clicked/navigated to (competition Don't #3: external sites are out of scope).
     [Arguments]    ${index}
     ${href}=    Get Attribute    ${SOCIAL_LINKS} >> nth=${index}    href
@@ -128,7 +128,7 @@ Mini Cart Drawer Should Contain Checkout Control
     Get Element Count    ${DRAWER_CHECKOUT}    >    0
 
 Mini Cart Drawer Line Title Text
-    [Documentation]    Returns the drawer's product-link text — runtime evidence capture for the
+    [Documentation]    Returns the drawer's product-link text: runtime evidence capture for the
     ...    known display defect (the title renders triplicated in the drawer).
     ...    Callers should assert "contains", not equality, against the product name.
     ${text}=    Get Text    ${DRAWER_PRODUCT_LINK}

@@ -76,7 +76,7 @@ TC-10-002 Check Whether Destination-Appropriate Shipping Methods Are Offered
     ...    address is already entered; no re-navigation). Priority High / Negative.
     [Tags]    priority-high    type-negative    TC-10-002
     ${page_text}=    Checkout Page Text
-    Log    Shipping-section text for a Malaysian (MY) address (observation, the Test Case Specification's §REWORDS: expected a single "International Shipping" method as at 5 Aug 2026): ${page_text}
+    Log    Shipping-section text for a Malaysian (MY) address (observation, the Test Case Specification's §REWORDS: expected a single "International Shipping" method as observed live): ${page_text}
     Shipping Method Should Be Displayed
 
 TC-10-003 International Shipping
@@ -115,7 +115,7 @@ TC-10-004 Change Shipping Method (Design-Only)
     ...    precondition "more than one method offered" remains unreachable from the public UI (the
     ...    Test Case Specification's §MODES Design-only). Priority High / Positive.
     [Tags]    priority-high    type-positive    design-only    TC-10-004
-    Skip    Design-only, re-verified 12 Aug 2026 by a live destination sweep (MY/IN/NL/PE and the worldwide catch-all zone -> International Shipping £20.00; UK alone -> Standard Shipping £10.00): two methods exist store-wide but never together for one address, so "select a different method" has no reachable precondition on the public UI. Designed case retained in the TCS.
+    Skip    Design-only, re-verified by a later live destination sweep (MY/IN/NL/PE and the worldwide catch-all zone -> International Shipping £20.00; UK alone -> Standard Shipping £10.00): two methods exist store-wide but never together for one address, so "select a different method" has no reachable precondition on the public UI. Designed case retained in the TCS.
 
 TC-10-005 No Shipping Available (Design-Only)
     [Documentation]    Scenario: no shipping available. Precondition: unsupported address. Steps:
@@ -126,4 +126,4 @@ TC-10-005 No Shipping Available (Design-Only)
     ...    shipping method, so the unsupported-address precondition cannot be reached from the
     ...    public UI (the Test Case Specification's §MODES Design-only). Priority High / Negative.
     [Tags]    priority-high    type-negative    design-only    TC-10-005
-    Skip    Design-only, re-verified 12 Aug 2026 by a live probe: a worldwide catch-all shipping zone exists (every destination probed, incl. Vanuatu, is answered with International Shipping £20.00), so no selectable destination lacks a method and the unsupported-address precondition is unreachable. Designed case retained in the TCS.
+    Skip    Design-only, re-verified by a later live probe: a worldwide catch-all shipping zone exists (every destination probed, incl. Vanuatu, is answered with International Shipping £20.00), so no selectable destination lacks a method and the unsupported-address precondition is unreachable. Designed case retained in the TCS.

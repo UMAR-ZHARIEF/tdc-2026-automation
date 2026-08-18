@@ -97,7 +97,7 @@ TC-08-002 Proceed To Checkout As A Guest
     Checkout Should Be Reached
     ${url}=    Get Url
     Should Not Contain    ${url}    /account/login
-    ...    msg=Guest checkout was redirected to a login page — a login gate was encountered
+    ...    msg=Guest checkout was redirected to a login page: a login gate was encountered
 
 TC-08-005 Return From Checkout To Cart Without Completing The Order
     [Documentation]    Precondition: customer has navigated to the checkout page. Steps (the Test

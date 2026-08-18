@@ -4,7 +4,7 @@ Documentation     Page object: the cart page (/cart). The theme uses classic
 ...               empties the cart. After an add the theme stays on the product page, so
 ...               cart-content assertions must Open Cart explicitly (finding AF-09).
 ...               Known display defect: the line title renders duplicated on this
-...               page (and triplicated in the header's mini-cart drawer — see layout.resource);
+...               page (and triplicated in the header's mini-cart drawer, see layout.resource);
 ...               keywords here read line/total text without asserting title equality. The
 ...               header mini-cart drawer's own copy of the cart form is present (hidden) in the
 ...               DOM on every page, including this one, so line/total/remove/update/note
@@ -27,11 +27,11 @@ Open Cart
 Cart Should Contain
     [Documentation]    Asserts the cart page shows the given text (a runtime-captured product
     ...    name or price). Guards against an EMPTY expected string first: "contains ''" passes
-    ...    against any page, which silently voids the oracle — discovered by live verification
-    ...    7 Aug 2026 when an empty runtime-captured title made this check pass on an empty
+    ...    against any page, which silently voids the oracle, discovered by live verification
+    ...    when an empty runtime-captured title made this check pass on an empty
     ...    cart.
     [Arguments]    ${text}
-    Should Not Be Empty    ${text}    msg=Cart Should Contain called with an EMPTY expected text — the runtime capture that produced it failed; the oracle would be vacuous
+    Should Not Be Empty    ${text}    msg=Cart Should Contain called with an EMPTY expected text: the runtime capture that produced it failed; the oracle would be vacuous
     Get Text    body    contains    ${text}
 
 Cart Should Have Lines
@@ -55,7 +55,7 @@ Clear Cart
 
 Cart Is Empty
     [Documentation]    Returns True when the cart page shows no quantity input (no line
-    ...    present) — the theme renders an empty-cart message instead of the line form.
+    ...    present); the theme renders an empty-cart message instead of the line form.
     ${count}=    Get Element Count    ${QTY_INPUT}
     ${is_empty}=    Evaluate    ${count} == 0
     RETURN    ${is_empty}
@@ -72,7 +72,7 @@ Current Line Quantity
     RETURN    ${number}
 
 Set Line Quantity
-    [Documentation]    Types the given value into the first visible cart line's quantity field —
+    [Documentation]    Types the given value into the first visible cart line's quantity field:
     ...    the theme's only quantity-editing control; no increment/decrement buttons exist.
     ...    Does not submit; call Update Cart afterwards to apply.
     [Arguments]    ${value}
@@ -84,7 +84,7 @@ Update Cart
     Click    ${UPDATE_BUTTON}
 
 Remove First Cart Line
-    [Documentation]    Clicks the cart page's line-level Remove control — a plain "x" link to
+    [Documentation]    Clicks the cart page's line-level Remove control: a plain "x" link to
     ...    /cart/change?...&quantity=0. Distinct from the mini-cart drawer's own
     ...    "Remove" link, which carries a "removeLine" class this page control lacks (see
     ...    layout.resource).

@@ -71,14 +71,14 @@ TC-13-001 Display Confirmation Page
     ...    order-creating action: TC-13-002/003/004/007 are chained after it and only ever inspect
     ...    the SAME confirmation page it reaches. Priority High / Positive.
     [Tags]    priority-high    type-positive    TC-13-001
-    Skip If    not ${ALLOW_ORDERS}    Requires a completed order — run only in the explicitly authorized combined TS-12->TS-13 session (team payment policy, order budget).
+    Skip If    not ${ALLOW_ORDERS}    Requires a completed order; run only in the explicitly authorized combined TS-12->TS-13 session (team payment policy, order budget).
     Reach Checkout With Product And Address    ${PRODUCT_HANDLE}
     Enter Card Details    1    12/30    123
     Click Pay Now
     Order Confirmation Should Be Reached
     ${confirmation_text}=    Confirmation Number Text
     Set Suite Variable    ${CONFIRMATION_TEXT}    ${confirmation_text}
-    Log    Order confirmation evidence (verified format #1YRC8ZIPW, 5 Aug 2026): ${confirmation_text}
+    Log    Order confirmation evidence (verified format #1YRC8ZIPW): ${confirmation_text}
 
 TC-13-002 Verify The Confirmation Number Is Displayed
     [Documentation]    Precondition: a test order has just been completed and the confirmation
@@ -88,7 +88,7 @@ TC-13-002 Verify The Confirmation Number Is Displayed
     ...    TC-13-001 (deliberate: inspects the same already-reached confirmation page; creates no
     ...    further order). Priority High / Positive.
     [Tags]    priority-high    type-positive    TC-13-002
-    Skip If    not ${ALLOW_ORDERS}    Requires a completed order — run only in the explicitly authorized combined TS-12->TS-13 session (team payment policy, order budget).
+    Skip If    not ${ALLOW_ORDERS}    Requires a completed order; run only in the explicitly authorized combined TS-12->TS-13 session (team payment policy, order budget).
     Should Match Regexp    ${CONFIRMATION_TEXT}    [#][A-Za-z0-9]{6,}
     ...    msg=No confirmation-number pattern (#<alphanumeric>) found on the confirmation page
     Log    Confirmation number recorded for the execution log (evidence).
@@ -104,7 +104,7 @@ TC-13-003 Verify The Purchased-Item Summary And Totals
     ...    Chained from TC-13-001 (deliberate: same confirmation page; creates no further order).
     ...    Priority High / Positive.
     [Tags]    priority-high    type-positive    TC-13-003
-    Skip If    not ${ALLOW_ORDERS}    Requires a completed order — run only in the explicitly authorized combined TS-12->TS-13 session (team payment policy, order budget).
+    Skip If    not ${ALLOW_ORDERS}    Requires a completed order; run only in the explicitly authorized combined TS-12->TS-13 session (team payment policy, order budget).
     Confirmation Page Should Contain    Grey jacket
     Confirmation Page Should Contain    £75.00
 
@@ -123,7 +123,7 @@ TC-13-007 Confirmation E-Mail Delivery
     ...    manual verification step against the team's project inbox. Chained from TC-13-001
     ...    (deliberate: same confirmation page). Priority Medium / Positive.
     [Tags]    priority-medium    type-positive    TC-13-007
-    Skip If    not ${ALLOW_ORDERS}    Requires a completed order — run only in the explicitly authorized combined TS-12->TS-13 session (team payment policy, order budget).
+    Skip If    not ${ALLOW_ORDERS}    Requires a completed order; run only in the explicitly authorized combined TS-12->TS-13 session (team payment policy, order budget).
     Confirmation Page Should Contain    ${FICTITIOUS_EMAIL}
     Log    Automated half complete (confirmation page references the checkout contact e-mail, ${FICTITIOUS_EMAIL}). Manual half NOT performed by this suite: verify actual inbox delivery separately against the team's project inbox, per team payment policy.
 
@@ -135,7 +135,7 @@ TC-13-004 Continue Shopping
     ...    Shopping navigates away from it, the last case in this file that needs the shared
     ...    confirmation page. Priority Medium / Positive.
     [Tags]    priority-medium    type-positive    TC-13-004
-    Skip If    not ${ALLOW_ORDERS}    Requires a completed order — run only in the explicitly authorized combined TS-12->TS-13 session (team payment policy, order budget).
+    Skip If    not ${ALLOW_ORDERS}    Requires a completed order; run only in the explicitly authorized combined TS-12->TS-13 session (team payment policy, order budget).
     Click Continue Shopping
     ${url}=    Get Url
     Should Contain    ${url}    sauce-demo.myshopify.com
@@ -152,7 +152,7 @@ TC-13-005 Confirmation Page Fails (Design-Only)
     [Tags]    priority-high    type-negative    design-only    TC-13-005
     Skip    Design-only: a confirmation-page load failure cannot be deliberately induced on a live store the team does not control. Designed case retained in the TCS.
 
-TC-13-006 Confirmation Completeness — Missing Receipt Information (Design-Only)
+TC-13-006 Confirmation Completeness: Missing Receipt Information (Design-Only)
     [Documentation]    Scenario (the Test Case Specification's §FRESH CASES): confirmation
     ...    completeness, missing receipt information. Precondition: a test order has just been
     ...    completed. Steps: 1. On
