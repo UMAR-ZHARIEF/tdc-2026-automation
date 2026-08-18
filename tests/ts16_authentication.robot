@@ -71,8 +71,8 @@ TC-16-001 Successful Login
     ...    1. Enter valid credentials. 2. Activate Sign In. Expected: login successful — the
     ...    header switches to the logged-in state (My Account / Log Out; live-verified marker).
     ...    Ends in guest state via teardown. Priority Critical / Positive (suite value; the
-    ...    superseded detail table's "High" is overridden per 02 v2.1's suite-wins rule,
-    ...    alignment anomaly item 24).
+    ...    superseded detail table's "High" is overridden per the Test Case Specification's
+    ...    suite-wins rule, alignment anomaly item 24).
     [Tags]    priority-critical    type-positive    captcha-gated    TC-16-001
     [Teardown]    Ensure Logged Out
     Skip    Captcha-gated for automation (discovered 12 Aug 2026): the login submit is hCaptcha-protected and automated submissions are silently swallowed — the form stays filled, the page never navigates, no error renders (fail-screenshot evidence, results/ts16_live_2026-08-12/). The flow itself is HUMAN-VERIFIED the same day: the account logged straight in at creation (header switched to My Account / Log Out). Steps retained below for a future maintenance re-attempt; automation does not defeat bot protection.
@@ -99,10 +99,11 @@ TC-16-002 Login With Incorrect Password
     No Session Should Be Established
 
 TC-16-003 Login With Non-Existing Account
-    [Documentation]    Login page open; no account exists for the credentials used (02 v2.1
-    ...    audit addendum A17 precondition/steps). Steps: 1. Enter credentials for an account
-    ...    that does not exist. 2. Activate Sign In. Expected (realigned content — 02 v2.1
-    ...    §REWORDS, its "Authentication security" origin resolved into this case): login with
+    [Documentation]    Login page open; no account exists for the credentials used (the Test Case
+    ...    Specification's audit addendum A17 precondition/steps). Steps: 1. Enter credentials for
+    ...    an account that does not exist. 2. Activate Sign In. Expected (realigned content — the
+    ...    Test Case Specification's §REWORDS, its "Authentication security" origin resolved into
+    ...    this case): login with
     ...    a non-existing account is rejected with a generic error that does not reveal whether
     ...    the account exists or which field is wrong. The e-mail is generated random-ish at
     ...    run time so this case is guaranteed to target an unregistered account without

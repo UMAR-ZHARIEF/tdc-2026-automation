@@ -7,7 +7,7 @@ Documentation     Page object: static content areas for TS-18 Content & Error Pa
 ...               housekeeping move, same "persistent site chrome" concern as that file's own
 ...               ${CATALOGUE_NAV}; this file imports layout.resource so those keywords remain
 ...               reachable through it. Zero-store-traffic constraint: every locator below is
-...               still PROVISIONAL, inferred from Test Basis v1.0 observations
+...               still PROVISIONAL, inferred from Test Basis observations
 ...               rather than a live visit; live-verify before relying on this file outside
 ...               dry-run.
 ...               FLAG FOR COORDINATOR (unresolved): the breadcrumb-count reuse below still

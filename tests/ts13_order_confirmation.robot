@@ -147,20 +147,23 @@ TC-13-005 Confirmation Page Fails (Design-Only)
     [Documentation]    Scenario: confirmation page fails. Precondition: successful payment.
     ...    Steps: 1. Simulate page failure. Expected: error handled properly. Not executed: a
     ...    confirmation-page load failure cannot be deliberately induced on a live store the team
-    ...    does not control (02 v2.1 §MODES Design-only). Priority Critical / Negative.
+    ...    does not control (the Test Case Specification's §MODES Design-only). Priority Critical
+    ...    / Negative.
     [Tags]    priority-critical    type-negative    design-only    TC-13-005
     Skip    Design-only: a confirmation-page load failure cannot be deliberately induced on a live store the team does not control. Designed case retained in the TCS.
 
 TC-13-006 Confirmation Completeness — Missing Receipt Information (Design-Only)
-    [Documentation]    Scenario (02 v2.1 §FRESH CASES): confirmation completeness — missing
-    ...    receipt information. Precondition: a test order has just been completed. Steps: 1. On
+    [Documentation]    Scenario (the Test Case Specification's §FRESH CASES): confirmation
+    ...    completeness — missing receipt information. Precondition: a test order has just been
+    ...    completed. Steps: 1. On
     ...    the confirmation page, check each required element: confirmation number, contact
     ...    e-mail, shipping address, billing address, shipping method, payment method and amount,
     ...    item summary, totals. 2. Record any element that is absent or incorrect. Expected:
     ...    every required order detail is present and correct; any missing element is recorded as
     ...    a defect. Not executed: deliberately degrading or truncating the store's receipt
-    ...    rendering cannot be induced on a live store the team does not control (02 v2.1 §MODES
-    ...    Design-only, per task brief); TC-13-001/002/003/007 already inspect confirmation-page
+    ...    rendering cannot be induced on a live store the team does not control (the Test Case
+    ...    Specification's §MODES Design-only, per task brief); TC-13-001/002/003/007 already
+    ...    inspect confirmation-page
     ...    completeness against the verified page. Priority Critical / Negative.
     [Tags]    priority-critical    type-negative    design-only    TC-13-006
     Skip    Design-only: deliberately degrading or truncating the store's receipt/confirmation rendering cannot be induced on a live store the team does not control. Designed case retained in the TCS.

@@ -81,8 +81,9 @@ ${ALLOW_ORDERS}                  ${False}
 *** Test Cases ***
 TC-12-002 Payment Declined
     [Documentation]    Precondition: invalid card (i.e. the store's published DECLINE test
-    ...    value). Steps (02 v2.1 §REWORDS): 1. Complete payment using card 2. Expected: alert
-    ...    displayed: "There was an issue processing your payment. Try again or use a different
+    ...    value). Steps (the Test Case Specification's §REWORDS): 1. Complete payment using card
+    ...    2. Expected: alert displayed: "There was an issue processing your payment. Try again or
+    ...    use a different
     ...    payment method." No order is created; user remains on checkout. Verified 5 Aug 2026.
     ...    SAFETY: card "2" is store-published as decline-only — it creates NO order under any
     ...    circumstance and is default-executable, unlike card "1" which is gated by
@@ -99,8 +100,9 @@ TC-12-002 Payment Declined
     Checkout Should Not Have Advanced To Confirmation
 
 TC-12-006 Payment Gateway Timeout
-    [Documentation]    Precondition: simulate timeout. Steps (02 v2.1 §REWORDS): 1. Submit
-    ...    payment using card 3. Expected: payment alert plus checkout-problem banner with
+    [Documentation]    Precondition: simulate timeout. Steps (the Test Case Specification's
+    ...    §REWORDS): 1. Submit payment using card 3. Expected: payment alert plus
+    ...    checkout-problem banner with
     ...    request ID displayed; no order is created; retry is possible. (The store's published
     ...    card 3 simulates gateway failure, the closest inducible condition to a timeout.)
     ...    Verified 5 Aug 2026. SAFETY: card "3" is store-published as gateway-failure-only — it
@@ -125,8 +127,9 @@ TC-12-006 Payment Gateway Timeout
     Log    Post-gateway-failure page text (observation evidence): ${alert_text}
 
 TC-12-003 Invalid Card Information
-    [Documentation]    Precondition: checkout page. Steps (02 v2.1 §REWORDS): 1. Enter a card
-    ...    value other than the published test values (e.g. 4111…) with valid other fields.
+    [Documentation]    Precondition: checkout page. Steps (the Test Case Specification's
+    ...    §REWORDS): 1. Enter a card value other than the published test values (e.g. 4111…) with
+    ...    valid other fields.
     ...    Expected: payment is rejected with a clear error; no order is created. Uses the
     ...    well-known Luhn-valid-looking test pattern 4111111111111111, which is NOT one of the
     ...    store's three published test values (1/2/3) and is therefore generically rejected by
@@ -139,8 +142,9 @@ TC-12-003 Invalid Card Information
     Payment Rejection Should Be Shown
 
 TC-12-001 Successful Payment
-    [Documentation]    Precondition: valid checkout. Steps (02 v2.1 §REWORDS): 1. Complete
-    ...    payment using card 1, any future expiry date, and any 3-digit security code. Expected:
+    [Documentation]    Precondition: valid checkout. Steps (the Test Case Specification's
+    ...    §REWORDS): 1. Complete payment using card 1, any future expiry date, and any 3-digit
+    ...    security code. Expected:
     ...    order confirmation page displays with a confirmation number. Verified 5 Aug 2026
     ...    (order #1YRC8ZIPW format). SAFETY INVARIANT: this is the ONLY case in this suite (with
     ...    TC-12-005's retained, no-longer-executing procedure) allowed to enter the published
@@ -160,8 +164,9 @@ TC-12-001 Successful Payment
     Log    Order confirmation evidence (verified format #1YRC8ZIPW, 5 Aug 2026): ${confirmation_text}
 
 TC-12-005 Retry Payment After Failure
-    [Documentation]    Precondition: previous payment failed. Steps (02 v2.1 §REWORDS): 1. After
-    ...    a failed attempt, re-enter card fields (note: the checkout clears them) with card 1.
+    [Documentation]    Precondition: previous payment failed. Steps (the Test Case Specification's
+    ...    §REWORDS): 1. After a failed attempt, re-enter card fields (note: the checkout clears
+    ...    them) with card 1.
     ...    2. Pay. Expected: retry succeeds. Verified 5 Aug 2026. SAFETY INVARIANT: the published
     ...    test-card value "1" is entered here too, so this case ALSO opens with
     ...    Skip If not ${ALLOW_ORDERS} as its first line. Needs its OWN fresh checkout: TC-12-001
@@ -217,7 +222,8 @@ TC-12-004 Payment Amount Mismatch (Design-Only)
     ...    checkout modified. Steps: 1. Submit payment. Expected: payment blocked. Not executed:
     ...    the order total is server-computed from the live cart/shipping/discount state — there
     ...    is no public-UI way to submit a payment against a mismatched amount on a live store the
-    ...    team does not control (02 v2.1 §MODES Design-only). Priority Critical / Negative.
+    ...    team does not control (the Test Case Specification's §MODES Design-only). Priority
+    ...    Critical / Negative.
     [Tags]    priority-critical    type-negative    design-only    TC-12-004
     [Setup]    NONE
     Skip    Design-only: the order total is server-computed from the live checkout state; there is no public-UI way to submit a mismatched payment amount on a live store the team does not control. Designed case retained in the TCS.

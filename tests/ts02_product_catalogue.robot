@@ -63,13 +63,13 @@ TC-02-003 External Direct Link Opens Product Detail Page
     Product Page Should Be Complete
 
 TC-02-004 Empty Result Set Shows A Clear Empty State (Design-Only)
-    [Documentation]    TCS asks for a clear empty-state when the catalogue has nothing to
-    ...    display. Not executed: an empty-catalogue state is a store-side condition that
-    ...    cannot be induced on a live third-party store (02 v2.1 §MODES). NOTE: the
-    ...    no-results-search adaptation previously used here is redirected as future coverage
-    ...    for TS-17 Search System when that suite is authored. Priority Medium / Negative.
+    [Documentation]    TCS asks for a clear empty-state when the catalogue has nothing to display.
+    ...    Not executed: an empty-catalogue state is a store-side condition that cannot be induced
+    ...    on a live third-party store (the Test Case Specification's §MODES). NOTE: the
+    ...    no-results-search adaptation previously used here is redirected as future coverage for
+    ...    TS-17 Search System when that suite is authored. Priority Medium / Negative.
     [Tags]    priority-medium    type-negative    design-only    TC-02-004
-    Skip    Design-only per 02 v2.1: an empty catalogue state cannot be induced on a live third-party store (store-side condition only).
+    Skip    Design-only per the Test Case Specification: an empty catalogue state cannot be induced on a live third-party store (store-side condition only).
 
 TC-02-005 Incomplete Product Listing Data (Design-Only)
     [Documentation]    TCS expects graceful rendering when listings miss images/prices/
@@ -82,10 +82,10 @@ TC-02-005 Incomplete Product Listing Data (Design-Only)
 
 TC-02-006 Nonexistent Product Page Fails Safely With Not-Found Message (Design-Only)
     [Documentation]    A product link whose detail page no longer exists must yield a clear
-    ...    not-found/unavailable message inside the storefront layout — not a raw server error
-    ...    or blank screen. Not executed: a detail-page load failure is a store-side condition
-    ...    that cannot be induced on a live store (02 v2.1 §MODES). NOTE: the nonexistent-URL/404
-    ...    adaptation previously used here is redirected as future coverage for TS-18 Content &
-    ...    Error Pages when that suite is authored. Priority High / Negative.
+    ...    not-found/unavailable message inside the storefront layout — not a raw server error or
+    ...    blank screen. Not executed: a detail-page load failure is a store-side condition that
+    ...    cannot be induced on a live store (the Test Case Specification's §MODES). NOTE: the
+    ...    nonexistent-URL/404 adaptation previously used here is redirected as future coverage
+    ...    for TS-18 Content & Error Pages when that suite is authored. Priority High / Negative.
     [Tags]    priority-high    type-negative    design-only    TC-02-006
-    Skip    Design-only per 02 v2.1: a detail-page load failure cannot be induced on a live store.
+    Skip    Design-only per the Test Case Specification: a detail-page load failure cannot be induced on a live store.

@@ -5,7 +5,7 @@ Documentation     Page object: classic Shopify customer authentication forms —
 ...               customer[email], customer[password], Create submit). Built for TS-16 User
 ...               Authentication (UC-16) under the zero-store-traffic
 ...               constraint: every locator below is PROVISIONAL — inferred from Shopify classic
-...               theme conventions and Test Basis v1.0 observations, not from
+...               theme conventions and Test Basis observations, not from
 ...               a live visit to these two pages. Each is flagged individually; live-verify
 ...               before relying on this file outside dry-run. Error/validation oracles are
 ...               written as UNION checks (a locator-based surface OR a body-text regex) so a
@@ -62,8 +62,8 @@ Login Error Should Be Shown
     ...    login attempt — union oracle: the PROVISIONAL error-surface element is present, or
     ...    the page text carries a generic error/invalid-credentials message (keeps the check
     ...    robust even if the surface locator proves wrong once live-verified). Realigned
-    ...    TC-16-003 expected result (02 v2.1 §REWORDS): a generic error that does not reveal
-    ...    whether the account exists or which field is wrong.
+    ...    TC-16-003 expected result (the Test Case Specification's §REWORDS): a generic error
+    ...    that does not reveal whether the account exists or which field is wrong.
     ...
     ...    THE CHECK RETRIES. Submitting the login form is a full page reload, so asserting
     ...    immediately after the click can read the PRE-reload page, which of course carries no

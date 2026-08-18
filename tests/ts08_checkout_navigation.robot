@@ -44,17 +44,17 @@ ${PRODUCT_HANDLE}    grey-jacket
 
 *** Test Cases ***
 TC-08-004 Block Checkout Access When The Cart Is Empty
-    [Documentation]    Precondition: cart currently has zero items. Steps (02 v2.1 §REWORDS):
-    ...    1. With an empty cart, navigate to /checkout directly. 2. Observe whether checkout is
-    ...    refused or redirected. Expected: checkout is not offered for an empty cart (refusal,
-    ...    redirect, or equivalent — e.g. lands back on /cart). SAFE, no data needed.
-    ...    ORDERING: runs FIRST, immediately after the Suite Setup /cart/clear, because that is
-    ...    the only point in the run where the cart is genuinely empty. It previously ran last
-    ...    inside Open Fresh Context, but Playwright cannot open a second context while a
-    ...    persistent context is active, so the fallback reused the SAME context — the cart still
-    ...    held the shared line and the case failed on a precondition that was never established
-    ...    (live run 11 Aug 2026). Running first needs no extra /cart/clear hit, keeping the
-    ...    two-per-run budget. Priority High / Negative.
+    [Documentation]    Precondition: cart currently has zero items. Steps (the Test Case
+    ...    Specification's §REWORDS): 1. With an empty cart, navigate to /checkout directly. 2.
+    ...    Observe whether checkout is refused or redirected. Expected: checkout is not offered
+    ...    for an empty cart (refusal, redirect, or equivalent — e.g. lands back on /cart). SAFE,
+    ...    no data needed. ORDERING: runs FIRST, immediately after the Suite Setup /cart/clear,
+    ...    because that is the only point in the run where the cart is genuinely empty. It
+    ...    previously ran last inside Open Fresh Context, but Playwright cannot open a second
+    ...    context while a persistent context is active, so the fallback reused the SAME context —
+    ...    the cart still held the shared line and the case failed on a precondition that was
+    ...    never established (live run 11 Aug 2026). Running first needs no extra /cart/clear hit,
+    ...    keeping the two-per-run budget. Priority High / Negative.
     [Tags]    priority-high    type-negative    TC-08-004
     Empty Cart Direct Checkout Should Be Refused
 
@@ -86,13 +86,14 @@ TC-08-001 Proceed To Checkout With Valid Cart And Verify Data Transfer
     Checkout Page Should Contain    ${PRICE_TEXT}
 
 TC-08-002 Proceed To Checkout As A Guest
-    [Documentation]    Precondition (02 v2.1 §REWORDS TC-08-002): customer is not logged in and
-    ...    has items in the cart — verified 5 Aug 2026. Steps: 1. Click "Proceed to Checkout"
-    ...    without logging in. Expected: the same navigation and cart-data transfer occur without
-    ...    requiring a login. Chained from TC-08-001 (deliberate — avoids a further checkout-entry
-    ...    click): this whole suite never logs in anywhere, so the checkout TC-08-001 already
-    ...    reached IS the guest-checkout evidence; this case adds the explicit no-login-gate
-    ...    assertion (never redirected to /account/login). Priority Medium / Positive.
+    [Documentation]    Precondition (the Test Case Specification's §REWORDS TC-08-002): customer
+    ...    is not logged in and has items in the cart — verified 5 Aug 2026. Steps: 1. Click
+    ...    "Proceed to Checkout" without logging in. Expected: the same navigation and cart-data
+    ...    transfer occur without requiring a login. Chained from TC-08-001 (deliberate — avoids a
+    ...    further checkout-entry click): this whole suite never logs in anywhere, so the checkout
+    ...    TC-08-001 already reached IS the guest-checkout evidence; this case adds the explicit
+    ...    no-login-gate assertion (never redirected to /account/login). Priority Medium /
+    ...    Positive.
     [Tags]    priority-medium    type-positive    TC-08-002
     Checkout Should Be Reached
     ${url}=    Get Url
@@ -100,17 +101,17 @@ TC-08-002 Proceed To Checkout As A Guest
     ...    msg=Guest checkout was redirected to a login page — a login gate was encountered
 
 TC-08-003 Return From Checkout To Cart Without Completing The Order
-    [Documentation]    Precondition: customer has navigated to the checkout page. Steps (02 v2.1
-    ...    §REWORDS): 1. In checkout, use the header Cart link. 2. Verify the cart page shows the
-    ...    same items/quantities. Expected: cart data remains intact and unchanged. The modern
-    ...    one-page checkout's header may not carry a Cart link the way the classic /cart chrome
-    ...    does (unobservable under this task's zero-store-traffic constraint), so this case is
-    ...    implemented against a PROVISIONAL anchor-tag locator (targeting the /cart href) with a
-    ...    documented Go-Back fallback — see "Return To Cart From Checkout" in
-    ...    resources/pages/checkout_page.resource; live-verify before relying on the primary path
-    ...    outside dry-run. Chained from TC-08-001 (deliberate): reuses the product name/quantity
-    ...    TC-08-001 captured via suite variables instead of re-reading the product page.
-    ...    Priority Medium / Positive.
+    [Documentation]    Precondition: customer has navigated to the checkout page. Steps (the Test
+    ...    Case Specification's §REWORDS): 1. In checkout, use the header Cart link. 2. Verify the
+    ...    cart page shows the same items/quantities. Expected: cart data remains intact and
+    ...    unchanged. The modern one-page checkout's header may not carry a Cart link the way the
+    ...    classic /cart chrome does (unobservable under this task's zero-store-traffic
+    ...    constraint), so this case is implemented against a PROVISIONAL anchor-tag locator
+    ...    (targeting the /cart href) with a documented Go-Back fallback — see "Return To Cart
+    ...    From Checkout" in resources/pages/checkout_page.resource; live-verify before relying on
+    ...    the primary path outside dry-run. Chained from TC-08-001 (deliberate): reuses the
+    ...    product name/quantity TC-08-001 captured via suite variables instead of re-reading the
+    ...    product page. Priority Medium / Positive.
     [Tags]    priority-medium    type-positive    TC-08-003
     Return To Cart From Checkout
     Open Cart
@@ -121,16 +122,16 @@ TC-08-005 Handle Cart-Data Transfer Into Checkout
     [Documentation]    Precondition: customer has items in the cart and proceeds to checkout.
     ...    Steps: 1. Click proceed to Checkout. 2. Compare the information between the cart page
     ...    and checkout page. 3. Record any missing or inconsistent information. Expected: all
-    ...    cart information is transferred correctly; any difference is recorded as a defect (02
-    ...    v2.1 A4: mode Executable — "fully executable using the public UI"). Deep compare: cart
-    ...    quantity is re-verified unchanged after the TC-08-001/003 round-trip through checkout
-    ...    (using cart_page.resource's own quantity locator — the checkout page has no captured
-    ...    quantity locator to read instead), the £55.00 item price (captured by TC-08-001) is
-    ...    still shown on checkout, and — once a valid address resolves shipping — the £75.00
-    ...    order total (£55 + £20 shipping, verified 5 Aug 2026) is shown. Chained from
-    ...    TC-08-001/003 (deliberate, avoids a further /cart/clear hit): reuses the suite
-    ...    variables TC-08-001 captured instead of re-reading the product page. Priority High /
-    ...    Negative (02 v2.1 suite-table value).
+    ...    cart information is transferred correctly; any difference is recorded as a defect (the
+    ...    Test Case Specification's A4: mode Executable — "fully executable using the public
+    ...    UI"). Deep compare: cart quantity is re-verified unchanged after the TC-08-001/003
+    ...    round-trip through checkout (using cart_page.resource's own quantity locator — the
+    ...    checkout page has no captured quantity locator to read instead), the £55.00 item price
+    ...    (captured by TC-08-001) is still shown on checkout, and — once a valid address resolves
+    ...    shipping — the £75.00 order total (£55 + £20 shipping, verified 5 Aug 2026) is shown.
+    ...    Chained from TC-08-001/003 (deliberate, avoids a further /cart/clear hit): reuses the
+    ...    suite variables TC-08-001 captured instead of re-reading the product page. Priority
+    ...    High / Negative (the Test Case Specification's suite-table value).
     [Tags]    priority-high    type-negative    TC-08-005
     Open Cart
     Cart Should Contain    ${PRODUCT_NAME}
@@ -143,13 +144,14 @@ TC-08-005 Handle Cart-Data Transfer Into Checkout
     Checkout Page Should Contain    £75.00
 
 TC-08-006 Handle Session Timeout Or Interruption During Transition To Checkout (Design-Only)
-    [Documentation]    Scenario (02 v2.1 A11 wording): handle session timeout / interruption
-    ...    during transition to checkout. Precondition: session is set to expire or is interrupted
-    ...    as the customer clicks checkout. Steps: 1. Trigger a session timeout or interruption
-    ...    right as the customer clicks "Proceed to Checkout". Expected: system handles this
-    ...    gracefully (e.g., redirect to cart or login) rather than showing a broken checkout page.
-    ...    Not executed: a server-side session timeout/interruption cannot be induced on a live
-    ...    store the team does not control (02 v2.1 §MODES Design-only; task brief confirms this
-    ...    assignment as a coordinator erratum fix). Priority Medium / Negative.
+    [Documentation]    Scenario (the Test Case Specification's A11 wording): handle session
+    ...    timeout / interruption during transition to checkout. Precondition: session is set to
+    ...    expire or is interrupted as the customer clicks checkout. Steps: 1. Trigger a session
+    ...    timeout or interruption right as the customer clicks "Proceed to Checkout". Expected:
+    ...    system handles this gracefully (e.g., redirect to cart or login) rather than showing a
+    ...    broken checkout page. Not executed: a server-side session timeout/interruption cannot
+    ...    be induced on a live store the team does not control (the Test Case Specification's
+    ...    §MODES Design-only; task brief confirms this assignment as a coordinator erratum fix).
+    ...    Priority Medium / Negative.
     [Tags]    priority-medium    type-negative    design-only    TC-08-006
     Skip    Design-only: a server-side session timeout/interruption cannot be induced on a live store the team does not control. Designed case retained in the TCS.

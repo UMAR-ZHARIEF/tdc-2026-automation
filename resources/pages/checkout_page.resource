@@ -99,8 +99,9 @@ ${RETURN_TO_CART_LINK}               css=a[href="/cart"]    # PROVISIONAL — li
 
 # --- Post-payment confirmation page: NOT covered by the 2026-08-07 capture (reaching it spends
 # the real payment gateway) — every locator/text pattern below is PROVISIONAL, inferred only from
-# the verified TEXT evidence in 02 v2.1 (order #1YRC8ZIPW format: "Thank you" heading,
-# confirmation number, order details sections, Continue shopping -> storefront). All TS-13/TS-15
+# the verified TEXT evidence in the Test Case Specification (order #1YRC8ZIPW format: "Thank you"
+# heading, confirmation number, order details sections, Continue shopping -> storefront). All
+# TS-13/TS-15
 # gated cases that depend on these run only under an explicit ALLOW_ORDERS-authorized session, so
 # a human is present to course-correct if any of this needs live re-verification.
 ${CONTINUE_SHOPPING_LINK}            xpath=//a[contains(normalize-space(),'Continue shopping') or contains(normalize-space(),'Continue Shopping')]    # PROVISIONAL — live-verify before relying on this outside dry-run
@@ -616,7 +617,8 @@ Click Continue Shopping
 Post Purchase Account Offer Present
     [Documentation]    Returns True if the confirmation page presents an account-creation offer.
     ...    Observed 5 Aug 2026: none present — TC-15-005 asserts this True and is expected to FAIL
-    ...    live (known-defect-lead evidence per 02 v2.1 §REWORDS), the same pattern used by
+    ...    live (known-defect-lead evidence per the Test Case Specification's §REWORDS), the same
+    ...    pattern used by
     ...    tests/ts14_secondary_services.robot and tests/ts17_search.robot.
     ${page_text}=    Checkout Page Text
     ${hit}=    Run Keyword And Return Status    Should Match Regexp    ${page_text}

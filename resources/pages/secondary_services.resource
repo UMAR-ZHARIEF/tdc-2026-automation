@@ -64,7 +64,7 @@ All Social Links Should Have External Targets
 Support Channel Should Be Present On Current Page
     [Documentation]    Union oracle: asserts a working pre-purchase support/contact affordance
     ...    is present on the current page — a mailto: link, a tel: link, or a link whose text
-    ...    contains "contact". Per Test Basis v1.0 (observed 5 Aug 2026) none exists
+    ...    contains "contact". Per the Test Basis (observed 5 Aug 2026) none exists
     ...    pre-purchase — the sole channel is a defunct post-purchase mailto to a third-party
     ...    address — so this oracle is EXPECTED TO FAIL on every pre-purchase page swept here;
     ...    the FAIL is the harvested defect evidence (known-defect-lead), not test breakage. The
@@ -82,8 +82,9 @@ Support Channel Should Be Present On Current Page
 Referral Mechanism Observation
     [Documentation]    Observation-logger, NOT a defect-lead: checks the current page for a
     ...    referral/share-with-a-friend mechanism (the Refer a Friend control) and logs either
-    ...    its presence or its absence — both outcomes PASS, per 02 v2.1's own either/or expected
-    ...    result for TC-14-006 ("...exists and functions, OR its absence is recorded as an
+    ...    its presence or its absence — both outcomes PASS, per the Test Case Specification's own
+    ...    either/or expected result for TC-14-006 ("...exists and functions, OR its absence is
+    ...    recorded as an
     ...    observation (defunct Sauce feature)"). Deliberately carries no Should-type assertion
     ...    so it cannot fail on its own.
     [Arguments]    ${page_label}
@@ -91,6 +92,6 @@ Referral Mechanism Observation
     IF    ${refer_hits} > 0
         Log    Referral/share mechanism found on ${page_label} (Refer a Friend control) — presence recorded as the observation; TC-14-006 does not re-exercise its response beyond TC-14-002's own check.
     ELSE
-        Log    No referral/share mechanism found on ${page_label} — absence recorded as the observation per 02 v2.1 (defunct Sauce feature).
+        Log    No referral/share mechanism found on ${page_label} — absence recorded as the observation per the Test Case Specification (defunct Sauce feature).
     END
     Log    TC-14-006 observation for ${page_label} complete; this case passes on either branch by design.

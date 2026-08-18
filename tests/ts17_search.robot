@@ -38,8 +38,9 @@ ${PRODUCT_HANDLE}       grey-jacket
 *** Test Cases ***
 TC-17-001 Search Returns Relevant Results
     [Documentation]    Store accessible. Steps: 1. Search for "jacket" from the header search
-    ...    box. 2. Compare each result against the query. Expected (02 v2.1 §FRESH CASES):
-    ...    results relate meaningfully to the query. Observed 5 Aug 2026: 6 results, of which 4
+    ...    box. 2. Compare each result against the query. Expected (the Test Case Specification's
+    ...    §FRESH CASES): results relate meaningfully to the query. Observed 5 Aug 2026: 6 results,
+    ...    of which 4
     ...    are unrelated products (placeholder descriptions match) — executing this case is
     ...    expected to FAIL and yield the search-relevance defect. Each result title is
     ...    captured at runtime and hard-asserted to relate to the query term; a live FAIL here

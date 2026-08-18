@@ -72,7 +72,7 @@ TC-05-004 Rapid Repeated Clicks (Design-Only)
     ...    reload, closing the timing window a deterministic automated test would need; the
     ...    behaviour is assessed manually. Priority High / Negative.
     [Tags]    priority-high    type-negative    not-automatable    TC-05-004
-    Skip    Not automatable deterministically: each add triggers an immediate page reload, closing the rapid-click timing window. Assessed manually; designed case retained in the TCS. (02 v2.1 mode: Executable — covered by the manual execution round; this is an automation-only limitation.)
+    Skip    Not automatable deterministically: each add triggers an immediate page reload, closing the rapid-click timing window. Assessed manually; designed case retained in the TCS. (the Test Case Specification's mode: Executable — covered by the manual execution round; this is an automation-only limitation.)
 
 TC-05-005 Offline Add Attempt Leaves The Cart Unchanged
     [Documentation]    A network failure during an add attempt must not corrupt the cart or
@@ -91,9 +91,9 @@ TC-05-005 Offline Add Attempt Leaves The Cart Unchanged
     [Teardown]    Go Online
 
 TC-05-006 Sold-Out Product Offers No Add Action
-    [Documentation]    An out-of-stock product must not offer a normal add-to-cart action at
-    ...    the moment of intent: the sold-out page presents no active add control.
-    ...    Priority High / Negative (02 v2.1 §REWORDS: documented evidence-based exception,
+    [Documentation]    An out-of-stock product must not offer a normal add-to-cart action at the
+    ...    moment of intent: the sold-out page presents no active add control. Priority High /
+    ...    Negative (the Test Case Specification's §REWORDS: documented evidence-based exception,
     ...    anchored to that earlier finding; overrides the earlier suite-table Medium value).
     [Tags]    priority-high    type-negative    TC-05-006
     Open Product    ${SOLD_OUT_HANDLE}

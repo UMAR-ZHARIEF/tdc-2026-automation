@@ -49,13 +49,13 @@ TC-04-001 Variant Selection Is Applied And Reflected
     Log    Variant selection applied: ${initial} -> ${after}
 
 TC-04-002 Single-Variant Product Proceeds Without Explicit Selection
-    [Documentation]    Alternative flow: a product without selectable options can be added
-    ...    without an explicit variant choice (02 v2.1 mode: Executable). Candidate re-pointed
-    ...    12 Aug 2026: 'Striped top' (striped-top) — a Shopify 'Default Title' single-variant
-    ...    product, live-verified the same day to render NO variant selector and an active Add
-    ...    to Cart control. The earlier candidate (grey-jacket) renders a selector, which made
-    ...    this case skip on every prior run despite its Executable mode. Runtime data guard
-    ...    retained: the case still skips with a reason if the candidate presents variant
+    [Documentation]    Alternative flow: a product without selectable options can be added without
+    ...    an explicit variant choice (the Test Case Specification's mode: Executable). Candidate
+    ...    re-pointed 12 Aug 2026: 'Striped top' (striped-top) — a Shopify 'Default Title'
+    ...    single-variant product, live-verified the same day to render NO variant selector and an
+    ...    active Add to Cart control. The earlier candidate (grey-jacket) renders a selector,
+    ...    which made this case skip on every prior run despite its Executable mode. Runtime data
+    ...    guard retained: the case still skips with a reason if the candidate presents variant
     ...    selectors in the current snapshot. Guard corrected same day (v4 evidence run): the
     ...    theme renders 2 HIDDEN select elements even on single-variant products, so the
     ...    unfiltered count still skipped this case; ${VARIANT_SELECT} now filters to :visible —
@@ -84,13 +84,13 @@ TC-04-004 A Default Variant Is Always Preselected
     [Documentation]    TCS negative case: adding without a mandatory variant selection must be
     ...    blocked. On this theme the invalid state is unreachable by design: every variant
     ...    dimension loads with a default option already selected, so no unselected add is
-    ...    possible. Verify-then-skip per 02 v2.1 A10/§MODES: the safeguard is re-verified live
-    ...    (fails loudly if the store changes), then the case ends with a documented design-only
-    ...    Skip. Priority High / Negative.
+    ...    possible. Verify-then-skip per the Test Case Specification's A10/§MODES: the safeguard
+    ...    is re-verified live (fails loudly if the store changes), then the case ends with a
+    ...    documented design-only Skip. Priority High / Negative.
     [Tags]    priority-high    type-negative    design-only    TC-04-004
     Open Product    ${VARIANT_HANDLE}
     All Variant Dimensions Should Have Defaults
-    Skip    Design-only per 02 v2.1: an unselected add is unreachable by design — every variant dimension loads with a default preselected (safeguard re-verified by this run).
+    Skip    Design-only per the Test Case Specification: an unselected add is unreachable by design — every variant dimension loads with a default preselected (safeguard re-verified by this run).
 
 TC-04-005 Selected Variant Becomes Out Of Stock (Design-Only)
     [Documentation]    TCS expects notification when a selected variant sells out while the
@@ -100,11 +100,11 @@ TC-04-005 Selected Variant Becomes Out Of Stock (Design-Only)
     Skip    Not executable: stock levels cannot be manipulated on a live store the team does not control. Designed case retained in the TCS.
 
 TC-04-006 Page Refresh Yields A Valid Variant State
-    [Documentation]    TCS robustness case: after a refresh the page must either restore the
-    ...    prior selection or reset cleanly to a default — never present an invalid state.
-    ...    Verify-then-skip per 02 v2.1 §MODES ("keep design-only"): the observed behaviour
-    ...    (restored or reset) is checked and logged as guard evidence, then the case ends with
-    ...    a documented design-only Skip. Priority Medium / Negative.
+    [Documentation]    TCS robustness case: after a refresh the page must either restore the prior
+    ...    selection or reset cleanly to a default — never present an invalid state.
+    ...    Verify-then-skip per the Test Case Specification's §MODES ("keep design-only"): the
+    ...    observed behaviour (restored or reset) is checked and logged as guard evidence, then
+    ...    the case ends with a documented design-only Skip. Priority Medium / Negative.
     [Tags]    priority-medium    type-negative    design-only    TC-04-006
     Open Product    ${VARIANT_HANDLE}
     ${options}=    Variant Option Count    0
@@ -120,17 +120,17 @@ TC-04-006 Page Refresh Yields A Valid Variant State
     ELSE
         Log    Refresh behaviour: selection RESET to default (${after}); prior was ${before}
     END
-    Skip    Design-only per 02 v2.1: session/refresh state loss cannot be systematically induced; the refresh check above is retained as guard evidence.
+    Skip    Design-only per the Test Case Specification: session/refresh state loss cannot be systematically induced; the refresh check above is retained as guard evidence.
 
 TC-04-007 Size And Colour Are Selectable Together
-    [Documentation]    Extension flow: specific size and colour options are configured
-    ...    together; both dimensions apply and the add control remains available (02 v2.1 mode:
-    ...    Executable). Product re-pointed 12 Aug 2026: 'Noir jacket' (noir-jacket) — Size
-    ...    S/M/L x Color Blue/Red with all six combinations available, live-verified the same
-    ...    day to render both dimensions with 2+ options. The shared ${VARIANT_HANDLE} product
-    ...    is unsuitable here (its linked second dimension collapses to one option by
-    ...    availability), which made this case skip on every prior run. Runtime data guards
-    ...    retained: skips if the product offers fewer than two variant dimensions, or if a
+    [Documentation]    Extension flow: specific size and colour options are configured together;
+    ...    both dimensions apply and the add control remains available (the Test Case
+    ...    Specification's mode: Executable). Product re-pointed 12 Aug 2026: 'Noir jacket'
+    ...    (noir-jacket) — Size S/M/L x Color Blue/Red with all six combinations available,
+    ...    live-verified the same day to render both dimensions with 2+ options. The shared
+    ...    ${VARIANT_HANDLE} product is unsuitable here (its linked second dimension collapses to
+    ...    one option by availability), which made this case skip on every prior run. Runtime data
+    ...    guards retained: skips if the product offers fewer than two variant dimensions, or if a
     ...    dimension offers fewer than two options. Priority Low / Positive.
     [Tags]    priority-low    type-positive    TC-04-007
     Open Product    ${TWO_DIMENSION_HANDLE}

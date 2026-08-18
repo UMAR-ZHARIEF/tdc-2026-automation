@@ -55,8 +55,9 @@ ${ALLOW_ORDERS}      ${False}
 
 *** Test Cases ***
 TC-15-001 Guest Completes Purchase Successfully
-    [Documentation]    Precondition: guest user. Steps: 1. Purchase without login. Expected (02
-    ...    v2.1 A16): order completed successfully (verified 5 Aug 2026, order #1YRC8ZIPW). SAFETY
+    [Documentation]    Precondition: guest user. Steps: 1. Purchase without login. Expected (the
+    ...    Test Case Specification's A16): order completed successfully (verified 5 Aug 2026,
+    ...    order #1YRC8ZIPW). SAFETY
     ...    INVARIANT: this case enters the published test-card value "1" (approved, order-
     ...    creating) and opens with Skip If not ${ALLOW_ORDERS} as its first line — the default
     ...    run (${ALLOW_ORDERS} = ${False}) always skips it; a real order is only ever created by
@@ -77,8 +78,8 @@ TC-15-002 Guest Checkout Unavailable (Design-Only)
     ...    disabled. Steps: 1. Checkout. Expected: appropriate notification displayed. Not
     ...    executed: guest-checkout availability is a merchant-side configuration the team cannot
     ...    disable on a live store it does not control — every other case in this suite already
-    ...    confirms guest checkout IS currently enabled (02 v2.1 §MODES Design-only). Priority
-    ...    Critical / Negative.
+    ...    confirms guest checkout IS currently enabled (the Test Case Specification's §MODES
+    ...    Design-only). Priority Critical / Negative.
     [Tags]    priority-critical    type-negative    design-only    TC-15-002
     Skip    Design-only: guest-checkout availability is a merchant-side configuration that cannot be disabled on a live store the team does not control. Designed case retained in the TCS.
 
@@ -101,8 +102,9 @@ TC-15-003 Guest Abandons Checkout
 
 TC-15-004 Guest Cart Persistence (Same-Context New Page)
     [Documentation]    Precondition: guest user. Steps: 1. Add items. 2. Leave. 3. Return.
-    ...    Expected: cart remains available. Mode Executable (02 v2.1 A4: "persistence check
-    ...    benefits from account but guest-cookie variant Executable — mark Executable").
+    ...    Expected: cart remains available. Mode Executable (the Test Case Specification's A4:
+    ...    "persistence check benefits from account but guest-cookie variant Executable — mark
+    ...    Executable").
     ...    Interpretation used here: "leave"/"return" = close the current page and open a new one
     ...    in the SAME browser context, so the session cookie the classic cart relies on persists
     ...    (Browser library's New Context/New Page model). A genuinely new browser-restart-level
@@ -125,7 +127,8 @@ TC-15-005 Offer Account Creation After Purchase
     [Documentation]    Precondition: guest order completed. Steps: 1. Complete a test purchase.
     ...    2. Inspect confirmation page for an account-creation offer. Expected: an offer is
     ...    presented. Observed 5 Aug 2026: none — executing this TRUE offer-presence oracle is
-    ...    expected to FAIL and yield the corresponding defect record (02 v2.1 §REWORDS), the same
+    ...    expected to FAIL and yield the corresponding defect record (the Test Case
+    ...    Specification's §REWORDS), the same
     ...    known-defect-lead pattern used by tests/ts14_secondary_services.robot and
     ...    tests/ts17_search.robot. SAFETY INVARIANT: this case also enters the published test-card
     ...    value "1" and opens with Skip If not ${ALLOW_ORDERS} as its first line — same gate as

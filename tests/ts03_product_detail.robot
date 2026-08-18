@@ -85,12 +85,12 @@ TC-03-006 Broken Breadcrumb Link Fails Safely (Design-Only)
     Skip    Not executable: the detail page breadcrumb trail (Home - product) contains no broken link to exercise; its links are functional (element count logged by TC-03-001). Designed case retained in the TCS.
 
 TC-03-007 Expand Full Product Description
-    [Documentation]    TCS models an extension that expands a collapsed description. Executed
-    ...    per 02 v2.1 audit addendum A8 / the Test Basis (verified 5 Aug 2026): opens the
-    ...    PDP and re-verifies the description block renders by default. No expansion-control
-    ...    element exists anywhere in this page object to probe for absence, so "no expansion
-    ...    control exists" is carried forward as already-verified evidence rather than re-queried.
-    ...    Priority Low / Positive.
+    [Documentation]    TCS models an extension that expands a collapsed description. Executed per
+    ...    the Test Case Specification's audit addendum A8 / the Test Basis (verified 5 Aug 2026):
+    ...    opens the PDP and re-verifies the description block renders by default. No
+    ...    expansion-control element exists anywhere in this page object to probe for absence, so
+    ...    "no expansion control exists" is carried forward as already-verified evidence rather
+    ...    than re-queried. Priority Low / Positive.
     [Tags]    priority-low    type-positive    TC-03-007
     Open Product    ${PDP_HANDLE}
     ${desc}=    Description Block Count
@@ -99,10 +99,10 @@ TC-03-007 Expand Full Product Description
 
 TC-03-008 Breadcrumb Category Step-Back
     [Documentation]    TCS models stepping back through a category hierarchy via breadcrumbs.
-    ...    Executed per 02 v2.1 audit addendum A9: clicks the breadcrumb's Home link and verifies
-    ...    navigation back to the homepage. The trail itself is Home - product with no category
-    ...    level (the catalogue is a single flat collection) — there is no category
-    ...    step to exercise, only the Home step. Priority Low / Positive.
+    ...    Executed per the Test Case Specification's audit addendum A9: clicks the breadcrumb's
+    ...    Home link and verifies navigation back to the homepage. The trail itself is Home -
+    ...    product with no category level (the catalogue is a single flat collection) — there is
+    ...    no category step to exercise, only the Home step. Priority Low / Positive.
     [Tags]    priority-low    type-positive    TC-03-008
     Open Product    ${PDP_HANDLE}
     Click Breadcrumb Home Link

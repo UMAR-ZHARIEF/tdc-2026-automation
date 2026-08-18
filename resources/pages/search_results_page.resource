@@ -34,8 +34,9 @@ Search Result Titles
 
 All Result Titles Should Relate To Query
     [Documentation]    TRUE relevance oracle: every visible result title must
-    ...    relate to the given query term. Each title is logged as evidence; per 02 v2.1
-    ...    §FRESH CASES (6 results observed for "jacket" on 5 Aug 2026, of which 4 were
+    ...    relate to the given query term. Each title is logged as evidence; per the Test Case
+    ...    Specification's §FRESH CASES (6 results observed for "jacket" on 5 Aug 2026, of which 4
+    ...    were
     ...    unrelated — placeholder-description matching), a live FAIL here is the intended,
     ...    harvested search-relevance defect evidence, not test breakage.
     [Arguments]    ${query}
@@ -55,7 +56,7 @@ All Result Titles Should Relate To Query
 No Search Performed Message Should Be Shown
     [Documentation]    Asserts the empty-query results page shows the graceful "No search
     ...    performed" state rather than an error or blank page (TC-17-002; verified
-    ...    5 Aug 2026 per 02 v2.1 §FRESH CASES).
+    ...    5 Aug 2026 per the Test Case Specification's §FRESH CASES).
     ${page_text}=    Get Text    body
     Should Match Regexp    ${page_text}    (?i)no search performed
     ...    msg=Expected a graceful "No search performed" message for an empty search query

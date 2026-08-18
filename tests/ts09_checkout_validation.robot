@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     TS-09 Checkout Validation System — executable mirror of TCS cases
 ...               TC-09-001..007. Authorities: the team's Test Case Specification and Test
-...               Basis, UC-09 (TC-09-007 additionally traces an additional Test Basis item per
+...               Basis, UC-09 (TC-09-007 additionally traces one further Test Basis item per
 ...               the Test Case Specification's §TRACES). All 7 cases automated — no skip-mirror
 ...               (none of TC-09-001..007 appears in the Test Case Specification's
 ...               Design-only/Blocked-no-data lists).
@@ -82,14 +82,14 @@ TC-09-005 Leave Optional Field Blank
     Checkout Page Should Contain    ${SHIPPING_COST_TEXT}
 
 TC-09-007 Marketing Consent State At Checkout
-    [Documentation]    Precondition: checkout reached with an item. Steps (02 v2.1 §FRESH CASES):
-    ...    1. Observe the default state of "Email me with news and offers" (observed 5 Aug 2026:
-    ...    pre-ticked). 2. Untick it. 3. Complete checkout fields as usual (order not required for
-    ...    the state check). Expected: the control's state is respected and retained during
-    ...    checkout; the pre-ticked default is recorded as a consent observation. Chained from
-    ...    TC-09-001/005 (deliberate — same checkout page); restores a full valid fill afterward so
-    ...    the following field-validation cases start from a known-good baseline. NO Pay click.
-    ...    Priority Low / Negative.
+    [Documentation]    Precondition: checkout reached with an item. Steps (the Test Case
+    ...    Specification's §FRESH CASES): 1. Observe the default state of "Email me with news and
+    ...    offers" (observed 5 Aug 2026: pre-ticked). 2. Untick it. 3. Complete checkout fields as
+    ...    usual (order not required for the state check). Expected: the control's state is
+    ...    respected and retained during checkout; the pre-ticked default is recorded as a consent
+    ...    observation. Chained from TC-09-001/005 (deliberate — same checkout page); restores a
+    ...    full valid fill afterward so the following field-validation cases start from a
+    ...    known-good baseline. NO Pay click. Priority Low / Negative.
     [Tags]    priority-low    type-negative    TC-09-007
     ${default_state}=    Consent Checkbox State
     Log    Marketing consent default state (observation, captured live 2026-08-07: pre-ticked): ${default_state}
