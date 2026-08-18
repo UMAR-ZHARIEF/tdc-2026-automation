@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     TS-15 Guest Purchase Flow: executable mirror of TCS cases TC-15-001..005.
 ...               Authorities: the team's Test Case Specification and Test Basis, UC-15
-...               (TC-15-004 additionally traces an additional Test Basis item per the Test Case
+...               (TC-15-004 additionally traces one further Test Basis item per the Test Case
 ...               Specification's §TRACES). 3 cases automated (2 unconditionally
 ...               safe, 1 gated further below alongside another gated case); 1 documented SKIP
 ...               (TC-15-002: the Test Case Specification's §MODES Design-only:
