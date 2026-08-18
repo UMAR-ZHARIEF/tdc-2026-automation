@@ -39,15 +39,6 @@ ${DIRECT_HANDLE}          grey-jacket
 ${NONEXISTENT_HANDLE}     tdc-no-such-product-check
 
 *** Test Cases ***
-TC-02-001 External Direct Link Opens Product Detail Page
-    [Documentation]    Customer opens a product from an external/shared link, bypassing the
-    ...    catalogue. Executed in a fresh browser context (no store history/cookies). Verifies
-    ...    the PDP renders complete: title heading and price. Priority Medium / Positive.
-    [Tags]    priority-medium    type-positive    TC-02-001
-    Open Fresh Context
-    Open Product    ${DIRECT_HANDLE}
-    Product Page Should Be Complete
-
 TC-02-002 Search With No Matching Products Shows A Clear Empty State
     [Documentation]    Customer searches for a term that matches no products; the theme has no
     ...    category filters to narrow results another way, so search is the only route to this
@@ -115,3 +106,15 @@ TC-02-006 Search Returns Matching Product Info
     Products Should Be Listed
     ${hits}=    Listed Product Count
     Log    Search for "${SEARCH_TERM}" returned ${hits} visible product link(s), evidence for the over-matching defect lead.
+
+TC-02-001 External Direct Link Opens Product Detail Page
+    [Documentation]    Customer opens a product from an external/shared link, bypassing the
+    ...    catalogue. Executed in a fresh browser context (no store history/cookies). Verifies
+    ...    the PDP renders complete: title heading and price. Runs last in this file (deliberate):
+    ...    its Open Fresh Context fallback starts a separate plain browser under the
+    ...    persistent-profile session, and the shared session page may not survive that; nothing
+    ...    executes after this case here. Priority Medium / Positive.
+    [Tags]    priority-medium    type-positive    TC-02-001
+    Open Fresh Context
+    Open Product    ${DIRECT_HANDLE}
+    Product Page Should Be Complete
