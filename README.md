@@ -61,7 +61,7 @@ report.
 | File | Status | Notes |
 |---|---|---|
 | `tests/ts01_store_access.robot` | 3/0/0 | TS-01 Store Access (UC-01): 3 cases, all automated |
-| `tests/ts02_product_catalogue.robot` | 3/0/3 | TS-02 Product Catalogue (UC-02): 6 cases — 3 automated, 3 design-only SKIPs |
+| `tests/ts02_product_catalogue.robot` | 5/0/1 | TS-02 Product Catalogue (UC-02): 6 cases, 5 automated, 1 design-only SKIP (final4 realignment: the former empty-catalogue and detail-page-load-failure skips are replaced by two doable checks, a no-results search and a nonexistent-product 404, reusing the TS-17/TS-18 oracles) |
 | `tests/ts03_product_detail.robot` | 6/0/2 | TS-03 Product Detail (UC-03): 8 cases — 6 automated, 2 design-only SKIPs |
 | `tests/ts04_product_variants.robot` | 4/0/3 | TS-04 Variants (UC-04): 7 cases — 4 passing incl. the two re-pointed candidates (single-variant Striped top; two-dimension Noir jacket), 3 design-only SKIPs |
 | `tests/ts05_add_to_cart.robot` | 5/0/1 | TS-05 Add to Cart (UC-05): 6 cases — 5 automated, 1 design-only SKIP (rapid-click timing) |

@@ -63,8 +63,8 @@ TC-15-001 Guest Completes Purchase Successfully
     ...    run (${ALLOW_ORDERS} = ${False}) always skips it; a real order is only ever created by
     ...    an explicit -v ALLOW_ORDERS:True run (team payment policy; see suite Documentation for
     ...    the order-budget note). This whole suite never logs in anywhere, so completing this
-    ...    flow IS the guest-purchase evidence. Priority Critical / Positive.
-    [Tags]    priority-critical    type-positive    TC-15-001
+    ...    flow IS the guest-purchase evidence. Priority High / Positive.
+    [Tags]    priority-high    type-positive    TC-15-001
     Skip If    not ${ALLOW_ORDERS}    Creates a real order — run only in an explicitly authorized session (-v ALLOW_ORDERS:True); team payment policy and order budget apply (see suite Documentation).
     Reach Checkout With Product And Address    ${PRODUCT_HANDLE}
     Enter Card Details    1    12/30    123
@@ -134,8 +134,8 @@ TC-15-005 Offer Account Creation After Purchase
     ...    value "1" and opens with Skip If not ${ALLOW_ORDERS} as its first line: same gate as
     ...    TC-15-001, its own separate order (see suite Documentation's order-budget note: up to
     ...    TWO real orders total in this file when both TC-15-001 and TC-15-005 execute under
-    ...    ALLOW_ORDERS:True). Priority Medium / Positive.
-    [Tags]    priority-medium    type-positive    known-defect-lead    TC-15-005
+    ...    ALLOW_ORDERS:True). Priority Low / Positive.
+    [Tags]    priority-low    type-positive    known-defect-lead    TC-15-005
     Skip If    not ${ALLOW_ORDERS}    Creates a real order — run only in an explicitly authorized session (-v ALLOW_ORDERS:True); team payment policy and order budget apply (see suite Documentation).
     Reach Checkout With Product And Address    ${PRODUCT_HANDLE}
     Enter Card Details    1    12/30    123

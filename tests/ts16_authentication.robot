@@ -70,10 +70,10 @@ TC-16-001 Successful Login
     ...    credentials. Precondition: registered user (already exists). Steps:
     ...    1. Enter valid credentials. 2. Activate Sign In. Expected: login successful: the
     ...    header switches to the logged-in state (My Account / Log Out; live-verified marker).
-    ...    Ends in guest state via teardown. Priority Critical / Positive (suite value; the
-    ...    superseded detail table's "High" is overridden per the Test Case Specification's
-    ...    suite-wins rule, alignment anomaly item 24).
-    [Tags]    priority-critical    type-positive    captcha-gated    TC-16-001
+    ...    Ends in guest state via teardown. Priority High / Positive (final4 value; supersedes
+    ...    the former Critical override recorded in the Test Case Specification's suite-wins
+    ...    rule, alignment anomaly item 24, and restores the detail table's original High).
+    [Tags]    priority-high    type-positive    captcha-gated    TC-16-001
     [Teardown]    Ensure Logged Out
     Skip    Captcha-gated for automation (discovered 12 Aug 2026): the login submit is hCaptcha-protected and automated submissions are silently swallowed — the form stays filled, the page never navigates, no error renders (fail-screenshot evidence, results/ts16_live_2026-08-12/). The flow itself is HUMAN-VERIFIED the same day: the account logged straight in at creation (header switched to My Account / Log Out). Steps retained below for a future maintenance re-attempt; automation does not defeat bot protection.
     Log In With    ${TEST_ACCOUNT_EMAIL}    ${TEST_ACCOUNT_PASSWORD}
@@ -89,9 +89,10 @@ TC-16-002 Login With Incorrect Password
     ...    REQUIREMENT IS MET (verified PASS, manually). Automated submissions of this form
     ...    never reach the server (hCaptcha, see TC-16-001), which is also why the earlier
     ...    "silent failed login" automated results were artifacts, not store behaviour.
-    ...    Priority Critical / Negative (suite value; alignment anomaly item 25 overrides the
-    ...    superseded detail table's "High").
-    [Tags]    priority-critical    type-negative    captcha-gated    TC-16-002
+    ...    Priority High / Negative (final4 value; supersedes the former Critical override,
+    ...    the Test Case Specification's alignment anomaly item 25, and restores the detail
+    ...    table's original High).
+    [Tags]    priority-high    type-negative    captcha-gated    TC-16-002
     [Teardown]    Ensure Logged Out
     Skip    Captcha-gated for automation; requirement HUMAN-VERIFIED PASS 12 Aug 2026 — wrong password on the registered account produced the generic "Incorrect email or password." error (screenshot evidence, results/MANUAL_TS16_LOGIN_2026-08-12/). Automated submits are swallowed by hCaptcha and never reach the server. Steps retained below for a future maintenance re-attempt.
     Log In With    ${TEST_ACCOUNT_EMAIL}    Wrong-${TEST_ACCOUNT_PASSWORD}

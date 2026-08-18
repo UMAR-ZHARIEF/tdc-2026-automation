@@ -11,25 +11,24 @@ Documentation     TS-08 Checkout Navigation: executable mirror of TCS cases TC-0
 ...               locators it flags individually.
 ...               STATE-CHAINED execution (mirrors the ts06/ts07 root-caused fix: repeated
 ...               /cart/clear top-level GETs trip Cloudflare, so this file also keeps that call to
-...               Suite Setup + Suite Teardown only, 2 hits total): cases run in FILE ORDER 001,
-...               002, 003, 005, 004, 006. TC-08-001 is the suite's single checkout-reach action:
-...               it adds the product, captures the cart's product name/price-text/quantity into
-...               suite variables, and transitions into checkout once. TC-08-002/003/005 reuse or
-...               briefly re-enter that same checkout (a #checkout click is a same-suite
-...               navigation, not a /cart/clear hit, so it is not budget-limited) instead of
-...               rebuilding cart state from scratch. TC-08-004 needs a genuinely EMPTY cart, which
-...               is incompatible with the shared state, so it runs in its own fresh browser
-...               context (Open Fresh Context) scheduled after every other executing case; nothing
-...               later in the file needs the shared checkout state back. TC-08-006 (Design-only
-...               Skip) needs no state and runs last, mirroring ts04/ts06's convention of placing
-...               Design-only cases at the end.
+...               Suite Setup + Suite Teardown only, 2 hits total): cases run in FILE ORDER 003,
+...               001, 002, 005, 004, 006 (final4 ID labels). TC-08-003 (the genuinely-empty-cart
+...               probe) runs FIRST, right after the Suite Setup /cart/clear, the only point where
+...               the cart is genuinely empty (see its own case note on the ordering fix).
+...               TC-08-001 is the suite's single checkout-reach action: it adds the product,
+...               captures the cart's product name/price-text/quantity into suite variables, and
+...               transitions into checkout once. TC-08-002/004/005 reuse or briefly re-enter that
+...               same checkout (a #checkout click is a same-suite navigation, not a /cart/clear
+...               hit, so it is not budget-limited) instead of rebuilding cart state from scratch.
+...               TC-08-006 (Design-only Skip) needs no state and runs last, mirroring ts04/ts06's
+...               convention of placing Design-only cases at the end.
 ...               Page Object Model: element locators live in resources/pages/; this file
 ...               contains business-readable steps only.
 ...               Environment: Brave (Chromium) via Browser library (Playwright), guest role;
 ...               no case in this suite ever logs in.
 ...               Traffic: ~9 page loads per run (3 for TC-08-001's product->cart->checkout
-...               transfer, ~1 for TC-08-003's return, ~2 for TC-08-005's re-entry, ~2 for
-...               TC-08-004's isolated fresh-context probe, plus the Suite Setup/Teardown
+...               transfer, ~2 for TC-08-003's empty-cart probe, ~1 for TC-08-005's return, ~2 for
+...               TC-08-004's re-entry, plus the Suite Setup/Teardown
 ...               /cart/clear pair); run sparingly (shared live store).
 Resource          ../resources/common.resource
 Resource          ../resources/pages/product_page.resource
@@ -43,7 +42,7 @@ Test Tags         TS-08    UC-08    guest
 ${PRODUCT_HANDLE}    grey-jacket
 
 *** Test Cases ***
-TC-08-004 Block Checkout Access When The Cart Is Empty
+TC-08-003 Block Checkout Access When The Cart Is Empty
     [Documentation]    Precondition: cart currently has zero items. Steps (the Test Case
     ...    Specification's §REWORDS): 1. With an empty cart, navigate to /checkout directly. 2.
     ...    Observe whether checkout is refused or redirected. Expected: checkout is not offered
@@ -55,7 +54,7 @@ TC-08-004 Block Checkout Access When The Cart Is Empty
     ...    the cart still held the shared line and the case failed on a precondition that was
     ...    never established (live run). Running first needs no extra /cart/clear hit,
     ...    keeping the two-per-run budget. Priority High / Negative.
-    [Tags]    priority-high    type-negative    TC-08-004
+    [Tags]    priority-high    type-negative    TC-08-003
     Empty Cart Direct Checkout Should Be Refused
 
 TC-08-001 Proceed To Checkout With Valid Cart And Verify Data Transfer
@@ -65,7 +64,7 @@ TC-08-001 Proceed To Checkout With Valid Cart And Verify Data Transfer
     ...    what was shown in the cart. Expected: customer is placed on the checkout screen with
     ...    cart data intact and all checkout sections rendered. The product name and price are
     ...    captured at runtime from the product page (data policy: store content is volatile) and
-    ...    reused as suite variables by TC-08-003/005. Known display defect (checkout_page.resource
+    ...    reused as suite variables by TC-08-004/005. Known display defect (checkout_page.resource
     ...    Documentation): the order-summary line doubles the product title ("Grey
     ...    jacketGrey jacket"), so the product-name check below uses "contains", never equality.
     ...    Priority High / Positive.
@@ -100,7 +99,7 @@ TC-08-002 Proceed To Checkout As A Guest
     Should Not Contain    ${url}    /account/login
     ...    msg=Guest checkout was redirected to a login page — a login gate was encountered
 
-TC-08-003 Return From Checkout To Cart Without Completing The Order
+TC-08-005 Return From Checkout To Cart Without Completing The Order
     [Documentation]    Precondition: customer has navigated to the checkout page. Steps (the Test
     ...    Case Specification's §REWORDS): 1. In checkout, use the header Cart link. 2. Verify the
     ...    cart page shows the same items/quantities. Expected: cart data remains intact and
@@ -112,27 +111,27 @@ TC-08-003 Return From Checkout To Cart Without Completing The Order
     ...    the primary path outside dry-run. Chained from TC-08-001 (deliberate): reuses the
     ...    product name/quantity TC-08-001 captured via suite variables instead of re-reading the
     ...    product page. Priority Medium / Positive.
-    [Tags]    priority-medium    type-positive    TC-08-003
+    [Tags]    priority-medium    type-positive    TC-08-005
     Return To Cart From Checkout
     Open Cart
     Cart Should Contain    ${PRODUCT_NAME}
     Line Quantity Should Be    ${CART_QTY}
 
-TC-08-005 Handle Cart-Data Transfer Into Checkout
+TC-08-004 Handle Cart-Data Transfer Into Checkout
     [Documentation]    Precondition: customer has items in the cart and proceeds to checkout.
     ...    Steps: 1. Click proceed to Checkout. 2. Compare the information between the cart page
     ...    and checkout page. 3. Record any missing or inconsistent information. Expected: all
     ...    cart information is transferred correctly; any difference is recorded as a defect (the
     ...    Test Case Specification's A4: mode Executable: "fully executable using the public
-    ...    UI"). Deep compare: cart quantity is re-verified unchanged after the TC-08-001/003
+    ...    UI"). Deep compare: cart quantity is re-verified unchanged after the TC-08-001/005
     ...    round-trip through checkout (using cart_page.resource's own quantity locator; the
     ...    checkout page has no captured quantity locator to read instead), the £55.00 item price
     ...    (captured by TC-08-001) is still shown on checkout, and (once a valid address resolves
     ...    shipping) the £75.00 order total (£55 + £20 shipping, verified live) is shown.
-    ...    Chained from TC-08-001/003 (deliberate, avoids a further /cart/clear hit): reuses the
+    ...    Chained from TC-08-001/005 (deliberate, avoids a further /cart/clear hit): reuses the
     ...    suite variables TC-08-001 captured instead of re-reading the product page. Priority
     ...    High / Negative (the Test Case Specification's suite-table value).
-    [Tags]    priority-high    type-negative    TC-08-005
+    [Tags]    priority-high    type-negative    TC-08-004
     Open Cart
     Cart Should Contain    ${PRODUCT_NAME}
     Line Quantity Should Be    ${CART_QTY}

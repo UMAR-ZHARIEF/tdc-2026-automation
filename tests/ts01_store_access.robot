@@ -1,10 +1,12 @@
 *** Settings ***
-Documentation     TS-01 Store Access System: executable mirror of TCS cases TC-01-001..007.
+Documentation     TS-01 Store Access System: executable mirror of TCS cases TC-01-001..003, all
+...               automated (final4 numbering: consecutive, no gaps).
 ...               Authorities: the team's Test Case Specification and Test Basis, UC-01.
-...               3 cases automated. TC-01-003/004/006/007 were removed together with the Test
-...               Case Specification's deletion of the non-functional annex (competition Don't
-...               #1); the removal is recorded in the Test Case Specification's change log and
-...               the ID gaps are intentional (no renumbering).
+...               The Test Case Specification's non-functional annex (competition Don't #1)
+...               removed four cases from this module's original seven; final4 renumbers the
+...               surviving three consecutively as TC-01-001..003, so this file's TC-01-003
+...               below (network disconnection) carries a new final4 ID (it was labelled
+...               TC-01-005 before this renumbering; no other case in this file changed).
 ...               Expected results in the TCS are derived acceptance criteria (oracle = standard
 ...               e-commerce behaviour); a mismatch found here is a finding, not a broken test.
 ...               Page Object Model: element locators live in resources/pages/; this file
@@ -49,13 +51,13 @@ TC-01-002 Bookmark Or Direct Product Link Loads Without Homepage
     Open Product    ${DEEP_LINK_HANDLE}
     Product Name Should Be Displayed    ${DEEP_LINK_PRODUCT}
 
-TC-01-005 Network Disconnection Yields Clear Error And Recovery
+TC-01-003 Network Disconnection Yields Clear Error And Recovery
     [Documentation]    With connectivity lost, attempting to load the store must surface an
     ...    explicit connection error rather than a blank page or silent hang; loading works again
     ...    once the connection returns. Executed with Playwright's client-side offline emulation
     ...    (Set Offline); no request leaves this machine while offline, safe for the live store.
     ...    Priority High / Negative.
-    [Tags]    priority-high    type-negative    TC-01-005
+    [Tags]    priority-high    type-negative    TC-01-003
     Go Offline
     ${err}=    Run Keyword And Expect Error    *    Open Catalogue
     Should Contain    ${err}    net::ERR

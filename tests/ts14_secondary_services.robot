@@ -63,9 +63,9 @@ TC-14-002 Refer A Friend
     [Documentation]    Store accessible (any role). Steps: 1. Activate the Refer a Friend
     ...    control (share referral). Expected: a referral function opens or a meaningful
     ...    response is given, per the same check pattern as TC-14-001. Same documented
-    ...    inert-remnant reality: expected to FAIL live. Priority Medium /
+    ...    inert-remnant reality: expected to FAIL live. Priority Low /
     ...    Positive.
-    [Tags]    priority-medium    type-positive    known-defect-lead    TC-14-002
+    [Tags]    priority-low    type-positive    known-defect-lead    TC-14-002
     Open Home
     ${before}=    Current Page Fingerprint
     Activate Refer A Friend Control
@@ -86,8 +86,8 @@ TC-14-004 Guest Accesses Wish List
     [Documentation]    Guest user. Steps: 1. Open Wishlist. Expected: a login prompt or other
     ...    meaningful response is given, per the same check pattern as TC-14-001. Same
     ...    documented inert-remnant reality: expected to FAIL live. Priority Medium /
-    ...    Negative.
-    [Tags]    priority-medium    type-negative    known-defect-lead    TC-14-004
+    ...    Positive.
+    [Tags]    priority-medium    type-positive    known-defect-lead    TC-14-004
     Open Home
     ${before}=    Current Page Fingerprint
     Activate Wish List Control

@@ -86,8 +86,8 @@ TC-10-003 International Shipping
     ...    "select" (captured live: shipping has no radio controls, a single method is
     ...    applied automatically), so this case asserts the method's name AND its cost line are
     ...    both shown, the text-based equivalent of "selected and applied". Chained from
-    ...    TC-10-001/002 (deliberate: same checkout page). Priority High / Positive.
-    [Tags]    priority-high    type-positive    TC-10-003
+    ...    TC-10-001/002 (deliberate: same checkout page). Priority Medium / Positive.
+    [Tags]    priority-medium    type-positive    TC-10-003
     Shipping Method Should Be Displayed
     Checkout Page Should Contain    ${SHIPPING_COST_TEXT}
 
@@ -98,8 +98,8 @@ TC-10-006 Shipping Cost Added To Order Total Correctly
     ...    against subtotal + shipping. Expected: total equals subtotal plus the displayed
     ...    shipping cost (verified live: £55.00 + £20.00 = £75.00). Chained from
     ...    TC-10-001..003 (deliberate: same checkout page, address already resolved). Priority
-    ...    High / Negative (the Test Case Specification's suite-table value).
-    [Tags]    priority-high    type-negative    TC-10-006
+    ...    High / Positive (the Test Case Specification's suite-table value).
+    [Tags]    priority-high    type-positive    TC-10-006
     Checkout Page Should Contain    ${SHIPPING_COST_TEXT}
     Checkout Page Should Contain    £75.00
 

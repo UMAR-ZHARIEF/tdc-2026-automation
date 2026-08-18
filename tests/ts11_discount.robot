@@ -61,9 +61,9 @@ TC-11-005 Skip Coupon / Proceed Without A Discount Code
     ...    checkout proceeds normally. Implemented as: leave the Discount field untouched and
     ...    confirm the Cost summary total is unaffected (still £75.00). Chained from TC-11-003
     ...    (deliberate: same checkout page; the earlier invalid-code attempt left no lasting
-    ...    discount applied, which this case's own total check also re-confirms). Priority Medium
+    ...    discount applied, which this case's own total check also re-confirms). Priority Low
     ...    / Positive.
-    [Tags]    priority-medium    type-positive    TC-11-005
+    [Tags]    priority-low    type-positive    TC-11-005
     Checkout Page Should Contain    £75.00
     Shipping Method Should Be Displayed
 

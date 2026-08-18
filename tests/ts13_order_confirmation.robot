@@ -147,9 +147,9 @@ TC-13-005 Confirmation Page Fails (Design-Only)
     [Documentation]    Scenario: confirmation page fails. Precondition: successful payment.
     ...    Steps: 1. Simulate page failure. Expected: error handled properly. Not executed: a
     ...    confirmation-page load failure cannot be deliberately induced on a live store the team
-    ...    does not control (the Test Case Specification's §MODES Design-only). Priority Critical
+    ...    does not control (the Test Case Specification's §MODES Design-only). Priority High
     ...    / Negative.
-    [Tags]    priority-critical    type-negative    design-only    TC-13-005
+    [Tags]    priority-high    type-negative    design-only    TC-13-005
     Skip    Design-only: a confirmation-page load failure cannot be deliberately induced on a live store the team does not control. Designed case retained in the TCS.
 
 TC-13-006 Confirmation Completeness — Missing Receipt Information (Design-Only)
