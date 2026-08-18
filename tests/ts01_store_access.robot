@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation     TS-01 Store Access System — executable mirror of TCS cases TC-01-001..007.
+Documentation     TS-01 Store Access System: executable mirror of TCS cases TC-01-001..007.
 ...               Authorities: the team's Test Case Specification and Test Basis, UC-01.
 ...               3 cases automated. TC-01-003/004/006/007 were removed together with the Test
 ...               Case Specification's deletion of the non-functional annex (competition Don't
@@ -7,10 +7,10 @@ Documentation     TS-01 Store Access System — executable mirror of TCS cases T
 ...               the ID gaps are intentional (no renumbering).
 ...               Expected results in the TCS are derived acceptance criteria (oracle = standard
 ...               e-commerce behaviour); a mismatch found here is a finding, not a broken test.
-...               Page Object Model: element locators live in resources/pages/ — this file
+...               Page Object Model: element locators live in resources/pages/; this file
 ...               contains business-readable steps only.
 ...               Environment: Brave (Chromium) via Browser library (Playwright), guest role.
-...               Traffic: ~4 page loads per run — run sparingly (shared live store).
+...               Traffic: ~4 page loads per run; run sparingly (shared live store).
 Resource          ../resources/common.resource
 Resource          ../resources/pages/layout.resource
 Resource          ../resources/pages/home_page.resource
@@ -53,7 +53,7 @@ TC-01-005 Network Disconnection Yields Clear Error And Recovery
     [Documentation]    With connectivity lost, attempting to load the store must surface an
     ...    explicit connection error rather than a blank page or silent hang; loading works again
     ...    once the connection returns. Executed with Playwright's client-side offline emulation
-    ...    (Set Offline) — no request leaves this machine while offline, safe for the live store.
+    ...    (Set Offline); no request leaves this machine while offline, safe for the live store.
     ...    Priority High / Negative.
     [Tags]    priority-high    type-negative    TC-01-005
     Go Offline

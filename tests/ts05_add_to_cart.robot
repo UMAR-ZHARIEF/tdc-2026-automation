@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation     TS-05 Add to Cart — executable mirror of TCS cases TC-05-001..006.
+Documentation     TS-05 Add to Cart: executable mirror of TCS cases TC-05-001..006.
 ...               Authorities: the team's Test Case Specification and Test Basis, UC-05. 5 cases
 ...               automated; 1
 ...               documented SKIP (each add triggers an immediate page reload, closing the
@@ -10,10 +10,10 @@ Documentation     TS-05 Add to Cart — executable mirror of TCS cases TC-05-001
 ...               the suite teardown empties the cart as store hygiene.
 ...               Oracles are runtime-captured: product names are read from each product page
 ...               heading before adding.
-...               Page Object Model: element locators live in resources/pages/ — this file
+...               Page Object Model: element locators live in resources/pages/; this file
 ...               contains business-readable steps only.
 ...               Environment: Brave (Chromium) via Browser library (Playwright), guest role.
-...               Traffic: ~11 page loads per run — run sparingly (shared live store).
+...               Traffic: ~11 page loads per run; run sparingly (shared live store).
 Resource          ../resources/common.resource
 Resource          ../resources/pages/layout.resource
 Resource          ../resources/pages/product_page.resource

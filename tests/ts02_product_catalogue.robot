@@ -1,14 +1,14 @@
 *** Settings ***
-Documentation     TS-02 Product Catalogue System — executable mirror of TCS cases TC-02-001..006.
+Documentation     TS-02 Product Catalogue System: executable mirror of TCS cases TC-02-001..006.
 ...               Authorities: the team's Test Case Specification and Test Basis, UC-02.
 ...               3 cases automated; 3 design-only documented SKIPs (empty-catalogue and
 ...               detail-page-load-failure conditions cannot be induced on a live store we do
 ...               not control; see each case's reason). Assertions are data-independent: product
 ...               identity is captured at runtime (store content is volatile).
-...               Page Object Model: element locators live in resources/pages/ — this file
+...               Page Object Model: element locators live in resources/pages/; this file
 ...               contains business-readable steps only.
 ...               Environment: Brave (Chromium) via Browser library (Playwright), guest role.
-...               Traffic: ~7 page loads per run — run sparingly (shared live store).
+...               Traffic: ~7 page loads per run; run sparingly (shared live store).
 Resource          ../resources/common.resource
 Resource          ../resources/pages/layout.resource
 Resource          ../resources/pages/home_page.resource
@@ -41,10 +41,10 @@ TC-02-001 Browse Catalogue And Open Product Detail Page
 
 TC-02-002 Search Returns Matching Product Info
     [Documentation]    Alternative flow: the customer uses the search box instead of browsing.
-    ...    NOTE: the TCS also names filter/sort controls — none exist on this theme (recorded as
+    ...    NOTE: the TCS also names filter/sort controls; none exist on this theme (recorded as
     ...    an observation for the test basis); search is the implemented alternative flow.
     ...    Result count is logged, not hard-asserted: "${SEARCH_TERM}" is a known over-matching
-    ...    candidate (defect lead — search matches description text). Priority High / Positive.
+    ...    candidate (defect lead: search matches description text). Priority High / Positive.
     [Tags]    priority-high    type-positive    TC-02-002
     Open Home
     Search For    ${SEARCH_TERM}
@@ -82,7 +82,7 @@ TC-02-005 Incomplete Product Listing Data (Design-Only)
 
 TC-02-006 Nonexistent Product Page Fails Safely With Not-Found Message (Design-Only)
     [Documentation]    A product link whose detail page no longer exists must yield a clear
-    ...    not-found/unavailable message inside the storefront layout — not a raw server error or
+    ...    not-found/unavailable message inside the storefront layout, not a raw server error or
     ...    blank screen. Not executed: a detail-page load failure is a store-side condition that
     ...    cannot be induced on a live store (the Test Case Specification's §MODES). NOTE: the
     ...    nonexistent-URL/404 adaptation previously used here is redirected as future coverage

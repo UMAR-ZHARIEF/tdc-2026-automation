@@ -1,24 +1,24 @@
 *** Settings ***
-Documentation     TS-06 Cart Review — executable mirror of TCS cases TC-06-001..007.
+Documentation     TS-06 Cart Review: executable mirror of TCS cases TC-06-001..007.
 ...               Authorities: the team's Test Case Specification and Test Basis, UC-06. 5 cases
 ...               automated; 2
 ...               documented SKIP (mid-session price change and stock-invalidation cannot be
 ...               induced on a live store the team does not control). Known display
 ...               defect: the product title renders duplicated on the cart page and triplicated
-...               in the header's mini-cart drawer — assertions use "contains", never exact
+...               in the header's mini-cart drawer; assertions use "contains", never exact
 ...               equality, against line titles; TC-06-006 logs the drawer's actual title text as
 ...               observation evidence. STATE-CHAINED execution (root-caused fix from live-run
 ...               failure analysis): cases run in FILE ORDER 003, 001, 002, 006, 007, 004, 005 and
 ...               deliberately share one cart built up incrementally across 003→001→002→006→007,
-...               instead of each case clearing the cart itself — repeated /cart/clear
+...               instead of each case clearing the cart itself: repeated /cart/clear
 ...               navigations (up to 7 per run under the old per-test-clear design) trip the
 ...               store's Cloudflare bot protection mid-suite. Only Suite Setup and Suite
 ...               Teardown call Clear Cart now (2 hits per run total). Oracles are unchanged from
 ...               the per-test-clear design; only preconditions and cleanup moved.
-...               Page Object Model: element locators live in resources/pages/ — this file
+...               Page Object Model: element locators live in resources/pages/; this file
 ...               contains business-readable steps only.
 ...               Environment: Brave (Chromium) via Browser library (Playwright), guest role.
-...               Traffic: ~13 page loads per run (down from ~22) — run sparingly (shared live store).
+...               Traffic: ~13 page loads per run (down from ~22); run sparingly (shared live store).
 Resource          ../resources/common.resource
 Resource          ../resources/pages/layout.resource
 Resource          ../resources/pages/home_page.resource
@@ -35,9 +35,9 @@ ${NOTE_TEXT}          TDC-TS06-ORDER-NOTE-CHECK
 *** Test Cases ***
 TC-06-003 Empty-Cart State
     [Documentation]    With the cart cleared, opening the cart page shows a clear empty-cart
-    ...    message rather than an error or blank page. Runs first in the file — state chained
+    ...    message rather than an error or blank page. Runs first in the file: state chained
     ...    from Suite Setup's single cart clear (deliberate: repeated /cart/clear navigations
-    ...    trip the store's bot protection) — so the cart is already empty here and no further
+    ...    trip the store's bot protection), so the cart is already empty here and no further
     ...    clearing is performed. Priority Medium / Negative.
     [Tags]    priority-medium    type-negative    TC-06-003
     Open Cart
@@ -47,7 +47,7 @@ TC-06-001 View Cart Items And Calculate Totals
     [Documentation]    The customer adds a known product to the cart and opens the cart page: the
     ...    line is present at quantity 1, the line total equals the unit price, and the cart
     ...    total equals the sum of line totals. Runs after TC-06-003
-    ...    (deliberate — repeated /cart/clear navigations trip the store's bot protection): the
+    ...    (deliberate: repeated /cart/clear navigations trip the store's bot protection): the
     ...    cart is still empty at this point (TC-06-003 only observes, it does not add), so this
     ...    test establishes the one-item state that TC-06-002/006/007 build on next.
     ...    Priority High / Positive.
@@ -70,9 +70,9 @@ TC-06-001 View Cart Items And Calculate Totals
 
 TC-06-002 Cart-View Duplicate Consolidation
     [Documentation]    Adding the same product twice and opening the cart page shows ONE line at
-    ...    quantity 2 with the correct line total — the cart PAGE's own line/quantity display
+    ...    quantity 2 with the correct line total, the cart PAGE's own line/quantity display
     ...    (distinct from TS-05 TC-05-002, which checks the header badge at add time). State
-    ...    chained from TC-06-001 (deliberate — repeated /cart/clear navigations trip the store's
+    ...    chained from TC-06-001 (deliberate: repeated /cart/clear navigations trip the store's
     ...    bot protection): the cart already holds one unit from TC-06-001, so only one further
     ...    add is performed here to reach the tested quantity of 2.
     ...    Priority High / Positive.
@@ -96,7 +96,7 @@ TC-06-006 Mini-Cart Drawer Access And Contents
     ...    toggle hides it again. Known display defect: the line title renders
     ...    triplicated in the drawer, so the title is asserted to CONTAIN the product name (never
     ...    equality) and the actual text is logged as evidence. State chained from TC-06-001/002
-    ...    (deliberate — repeated /cart/clear navigations trip the store's bot protection): this
+    ...    (deliberate: repeated /cart/clear navigations trip the store's bot protection): this
     ...    case reuses the existing cart state rather than adding again, and reuses the product
     ...    name TC-06-001 captured (via a suite variable) instead of re-opening the product page.
     ...    Priority High / Positive.
@@ -120,7 +120,7 @@ TC-06-007 Cart Order-Note Entry
     [Documentation]    On the cart page, text entered into the order-note field survives an
     ...    Update submit and a subsequent page reload (client-side persistence check only;
     ...    persistence through to a placed order is manual-scope). State chained from
-    ...    TC-06-001/002/006 (deliberate — repeated /cart/clear navigations trip the store's bot
+    ...    TC-06-001/002/006 (deliberate: repeated /cart/clear navigations trip the store's bot
     ...    protection): the cart already holds items, so this case only needs a non-empty cart
     ...    and performs no further add. Priority Low / Positive.
     [Tags]    priority-low    type-positive    TC-06-007

@@ -1,33 +1,33 @@
 *** Settings ***
-Documentation     TS-18 Content & Error Pages — executable mirror of TCS cases TC-18-001..003.
+Documentation     TS-18 Content & Error Pages: executable mirror of TCS cases TC-18-001..003.
 ...               Authorities: the team's Test Case Specification and Test Basis, UC-18. All 3
 ...               cases automated (new
 ...               suite; no skips).
-...               New resource: resources/pages/content_pages.resource — blog article and
+...               New resource: resources/pages/content_pages.resource, blog article and
 ...               sitemap-only/404 markers. Its locators are PROVISIONAL (inferred from Test
-...               Basis v1.0 observations, not a live visit under this task's zero-store-traffic
+...               Basis observations, not a live visit under this task's zero-store-traffic
 ...               constraint); live-verify before relying on it outside dry-run. The Blog/About
 ...               Us site-navigation entry points (Go To Blog Via Navigation / Go To About Us
-...               Via Navigation) live in resources/pages/layout.resource — coordinator-directed
+...               Via Navigation) live in resources/pages/layout.resource, coordinator-directed
 ...               housekeeping move, same "persistent site chrome" concern as that file's own
-...               ${CATALOGUE_NAV} — and reach this suite via the direct layout.resource import
+...               ${CATALOGUE_NAV}, and reach this suite via the direct layout.resource import
 ...               below (also imported transitively via content_pages.resource). FLAG FOR
 ...               COORDINATOR (unresolved): the article breadcrumb count reuses
 ...               product_page.resource's breadcrumb locator on the assumption it is a shared
-...               theme-wide component — kept as an assumption only because this task may not
+...               theme-wide component, kept as an assumption only because this task may not
 ...               modify product_page.resource.
-...               TC-18-001 note: blog articles carry a three-level breadcrumb Home — News —
-...               article (distinct from the product page's two-level Home — product trail);
+...               TC-18-001 note: blog articles carry a three-level breadcrumb Home - News -
+...               article (distinct from the product page's two-level Home - product trail);
 ...               the link count is logged as observation evidence, not hard-asserted to an
 ...               exact number, mirroring TC-03-001's own treatment of the analogous
 ...               uncertain-count situation. TC-18-002's three pages are sitemap-only and
 ...               unlinked from navigation by design (per the Test Basis); that status is
 ...               logged as an observation per case, not probed for or asserted.
-...               Page Object Model: element locators live in resources/pages/ — this file
+...               Page Object Model: element locators live in resources/pages/; this file
 ...               contains business-readable steps only.
 ...               Environment: Brave (Chromium) via Browser library (Playwright), guest role.
 ...               Traffic: ~10 page loads per run (~6 for TC-18-001, 3 for TC-18-002, 1 for
-...               TC-18-003) — run sparingly (shared live store).
+...               TC-18-003); run sparingly (shared live store).
 Resource          ../resources/common.resource
 Resource          ../resources/pages/layout.resource
 Resource          ../resources/pages/home_page.resource
@@ -79,7 +79,7 @@ TC-18-002 Sitemap-Only Pages Load
 TC-18-003 Invalid URL Returns 404 Page
     [Documentation]    Store accessible. Steps: 1. Navigate to a nonexistent address (e.g.
     ...    /products/does-not-exist). 2. Verify the response and page. Expected: an HTTP 404
-    ...    with the store's error page and working navigation (verified 5 Aug 2026). Priority
+    ...    with the store's error page and working navigation (verified live). Priority
     ...    Medium / Negative.
     [Tags]    priority-medium    type-negative    TC-18-003
     Open Nonexistent Product Page    does-not-exist

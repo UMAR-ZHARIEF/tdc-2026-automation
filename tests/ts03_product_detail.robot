@@ -1,17 +1,17 @@
 *** Settings ***
-Documentation     TS-03 Product Detail Page — executable mirror of TCS cases TC-03-001..008.
+Documentation     TS-03 Product Detail Page: executable mirror of TCS cases TC-03-001..008.
 ...               Authorities: the team's Test Case Specification and Test Basis, UC-03. 6
 ...               cases automated; 2 carry a
 ...               documented design-only SKIP (fault injection impossible on a live store; the
-...               breadcrumb trail is Home — product with no category level, so no broken link
+...               breadcrumb trail is Home - product with no category level, so no broken link
 ...               exists to exercise). Per the Test Case Specification's audit addendum A8/A9,
 ...               TC-03-007/008 execute
 ...               live checks (description visible by default; breadcrumb Home-link navigation)
 ...               rather than relying on a design-only skip.
-...               Page Object Model: element locators live in resources/pages/ — this file
+...               Page Object Model: element locators live in resources/pages/; this file
 ...               contains business-readable steps only.
 ...               Environment: Brave (Chromium) via Browser library (Playwright), guest role.
-...               Traffic: ~8 page loads per run — run sparingly (shared live store).
+...               Traffic: ~8 page loads per run; run sparingly (shared live store).
 Resource          ../resources/common.resource
 Resource          ../resources/pages/home_page.resource
 Resource          ../resources/pages/catalogue_page.resource
@@ -86,8 +86,8 @@ TC-03-006 Broken Breadcrumb Link Fails Safely (Design-Only)
 
 TC-03-007 Expand Full Product Description
     [Documentation]    TCS models an extension that expands a collapsed description. Executed per
-    ...    the Test Case Specification's audit addendum A8 / the Test Basis (verified 5 Aug 2026):
-    ...    opens the PDP and re-verifies the description block renders by default. No
+    ...    the Test Case Specification's audit addendum A8 / the Test Basis (verified live): opens
+    ...    the PDP and re-verifies the description block renders by default. No
     ...    expansion-control element exists anywhere in this page object to probe for absence, so
     ...    "no expansion control exists" is carried forward as already-verified evidence rather
     ...    than re-queried. Priority Low / Positive.
@@ -101,7 +101,7 @@ TC-03-008 Breadcrumb Category Step-Back
     [Documentation]    TCS models stepping back through a category hierarchy via breadcrumbs.
     ...    Executed per the Test Case Specification's audit addendum A9: clicks the breadcrumb's
     ...    Home link and verifies navigation back to the homepage. The trail itself is Home -
-    ...    product with no category level (the catalogue is a single flat collection) — there is
+    ...    product with no category level (the catalogue is a single flat collection); there is
     ...    no category step to exercise, only the Home step. Priority Low / Positive.
     [Tags]    priority-low    type-positive    TC-03-008
     Open Product    ${PDP_HANDLE}

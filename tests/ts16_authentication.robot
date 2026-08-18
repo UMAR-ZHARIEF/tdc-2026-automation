@@ -1,17 +1,17 @@
 *** Settings ***
-Documentation     TS-16 User Authentication — executable mirror of TCS cases TC-16-001..009.
+Documentation     TS-16 User Authentication: executable mirror of TCS cases TC-16-001..009.
 ...               Authorities: the team's Test Case Specification and Test Basis, UC-16. 2 cases
 ...               automated end-to-end
 ...               (TC-16-007 client-side sign-up validation; TC-16-008 recovery UI half, live-
-...               passed 12 Aug 2026); 1 verify-then-skip (TC-16-006 captures the client-side
+...               passed on a later run); 1 verify-then-skip (TC-16-006 captures the client-side
 ...               validation-contrast observation live, no submission); 6 documented SKIPs.
-...               THE REGISTERED TEST ACCOUNT EXISTS: created 12 Aug 2026 as the one-time
-...               controlled team action (TC-16-004 performed by hand — identity Tdc Fictitious,
+...               THE REGISTERED TEST ACCOUNT EXISTS: created earlier as the one-time
+...               controlled team action (TC-16-004 performed by hand: identity Tdc Fictitious,
 ...               project inbox forprojectdump@gmail.com; the registration submit is
 ...               hCaptcha-GATED, challenge solved by a human).
-...               ⚠️ hCAPTCHA GOVERNS THIS WHOLE SUITE (established 12 Aug 2026, three-step
+...               ⚠️ hCAPTCHA GOVERNS THIS WHOLE SUITE (established via a three-step
 ...               evidence chain): (1) registration drew an interactive challenge; (2) the first
-...               account-based automated run showed login submissions SILENTLY SWALLOWED — form
+...               account-based automated run showed login submissions SILENTLY SWALLOWED: form
 ...               still filled, no navigation, no error, badge visible (fail screenshots,
 ...               results/ts16_live_2026-08-12/); (3) the manual confirmation retest proved the
 ...               server's true behaviour: failed logins draw the generic red "Incorrect email
@@ -24,27 +24,27 @@ Documentation     TS-16 User Authentication — executable mirror of TCS cases T
 ...               retained (automation does not defeat bot protection); TC-16-005 likewise
 ...               (duplicate-e-mail response sits behind the same captcha). Every executing
 ...               case ends in guest state. TC-16-008's inbox half stays manual (TC-13-007
-...               split; the reset link is never followed — it would change the registered
+...               split; the reset link is never followed: it would change the registered
 ...               credential). TC-16-003 mode was amended to Executable (the Test Case
 ...               Specification's audit addendum A4); its execution is now human, not automated.
-...               Resource: resources/pages/account_pages.resource — the login/register field
-...               and session-marker locators are LIVE-VERIFIED (executed runs + the 12 Aug
-...               2026 registration); the recover-form and error-surface locators remain
+...               Resource: resources/pages/account_pages.resource, the login/register field
+...               and session-marker locators are LIVE-VERIFIED (executed runs + the account
+...               registration); the recover-form and error-surface locators remain
 ...               PROVISIONAL until TC-16-008's first live pass (union oracles keep those
 ...               assertions winnable either way).
-...               Page Object Model: element locators live in resources/pages/ — this file
+...               Page Object Model: element locators live in resources/pages/; this file
 ...               contains business-readable steps only.
-...               Environment: Brave (Chromium) via Browser library (Playwright), guest role —
+...               Environment: Brave (Chromium) via Browser library (Playwright), guest role;
 ...               every executed case here is designed to end in guest state (no session is
 ...               ever created).
 ...               Traffic: ~5 page loads per run (TC-16-006 opens the login page for its DOM
 ...               observation; TC-16-007 one register-page load, client-side only; TC-16-008
-...               login page + recover flow; captcha-gated cases skip before any navigation) —
+...               login page + recover flow; captcha-gated cases skip before any navigation);
 ...               run sparingly (shared live store). NOTE: automated runs of TC-16-008 dispatch
-...               NO recovery e-mail — the account-form captcha silently swallows automated
-...               submissions (proven 13 Aug 2026: an all-folder mailbox search found zero
-...               robot-triggered reset e-mails from the 12 Aug runs, while an identical
-...               human-submitted request produced one, received 14:52 the same day; evidence:
+...               NO recovery e-mail: the account-form captcha silently swallows automated
+...               submissions (proven live: an all-folder mailbox search found zero
+...               robot-triggered reset e-mails from the automated runs, while an identical
+...               human-submitted request produced one shortly after; evidence:
 ...               results/MANUAL_TC-16-008_INBOX_2026-08-13/).
 Resource          ../resources/common.resource
 Resource          ../resources/pages/layout.resource
@@ -67,8 +67,8 @@ ${TEST_ACCOUNT_PASSWORD}    ${FICTITIOUS_PASSWORD}
 *** Test Cases ***
 TC-16-001 Successful Login
     [Documentation]    Scenario: Successful login, using the registered test account's valid
-    ...    credentials. Precondition: registered user (EXISTS since 12 Aug 2026). Steps:
-    ...    1. Enter valid credentials. 2. Activate Sign In. Expected: login successful — the
+    ...    credentials. Precondition: registered user (already exists). Steps:
+    ...    1. Enter valid credentials. 2. Activate Sign In. Expected: login successful: the
     ...    header switches to the logged-in state (My Account / Log Out; live-verified marker).
     ...    Ends in guest state via teardown. Priority Critical / Positive (suite value; the
     ...    superseded detail table's "High" is overridden per the Test Case Specification's
@@ -81,11 +81,11 @@ TC-16-001 Successful Login
 
 TC-16-002 Login With Incorrect Password
     [Documentation]    Scenario: Invalid login (suite title: Login with incorrect password).
-    ...    Precondition: registered user (EXISTS since 12 Aug 2026). Steps: 1. Enter the
+    ...    Precondition: registered user (already exists). Steps: 1. Enter the
     ...    registered e-mail with a wrong password. 2. Activate Sign In. Expected:
     ...    authentication error displayed; no session established. RESOLVED BY MANUAL
-    ...    CONFIRMATION RETEST 12 Aug 2026: a human submitting the registered e-mail with a
-    ...    wrong password receives the generic red error "Incorrect email or password." — the
+    ...    CONFIRMATION RETEST: a human submitting the registered e-mail with a
+    ...    wrong password receives the generic red error "Incorrect email or password.": the
     ...    REQUIREMENT IS MET (verified PASS, manually). Automated submissions of this form
     ...    never reach the server (hCaptcha, see TC-16-001), which is also why the earlier
     ...    "silent failed login" automated results were artifacts, not store behaviour.
@@ -101,21 +101,21 @@ TC-16-002 Login With Incorrect Password
 TC-16-003 Login With Non-Existing Account
     [Documentation]    Login page open; no account exists for the credentials used (the Test Case
     ...    Specification's audit addendum A17 precondition/steps). Steps: 1. Enter credentials for
-    ...    an account that does not exist. 2. Activate Sign In. Expected (realigned content — the
+    ...    an account that does not exist. 2. Activate Sign In. Expected (realigned content: the
     ...    Test Case Specification's §REWORDS, its "Authentication security" origin resolved into
     ...    this case): login with
     ...    a non-existing account is rejected with a generic error that does not reveal whether
     ...    the account exists or which field is wrong. The e-mail is generated random-ish at
     ...    run time so this case is guaranteed to target an unregistered account without
     ...    hardcoding one fixed fictitious address. Priority High / Negative.
-    ...    ⚠️ RE-GRADED 12 Aug 2026 — THE "SILENT FAILED LOGIN" DEFECT IS STRUCK AS AN
+    ...    ⚠️ RE-GRADED in a later pass: THE "SILENT FAILED LOGIN" DEFECT IS STRUCK AS AN
     ...    AUTOMATION ARTIFACT. The earlier "EXPECTED FAIL, defect harvested" result (no
     ...    feedback after 15s) was recorded by an automated browser whose login submission
     ...    never reached the server: the submit is hCaptcha-protected and silently swallowed
     ...    (fail-screenshot: form still filled, no navigation, hCaptcha badge present). The
-    ...    manual confirmation retest the same day shows the store's true behaviour: a failed
-    ...    login draws the generic red "Incorrect email or password." — feedback exists and is
-    ...    properly non-revealing (it does not disclose whether the account exists — the exact
+    ...    manual confirmation retest shows the store's true behaviour: a failed
+    ...    login draws the generic red "Incorrect email or password.": feedback exists and is
+    ...    properly non-revealing (it does not disclose whether the account exists, the exact
     ...    A17 requirement). Requirement judged MET on manual evidence; the same generic
     ...    server-side error path serves nonexistent-account and wrong-password submissions.
     [Tags]    priority-high    type-negative    captcha-gated    TC-16-003
@@ -133,7 +133,7 @@ TC-16-004 Successful Registration (Not Automated — SKIP)
     ...    Positive. Not automated by deliberate policy, not by data unavailability: unlike
     ...    TC-16-001/002/005/008/009 this flow needs no pre-existing account (registration
     ...    itself creates one), but running it on every automation pass would create a fresh
-    ...    duplicate account each time. PERFORMED ONCE BY HAND on 12 Aug 2026 — the submit is
+    ...    duplicate account each time. PERFORMED ONCE BY HAND: the submit is
     ...    hCaptcha-gated (a human solved the challenge), so the flow is also not automatable
     ...    in principle; the registered account is live.
     [Tags]    priority-high    type-positive    TC-16-004
@@ -141,11 +141,11 @@ TC-16-004 Successful Registration (Not Automated — SKIP)
 
 TC-16-005 Register With Existing Email (Captcha-Gated — SKIP)
     [Documentation]    Scenario: Register existing email (suite title: Register with existing
-    ...    email). Precondition: existing account (EXISTS since 12 Aug 2026). Steps: 1. Register
+    ...    email). Precondition: existing account (already exists). Steps: 1. Register
     ...    using same email. Expected: duplicate account message displayed. Priority High /
     ...    Negative. NOT automatable: the duplicate-account response requires the registration
     ...    submit to reach the server, and that submit is hCaptcha-GATED (observed live
-    ...    12 Aug 2026 during the one-time account creation). Automation does not attempt to
+    ...    during the one-time account creation). Automation does not attempt to
     ...    defeat bot protection; the case is coverable in the Phase H manual round, where a
     ...    human passes the captcha.
     [Tags]    priority-high    type-negative    TC-16-005
@@ -154,16 +154,16 @@ TC-16-005 Register With Existing Email (Captcha-Gated — SKIP)
 TC-16-006 Empty Login Fields
     [Documentation]    Login page open; fields empty. Steps: 1. Activate Sign In with both
     ...    fields empty. 2. Observe validation. Expected: login is refused with clear
-    ...    validation; no session is created. ⚠️ RE-GRADED 12 Aug 2026 — the former "login form
+    ...    validation; no session is created. ⚠️ RE-GRADED in a later pass: the former "login form
     ...    has NO validation at all" defect is DOWNGRADED TO AN OBSERVATION. Its submit-half
     ...    evidence was an automation artifact (hCaptcha swallows automated submissions, so no
     ...    server response was ever observed); the manual retest proves the server answers
     ...    failed submissions with the generic "Incorrect email or password." What SURVIVES,
     ...    because it is DOM-inspectable without any submission, is the client-side contrast:
-    ...    the login e-mail field is NOT required — an empty submission passes client-side —
+    ...    the login e-mail field is NOT required (an empty submission passes client-side)
     ...    unlike the sign-up form's stricter enforcement. (The field does carry type='email',
     ...    so FORMAT checking exists; the contrast is specifically the missing required/empty
-    ...    enforcement — v6 run readback corrected an earlier overbroad "no format validation"
+    ...    enforcement: v6 run readback corrected an earlier overbroad "no format validation"
     ...    phrasing.) An inconsistency observation, not a defect. This case now performs that observation live
     ...    (verify-then-skip, the TC-04-004 pattern) and documents the captcha-gated submit
     ...    half. Priority High / Negative.
@@ -186,20 +186,20 @@ TC-16-007 Invalid E-Mail Format During Sign Up
     No Account Created Should Be Confirmed
 
 TC-16-008 Password Recovery E-Mail
-    [Documentation]    Registered test account exists (12 Aug 2026); login page open. Steps:
+    [Documentation]    Registered test account exists; login page open. Steps:
     ...    1. Activate "Forgot your password?". 2. Verify the Reset Password form appears.
     ...    3. Submit the account e-mail and verify the store renders its generic on-screen
     ...    confirmation. This automated case exercises the recovery UI half ONLY: the
     ...    account-form captcha silently swallows automated submissions, so NO e-mail is sent
-    ...    on automated runs — the on-screen confirmation renders regardless and is UI evidence
-    ...    only, not proof the request was processed (proven 13 Aug 2026: an all-folder mailbox
-    ...    search found no robot-triggered reset e-mail from the 12 Aug runs, while an identical
-    ...    human-submitted request produced one — "Customer account password reset" from Sauce
-    ...    Demo, received 14:52 the same day; evidence:
+    ...    on automated runs: the on-screen confirmation renders regardless and is UI evidence
+    ...    only, not proof the request was processed (proven live: an all-folder mailbox
+    ...    search found no robot-triggered reset e-mail from the automated runs, while an identical
+    ...    human-submitted request produced one, "Customer account password reset" from Sauce
+    ...    Demo, received shortly after; evidence:
     ...    results/MANUAL_TC-16-008_INBOX_2026-08-13/). The e-mail half of the requirement is
-    ...    HUMAN-VERIFIED PASS (13 Aug 2026). TCS steps 4–5 (read the inbox, follow the link, set
-    ...    a new password, log in with it) are the MANUAL half against the project inbox — the
-    ...    TC-13-007 split — and are deliberately never automated: following the reset link would
+    ...    HUMAN-VERIFIED PASS. TCS steps 4–5 (read the inbox, follow the link, set
+    ...    a new password, log in with it) are the MANUAL half against the project inbox (the
+    ...    TC-13-007 split) and are deliberately never automated: following the reset link would
     ...    change the registered credential and break TC-16-001. Priority Medium / Positive.
     [Tags]    priority-medium    type-positive    TC-16-008
     Open Login Page
@@ -211,7 +211,7 @@ TC-16-008 Password Recovery E-Mail
 
 TC-16-009 Log Out Returns To Guest State
     [Documentation]    Logged in with the test account (login performed by this case; account
-    ...    exists since 12 Aug 2026). Steps: 1. Activate the log-out control. 2. Verify the
+    ...    already exists). Steps: 1. Activate the log-out control. 2. Verify the
     ...    header returns to guest state (Log In visible, Log Out gone). 3. Verify /account is
     ...    no longer accessible without login (answered with the login page). Expected: the
     ...    session ends; the UI and access rights return to the guest state. Priority Medium /
