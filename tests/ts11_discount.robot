@@ -5,7 +5,8 @@ Documentation     TS-11 Coupon & Discount System — executable mirror of TCS ca
 ...               SKIP — all Blocked-no-data (the Test Case Specification's §MODES; Test Basis
 ...               item TBD-002): no genuine
 ...               valid or expired coupon code is known to the team, so TC-11-001 (apply valid),
-...               TC-11-002 (apply expired, 02 v2.1 A14 precondition/expected wording), TC-11-004
+...               TC-11-002 (apply expired, the Test Case Specification's A14
+...               precondition/expected wording), TC-11-004
 ...               (remove applied coupon) and TC-11-006 (discount calculation) all need data that
 ...               does not exist. Only the invalid-code path (TC-11-003) and the no-code path
 ...               (TC-11-005) need no such data and are executable now.
